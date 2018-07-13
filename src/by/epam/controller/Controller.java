@@ -7,9 +7,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+
+
 public class Controller extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
@@ -24,24 +28,19 @@ public class Controller extends HttpServlet {
                                 HttpServletResponse response)
             throws ServletException, IOException {
         String page = null;
-        // определение команды, пришедшей из JSP
         ActionFactory client = new ActionFactory();
         Command command = client.defineCommand(request);
-    /*
-    * вызов реализованного метода execute() и передача параметров
-    * классу-обработчику конкретной команды
-    */
+        HttpSession session = request.getSession();
         page = command.execute(request);
-        // метод возвращает страницу ответа
         if (page != null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
             // вызов страницы ответа на запрос
             dispatcher.forward(request, response);
+            //response.sendRedirect(page);
         } else {
-            // установка страницы c cообщением об ошибке
             page = "/index.jsp";
-            // page = ConfigurationManager.getProperty("path.page.index");
-            // request.getSession().setAttribute("nullPage", MessageManager.getProperty("message.nullpage"));
+         // page = ConfigurationManager.getProperty("path.page.index");
+         // request.getSession().setAttribute("nullPage", MessageManager.getProperty("message.nullpage"));
             request.getSession().setAttribute("nullPage", "Page not found. Business logic error.");
             response.sendRedirect(request.getContextPath() + page);
         }

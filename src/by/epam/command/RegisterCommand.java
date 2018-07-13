@@ -1,6 +1,7 @@
 package by.epam.command;
 
 import by.epam.entity.User;
+import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
 import by.epam.service.UserService;
 
@@ -25,12 +26,11 @@ public class RegisterCommand implements Command {
         String lName = request.getParameter(PARAM_NAME_LAST_NAME);
 
         UserService userService = new UserService();
-        boolean result = userService.register(login, pass, fName, mName, lName);
-
-        if (result) {
+        try {
+            userService.register(login, pass, fName, mName, lName);
             request.setAttribute("infoMessage", "Registration is successful. Please, sign on.");
             page = "/jsp/login.jsp";
-        } else {
+        } catch (DAOException e) {
             request.setAttribute("infoMessage", "Registration failed. Please, try again.");
             page = "/jsp/login.jsp";
         }

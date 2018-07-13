@@ -6,6 +6,8 @@ public class Company {
     private String location;
     private int headcount;
 
+    public Company(){}
+
     public Company(String name, String niche, String location, int headcount) {
         this.name = name;
         this.niche = niche;

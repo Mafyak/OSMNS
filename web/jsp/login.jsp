@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:bundle basename="content"/>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setBundle basename="resources.content"/>
+<fmt:setLocale value="${locale}"/>
 
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link href="/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="/jsp/css/style.css" rel="stylesheet">
     <script src="/jsp/js/bootstrap.min.js"></script>
@@ -25,12 +26,11 @@
                             <a href="#" class="active" id="login-form-link"><fmt:message key="login"/></a>
                         </div>
                         <div class="col-xs-5">
-                            <a href="#" id="register-form-link">Register</a>
+                            <a href="#" id="register-form-link"><fmt:message key="register"/></a>
                         </div>
                         <div class="col-xs-2">
                             <a href="/Controller?command=change_language&lang=en"><img id="change_lang_en" src="../img/empty_pix.gif"></a>
                             <a href="/Controller?command=change_language&lang=ru"><img id="change_lang_ru" src="../img/empty_pix.gif"></a>
-                            <a href="/Controller?command=change_language&lang=by"><img id="change_lang_by" src="../img/empty_pix.gif"></a>
                         </div>
                     </div>
                     <hr>

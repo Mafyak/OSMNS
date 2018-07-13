@@ -1,34 +1,31 @@
 package by.epam.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
-    private String email, pass, company, fName, lName;
+    private String email;
+    private String pass;
+    private String company;
+    private String fName;
+    private String mName;
+    private String lName;
     private int id;
     private UserType type;
+    private List<UserHistory> history = new ArrayList<UserHistory>();
+
 
     public User() {
     }
 
-    public User(String email, String pass, int id, UserType type) {
-        this.pass = pass;
-        this.email = email;
-        this.id = id;
-        this.type = type;
+
+    public String getmName() {
+        return mName;
     }
 
-    public User(String email, String pass, int id, UserType type, String fName, String lName) {
-        this.pass = pass;
-        this.email = email;
-        this.id = id;
-        this.type = type;
-        this.fName = fName;
-        this.lName = lName;
-    }
+    public void setmName(String mName) {
 
-    public User(String email, String pass, int id) {
-        this.pass = pass;
-        this.email = email;
-        this.id = id;
-        this.type = UserType.HR;
+        this.mName = mName;
     }
 
     public void setfName(String fName) {
@@ -65,7 +62,6 @@ public class User {
     }
 
     public String getCompany() {
-
         return company;
     }
 
@@ -89,11 +85,54 @@ public class User {
         this.type = type;
     }
 
+    public void addHistory(UserHistory history) {
+        this.history.add(history);
+    }
+
+    public List<UserHistory> getHistory() {
+        return history;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                ", email='" + email + '\'' +
+                "email='" + email + '\'' +
                 ", pass='" + pass + '\'' +
-                ", id=" + id + "}\n";
+                ", company='" + company + '\'' +
+                ", fName='" + fName + '\'' +
+                ", mName='" + mName + '\'' +
+                ", lName='" + lName + '\'' +
+                ", id=" + id +
+                ", type=" + type +
+                ", history=" + history +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email.hashCode();
+        result = 31 * result + pass.hashCode();
+        result = 31 * result + (company != null ? company.hashCode() : 0);
+        result = 31 * result + (fName != null ? fName.hashCode() : 0);
+        result = 31 * result + (lName != null ? lName.hashCode() : 0);
+        result = 31 * result + id;
+        result = 31 * result + type.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        if (!email.equals(user.email)) return false;
+        if (!pass.equals(user.pass)) return false;
+        if (company != null ? !company.equals(user.company) : user.company != null) return false;
+        if (fName != null ? !fName.equals(user.fName) : user.fName != null) return false;
+        if (lName != null ? !lName.equals(user.lName) : user.lName != null) return false;
+        return type == user.type;
     }
 }

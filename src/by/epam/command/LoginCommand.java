@@ -2,7 +2,6 @@ package by.epam.command;
 
 import by.epam.entity.User;
 import by.epam.service.UserService;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.ResourceBundle;
 
@@ -19,7 +18,8 @@ public class LoginCommand implements Command {
         UserService userService = new UserService();
         try {
             User user = userService.login(login, pass);
-            request.setAttribute("user", user);
+         //   request.setAttribute("user", user);
+            request.getSession().setAttribute("user", user);
             page = getProperPage(user);
         } catch (Exception e) {
             request.setAttribute("errorLoginPassMessage", "Incorrect login or password.");
@@ -29,6 +29,7 @@ public class LoginCommand implements Command {
     }
 
     private String getProperPage(User user) {
+        // ADD FILTER TO check role during project run.
         switch (user.getType()) {
             case HR:
                 return resourceBundle.getString("mainPage");

@@ -1,5 +1,8 @@
 package by.epam.command;
 
+import by.epam.command.user.AddMyCompany;
+import by.epam.command.user.ShowBySSNCommand;
+
 public enum CommandType {
     LOGIN {
         {
@@ -13,10 +16,19 @@ public enum CommandType {
         {
             this.command = new LogoutCommand();
         }
+    }, SHOW_BY_SSN {
+        {
+            this.command = new ShowBySSNCommand();
+        }
+    }, ADD_MY_COMPANY {
+        {
+            this.command = new AddMyCompany();
+        }
     }, CHANGE_LANGUAGE {
         {
             this.command = new ChangeLanguageCommand();
         }
+
     }, REGISTER {
         {
             this.command = new RegisterCommand();

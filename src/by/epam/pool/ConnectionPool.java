@@ -1,5 +1,7 @@
 package by.epam.pool;
 
+import org.apache.log4j.Logger;
+
 import java.sql.*;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -10,8 +12,8 @@ public class ConnectionPool {
     private BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(10, true);
     private ResourceBundle bundle = ResourceBundle.getBundle("resources/mysql");
     private Properties props = new Properties();
-    // private static ConnectionPool instance = null;
     private static volatile ConnectionPool instance;
+    Logger LOG = Logger.getLogger(ConnectionPool.class);
 
     private ConnectionPool() {
     }
@@ -30,16 +32,6 @@ public class ConnectionPool {
         return localInstance;
     }
 
-    /*
-    public static ConnectionPool getInstance() {
-        if (instance == null) {
-            instance = new ConnectionPool();
-            instance.createPool();
-        }
-        return instance;
-    }
-    */
-
     private void createPool() {
         String url = bundle.getString("db.url");
         props.put("user", bundle.getString("db.user"));
@@ -56,7 +48,7 @@ public class ConnectionPool {
             try {
                 pool.add(DriverManager.getConnection(url, props));
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOG.error("SQL Exception is thrown while filling Connection Pool" + e);
             }
         }
     }
@@ -66,17 +58,17 @@ public class ConnectionPool {
         try {
             conn = pool.take();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("SQL Exception is thrown while getting a connection from Connection Pool" + e);
         }
         return conn;
     }
 
-    public void closeConnection(Connection conn) {
+    public void returnConnection(Connection conn) {
         if (conn != null) {
             try {
                 pool.put(conn);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOG.error("SQL Exception is thrown while getting a connection from Connection Pool" + e);
             }
         }
     }
