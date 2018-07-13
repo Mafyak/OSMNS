@@ -1,6 +1,7 @@
 package by.epam;
 
 import by.epam.entity.User;
+import by.epam.exception.DAOException;
 import by.epam.service.UserService;
 import org.junit.After;
 import org.junit.Assert;
