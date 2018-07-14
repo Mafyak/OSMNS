@@ -17,6 +17,8 @@
 <html>
 <head>
     <title>Main page</title>
+    <link href="/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="/jsp/css/style.css" rel="stylesheet">
 </head>
 <body>
 
@@ -46,55 +48,97 @@
     </div>
 </div>
 </c:if>
-</p>
+<br/>
 <a href="${pageContext.request.contextPath}/Controller?command=logout">Logout</a>
+</p>
 <hr>
-<p>Search by SSN:</p>
+<p>Search by SSN:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
       style="display: block;">
     <input type="text" name="SSN" placeholder="SSN" required>
     <button type="submit" name="button" value="Search">Search me</button>
 </form>
+</p>
 <c:if test="${not empty employee.fName}">
     <p>Result for: ${employee.lName}, ${employee.fName}</p>
 
-<table style="width:50%" border="1px">
-    <tr>
-        <th>Company Name</th>
-        <th>Year Employed</th>
-        <th>Year Terminated</th>
-        <th>Rating 1</th>
-        <th>Rating 2</th>
-        <th>Rating 3</th>
-        <th>Rating 4</th>
-        <th>Rating 5</th>
-        <th>Hire again</th>
-    </tr>
-    <c:forEach items="${employee.history}" var="review">
+    <table style="width:50%" border="1px">
         <tr>
-            <td>${review.idCompany}</td>
-            <td>${review.yearEmployed}</td>
-            <td>${review.yearTerminated}</td>
-            <td>${review.rating1}</td>
-            <td>${review.rating2}</td>
-            <td>${review.rating3}</td>
-            <td>${review.rating4}</td>
-            <td>${review.rating5}</td>
-            <td>${review.hireAgain}</td>
+            <th>Company Name</th>
+            <th>Year Employed</th>
+            <th>Year Terminated</th>
+            <th>Rating 1</th>
+            <th>Rating 2</th>
+            <th>Rating 3</th>
+            <th>Rating 4</th>
+            <th>Rating 5</th>
+            <th>Hire again</th>
         </tr>
-    </c:forEach>
-
-</table>
+        <c:forEach items="${employee.history}" var="review">
+            <tr>
+                <td>${review.company}</td>
+                <td>${review.yearEmployed}</td>
+                <td>${review.yearTerminated}</td>
+                <td>${review.rating1}</td>
+                <td>${review.rating2}</td>
+                <td>${review.rating3}</td>
+                <td>${review.rating4}</td>
+                <td>${review.rating5}</td>
+                <td>${review.hireAgain}</td>
+            </tr>
+        </c:forEach>
+    </table>
 
 
 </c:if>
 <c:if test="${empty employee.fName}"><p>Can't find an employee with such ssn.</p></c:if>
 <hr>
-Here is a list of services I need to add to hr page:<br/>
-1. Delete user by name<br/>
-2. Edit review<br/>
-3. Show all reviews<br/>
-4. Search by name and dob<br/>
-5. Hire again field in search by SSN doesn't work properly<br/>
+<p>Add new review:
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-login">
+            <div class="panel-heading">
+                <div class="row">
+                    <form id="add-review" method="POST" action="${pageContext.request.contextPath}/Controller?command=add_review">
+                        <div class="form-group">
+                            <input name="fName" class="form-control" placeholder="First Name" required>
+                            <input name="lName" class="form-control" placeholder="Last Name" required>
+                            <input name="SSN" class="form-control" placeholder="Social Security Number" pattern="[0-9]+" title="Number only" required>
+                            <input name="cName" class="form-control" placeholder="Company Name" required>
+                            <input name="yEmployed" class="form-control" placeholder="Year Employed" required>
+                            <input name="yFired" class="form-control" placeholder="Year Fired" required>
+                        </div>
+                        <div class="form-group">
+                            <input name="rating1" class="form-control" placeholder="Rating1" required>
+                            <input name="rating2" class="form-control" placeholder="Rating2" required>
+                            <input name="rating3" class="form-control" placeholder="Rating3" required>
+                            <input name="rating4" class="form-control" placeholder="Rating4" required>
+                            <input name="rating5" class="form-control" placeholder="Rating5" required>
+                        </div>
+                        <div class="form-group">
+                            <input name="hireAgain" class="form-control" placeholder="Hire again (Yes or No)"
+                                   required>
+                        </div>
+                        <input type="submit" name="command"
+                               class="form-control btn btn-register" value="Add Review">
+                    </form>
+                    ${reviewAddResult}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</p>
+
+
+<hr>
+<p>
+    Here is a list of services I need to add to hr page:<br/>
+    1. Add review<br/>
+    2. Show all reviews<br/>
+    3. Edit review<br/>
+    4. Search by name and dob<br/>
+    5. Hire again field in search by SSN doesn't work properly<br/>
+</p>
 </body>
 </html>

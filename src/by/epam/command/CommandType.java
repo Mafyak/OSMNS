@@ -1,6 +1,7 @@
 package by.epam.command;
 
 import by.epam.command.user.AddMyCompany;
+import by.epam.command.user.AddNewReviewCommand;
 import by.epam.command.user.ShowBySSNCommand;
 
 public enum CommandType {
@@ -19,6 +20,10 @@ public enum CommandType {
     }, SHOW_BY_SSN {
         {
             this.command = new ShowBySSNCommand();
+        }
+    }, ADD_REVIEW {
+        {
+            this.command = new AddNewReviewCommand();
         }
     }, ADD_MY_COMPANY {
         {

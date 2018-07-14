@@ -10,6 +10,9 @@ public class User {
     private String fName;
     private String mName;
     private String lName;
+    private int SSN;
+
+
     private int id;
     private UserType type;
     private List<UserHistory> history = new ArrayList<UserHistory>();
@@ -91,6 +94,15 @@ public class User {
 
     public List<UserHistory> getHistory() {
         return history;
+    }
+
+    public void setSSN(int SSN) {
+        this.SSN = SSN;
+    }
+
+    public int getSSN() {
+
+        return SSN;
     }
 
     @Override

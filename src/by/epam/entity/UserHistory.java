@@ -1,9 +1,8 @@
 package by.epam.entity;
 
-import java.util.ArrayList;
-
 public class UserHistory {
 
+    private String company;
     private int idCompany;
     private int idHR;
     private int yearEmployed;
@@ -15,11 +14,11 @@ public class UserHistory {
     private int rating5;
     private int hireAgain;
 
-    public UserHistory(){}
+    public UserHistory() {
+    }
 
-
-    public void setIdCompany(int idCompany) {
-        this.idCompany = idCompany;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public void setIdHR(int idHR) {
@@ -58,9 +57,9 @@ public class UserHistory {
         this.hireAgain = hireAgain;
     }
 
-    public int getIdCompany() {
+    public String getCompany() {
 
-        return idCompany;
+        return company;
     }
 
     public int getIdHR() {
@@ -95,14 +94,24 @@ public class UserHistory {
         return rating5;
     }
 
-    public int getHireAgain() {
-        return hireAgain;
+    public String getHireAgain() {
+        return (hireAgain == 1) ? "Yes" : "No";
     }
+
+    public int getIdCompany() {
+        return idCompany;
+    }
+
+    public void setIdCompany(int idCompany) {
+
+        this.idCompany = idCompany;
+    }
+
 
     @Override
     public String toString() {
         return "UserHistory{" +
-                "idCompany=" + idCompany +
+                "company=" + company +
                 ", idHR=" + idHR +
                 ", yearEmployed=" + yearEmployed +
                 ", yearTerminated=" + yearTerminated +
