@@ -46,9 +46,6 @@
                                     <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
                                 </div>
                                 <div class="form-group">
-                                    ${errorLoginPassMessage}
-                                    ${wrongAction}
-                                    ${nullPage}
                                     ${infoMessage}
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">

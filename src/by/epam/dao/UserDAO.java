@@ -8,6 +8,8 @@ import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -22,18 +24,20 @@ public class UserDAO extends AbstractDAO<User> {
     private String queryGetEmplHistById = resourceBundle.getString("GET_EMPLOYEE_HISTORY_BY_ID");
     private String queryAddCompany = resourceBundle.getString("ADD_COMPANY");
     private String queryAddReview = resourceBundle.getString("ADD_REVIEW");
+    private String queryGetHrByName = resourceBundle.getString("GET_HR_BY_NAME");
     private String queryAddEmployeeBySSN = resourceBundle.getString("ADD_EMPLOYEE_BY_SSN");
     private String queryGetCompanyId = resourceBundle.getString("GET_COMPANY_ID_BY_NAME");
+    private String queryGetCompanyIdByOffId = resourceBundle.getString("GET_COMPANY_ID_BY_OFF_ID");
     private String queryGetEmployeeIdBySSN = resourceBundle.getString("GET_EMPLOYEE_ID_BY_SSN");
+    private String getReviewsOfSingleHrById = resourceBundle.getString("GET_REVIEWS_OF_SINGLE_HR_BY_ID");
+    private String getAVGReviewsOfSingleHrById = resourceBundle.getString("GET_AVG_REVIEWS_OF_SINGLE_HR_BY_ID");
+    private String querySetCompanyId = resourceBundle.getString("SET_COMPANY_TO_USER");
 
-
-    private String querySetCompany = resourceBundle.getString("SET_COMPANY_TO_USER");
-    Logger LOG = Logger.getLogger("UserDAO");
+    private static Logger LOG = Logger.getLogger("UserDAO");
 
     public UserDAO() {
     }
 
-    @Override
     public User getEntity(Object... params) {
         Connection conn = ConnectionPool.getInstance().getConnection();
         ResultSet rs = null;
@@ -64,38 +68,30 @@ public class UserDAO extends AbstractDAO<User> {
         }
     }
 
+
+    public void registerUser(User user) throws DAOException {
+        executeQuery(queryRegister, user.getEmail(), user.getPass());
+    }
+
+    public void setUserIdByEmailAndPass(User user) throws DAOException {
+        int userId = (int) executeForSingleResult(queryGetUserId, user.getEmail(), user.getPass());
+        user.setId(userId);
+    }
+
+    public void addHrHeadInfo(User user) throws SQLException, DAOException {
+        updateQuery(queryAddHRHEADInfo, user.getId(), user.getfName(), user.getmName(), user.getlName());
+    }
+
     public void register(User user) throws DAOException {
-        Connection conn = ConnectionPool.getInstance().getConnection();
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        int id = 0;
+
         try {
-            ps = conn.prepareStatement(queryRegister);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getPass());
-            ps.execute();
-
-            ps = conn.prepareStatement(queryGetUserId);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getPass());
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                id = rs.getInt(1);
-            }
-
-            ps = conn.prepareStatement(queryAddHRHEADInfo);
-            ps.setInt(1, id);
-            ps.setString(2, user.getfName());
-            ps.setString(3, user.getmName());
-            ps.setString(4, user.getlName());
-            ps.executeUpdate();
+            registerUser(user);
+            setUserIdByEmailAndPass(user);
+            addHrHeadInfo(user);
             LOG.info("New user is added:" + user.getEmail());
-
         } catch (SQLException e) {
             LOG.info("SQL Exception during registration command execution" + e);
             throw new DAOException("error during new user registrations", e);
-        } finally {
-            ConnectionPool.getInstance().returnConnection(conn);
         }
     }
 
@@ -114,22 +110,20 @@ public class UserDAO extends AbstractDAO<User> {
         return employee;
     }
 
-    public User getEntityBySSN(int SSN) {
+    public User getEntityBySSN(int SSN) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         ResultSet rs = null;
         PreparedStatement ps = null;
         User employee = null;
         UserHistory userHistory;
         try {
-
             employee = getEmployeeBySSN(SSN, conn);
-
             ps = conn.prepareStatement(queryGetEmplHistById);
             ps.setInt(1, employee.getId());
             rs = ps.executeQuery();
             while (rs.next()) {
                 userHistory = new UserHistory();
-                userHistory.setCompany(rs.getString(14));
+                userHistory.setCompany(rs.getString(16));
                 userHistory.setIdHR(rs.getInt(2));
                 userHistory.setYearEmployed(rs.getInt(4));
                 userHistory.setYearTerminated(rs.getInt(5));
@@ -141,19 +135,32 @@ public class UserDAO extends AbstractDAO<User> {
                 userHistory.setHireAgain(rs.getInt(12));
                 employee.addHistory(userHistory);
             }
-
         } catch (SQLException e) {
             LOG.info("SQL Exception during registration command execution" + e);
-            try {
-                throw new DAOException("error during new user registrations", e);
-            } catch (DAOException e1) {
-                e1.printStackTrace();
-            }
+            throw new DAOException("error during new user registrations", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }
         return employee;
+    }
 
+    public int getCompanyIdByOfficialId(int companyOfficialId) throws SQLException {
+        int companyInnerId = 0;
+        Connection conn = ConnectionPool.getInstance().getConnection();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement(queryGetCompanyIdByOffId);
+            ps.setInt(1, companyOfficialId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                companyInnerId = rs.getInt(1);
+            }
+        } finally {
+            ConnectionPool.getInstance().returnConnection(conn);
+        }
+        LOG.info("company id inside DB: " + companyInnerId);
+        return companyInnerId;
     }
 
     public int getCompanyIdByName(String companyName) throws SQLException {
@@ -175,83 +182,151 @@ public class UserDAO extends AbstractDAO<User> {
         return companyId;
     }
 
+
+    public void addCompany(Company companyName) throws DAOException {
+        executeQuery(queryAddCompany, companyName.getName(), companyName.getNiche(), companyName.getLocation(),
+                companyName.getHeadcount(), companyName.getCompanyOfficialId());
+        LOG.info("New company is added:" + companyName.getName());
+    }
+
+    public void setCompanyId(Company company, User user) throws SQLException {
+        updateQuery(querySetCompanyId, company.getCompanyInnerId(), user.getId());
+    }
+
     public void addMyCompany(User user, Company companyName) {
-        int userId = user.getId();
-        int companyId = 0;
-        Connection conn = ConnectionPool.getInstance().getConnection();
-        ResultSet rs = null;
-        PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement(queryAddCompany);
-            ps.setString(1, companyName.getName());
-            ps.setString(2, companyName.getNiche());
-            ps.setString(3, companyName.getLocation());
-            ps.setInt(4, companyName.getHeadcount());
-            ps.execute();
+            addCompany(companyName);
             LOG.info("New company is added:" + companyName.getName());
-
-            companyId = getCompanyIdByName(companyName.getName());
-
-            ps = conn.prepareStatement(querySetCompany);
-            ps.setInt(1, companyId);
-            ps.setInt(2, userId);
-            ps.executeUpdate();
-
+            companyName.setCompanyInnerId(getCompanyIdByName(companyName.getName()));
+            setCompanyId(companyName, user);
         } catch (SQLException e) {
             LOG.info("SQL Exception during company registration command execution" + e);
-        } finally {
-            ConnectionPool.getInstance().returnConnection(conn);
+        } catch (DAOException e) {
+            LOG.info("Exception during company registration command execution" + e);
         }
-
     }
 
-    public void registerEmployee(User employee, Connection conn) throws SQLException {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        LOG.info("Step 1 registration");
-        ps = conn.prepareStatement(queryAddEmployeeBySSN);
-        LOG.info("Step 3 registration");
-        ps.setString(1, employee.getfName());
-        ps.setString(2, employee.getlName());
-        ps.setInt(3, employee.getSSN());
-        LOG.info("Step 5 registration");
-        ps.executeUpdate();
+    public void registerEmployee(User employee) throws SQLException {
+        updateQuery(queryAddEmployeeBySSN, employee.getfName(), employee.getlName(), employee.getSSN());
     }
 
-   public void addReview(User hrHead, User employee, UserHistory userHistory) throws SQLException {
+    public void addReview(User hrHead, User employee, UserHistory userHistory) throws SQLException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            LOG.info("Step 1");
-            registerEmployee(employee, conn);
+        LOG.info("Adding new review...");
+        try { //tries to find employee with this SSN
             employee.setId(getEmployeeBySSN(employee.getSSN(), conn).getId());
-            int companyId = getCompanyIdByName(hrHead.getCompany());
-            LOG.info("Step 2");
-            ps = conn.prepareStatement(queryAddReview);
-            LOG.info("Step 3");
-            ps.setInt(1, companyId);
-            ps.setInt(2, hrHead.getId());
-            ps.setInt(3, employee.getId());
-            ps.setInt(4, userHistory.getYearEmployed());
-            ps.setInt(5, userHistory.getYearTerminated());
-            ps.setInt(6, userHistory.getRating1());
-            LOG.info("Step 4");
-            ps.setInt(7, userHistory.getRating2());
-            ps.setInt(8, userHistory.getRating3());
-            ps.setInt(9, userHistory.getRating4());
-            ps.setInt(10, userHistory.getRating5());
-            LOG.info("Step 5");
-            double aveRating = (userHistory.getRating1() + userHistory.getRating2() +
-                    userHistory.getRating3() + userHistory.getRating4() + userHistory.getRating5()) / 5.0;
-            ps.setDouble(11, aveRating);
-            LOG.info("Step 6");
-            ps.setInt(12, (userHistory.getHireAgain().equals("Yes") ? 1 : 0));
-            LOG.info("Step 7");
-            ps.executeUpdate();
-            LOG.info("New review is added:" + userHistory.toString());
+            if (employee.getId() == 0) {
+                LOG.info("Employee info is not found in DB, creating new employee...");
+                registerEmployee(employee);
+                employee.setId(getEmployeeBySSN(employee.getSSN(), conn).getId());
+                LOG.info("Employee registration is finished. Employee id is: " + employee.getId());
+            }
+        } catch (SQLException en) {
+            LOG.info("Something went wrong with adding new employee during review add." + en);
+        }
+        int companyId = 0;
+        try {
+            companyId = getCompanyIdByOfficialId(userHistory.getIdCompany());
+            if (companyId == 0) {
+                LOG.info("Company with official ID " + userHistory.getIdCompany() +
+                        "can't be found. Creating new one...");
+                Company company = new Company();
+                company.setName(userHistory.getCompany());
+                company.setLocation("");
+                company.setHeadcount(0);
+                company.setNiche("");
+                company.setCompanyOfficialId(userHistory.getIdOfficialCompany());
+                addCompany(company);
+                LOG.info("Company " + company.getName() + " was added.");
+                company.setCompanyInnerId(getCompanyIdByName(company.getName()));
+                companyId = company.getCompanyInnerId();
+            }
+        } catch (SQLException en) {
+            LOG.info("Something went wrong with getting company id." + en);
+        } catch (DAOException e) {
+            LOG.info("OMG! Something went wrong with getting company id." + e);
+        }
+        addReviewHelp(companyId, hrHead, employee, userHistory);
+    }
+
+
+    public void addReviewHelp(int companyId, User hrHead, User employee, UserHistory userHistory) throws SQLException {
+        double aveRating = (userHistory.getRating1() + userHistory.getRating2() +
+                userHistory.getRating3() + userHistory.getRating4() + userHistory.getRating5()) / 5.0;
+        int getHireAgain = (userHistory.getHireAgain().equals("Yes") ? 1 : 0);
+
+        updateQuery(queryAddReview, companyId, hrHead.getId(), employee.getId(), userHistory.getYearEmployed(),
+                userHistory.getYearTerminated(), userHistory.getRating1(), userHistory.getRating2(),
+                userHistory.getRating3(), userHistory.getRating4(), userHistory.getRating5(), aveRating, getHireAgain);
+    }
+
+
+    public List<User> getHrByName(String fName, String lName) throws SQLException {
+        Connection conn = ConnectionPool.getInstance().getConnection();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        List<User> hrList = null;
+        try {
+            ps = conn.prepareStatement(queryGetHrByName);
+            ps.setString(1, fName);
+            ps.setString(2, lName);
+            rs = ps.executeQuery();
+            hrList = new ArrayList<>();
+            User hr = null;
+            while (rs.next()) {
+                hr = new User();
+                hr.setId(rs.getInt(1));
+                hr.setfName(rs.getString(2));
+                hr.setmName(rs.getString(3));
+                hr.setlName(rs.getString(4));
+                hr.setCompany(rs.getString(5));
+                hrList.add(hr);
+            }
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }
+        return hrList;
+    }
+
+    public ArrayList<Integer> getReviewsRateForHrById(int idHR) throws SQLException {
+        Connection conn = ConnectionPool.getInstance().getConnection();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        ArrayList<Integer> ratingList = new ArrayList<>();
+        LOG.info("HR id: " + idHR);
+        try {
+            ps = conn.prepareStatement(getReviewsOfSingleHrById);
+            ps.setInt(1, idHR);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ratingList.add(rs.getInt(1));
+                ratingList.add(rs.getInt(2));
+                ratingList.add(rs.getInt(3));
+                ratingList.add(rs.getInt(4));
+                ratingList.add(rs.getInt(5));
+            }
+        } finally {
+            ConnectionPool.getInstance().returnConnection(conn);
+        }
+        return ratingList;
+    }
+
+    public ArrayList<Double> getAVGReviewsRateForHrById(int idHR) throws SQLException {
+        Connection conn = ConnectionPool.getInstance().getConnection();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        ArrayList<Double> ratingAVGSList = new ArrayList<>();
+        try {
+            ps = conn.prepareStatement(getAVGReviewsOfSingleHrById);
+            ps.setInt(1, idHR);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ratingAVGSList.add(rs.getDouble(1));
+            }
+        } finally {
+            ConnectionPool.getInstance().returnConnection(conn);
+        }
+        return ratingAVGSList;
     }
 }

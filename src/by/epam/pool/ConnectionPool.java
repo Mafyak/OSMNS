@@ -1,19 +1,20 @@
 package by.epam.pool;
 
-import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
 
 public class ConnectionPool {
     private BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(10, true);
     private ResourceBundle bundle = ResourceBundle.getBundle("resources/mysql");
     private Properties props = new Properties();
     private static volatile ConnectionPool instance;
-    Logger LOG = Logger.getLogger(ConnectionPool.class);
+    Logger LOG = Logger.getLogger("ConnectionPool");
+
 
     private ConnectionPool() {
     }
@@ -25,14 +26,25 @@ public class ConnectionPool {
                 localInstance = instance;
                 if (localInstance == null) {
                     instance = localInstance = new ConnectionPool();
-                    instance.createPool();
+                    //instance.createPool();
                 }
             }
         }
         return localInstance;
     }
 
-    private void createPool() {
+    public void closePool() {
+        for (Connection conn : pool) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                LOG.info("Connection " + conn + " can't be closed.");
+            }
+        }
+        LOG.info("Connection pool is closed.");
+    }
+
+    public void createPool() {
         String url = bundle.getString("db.url");
         props.put("user", bundle.getString("db.user"));
         props.put("password", bundle.getString("db.pass"));
@@ -42,15 +54,16 @@ public class ConnectionPool {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOG.info("Error while creating connection pool");
         }
         for (int i = 0; i < 10; i++) {
             try {
                 pool.add(DriverManager.getConnection(url, props));
             } catch (SQLException e) {
-                LOG.error("SQL Exception is thrown while filling Connection Pool" + e);
+                LOG.info("SQL Exception is thrown while filling Connection Pool" + e);
             }
         }
+        LOG.info("Connection pool is set and ready to go.");
     }
 
     public Connection getConnection() {
@@ -58,7 +71,7 @@ public class ConnectionPool {
         try {
             conn = pool.take();
         } catch (InterruptedException e) {
-            LOG.error("SQL Exception is thrown while getting a connection from Connection Pool" + e);
+            LOG.info("SQL Exception is thrown while getting a connection from Connection Pool" + e);
         }
         return conn;
     }
@@ -68,7 +81,7 @@ public class ConnectionPool {
             try {
                 pool.put(conn);
             } catch (InterruptedException e) {
-                LOG.error("SQL Exception is thrown while getting a connection from Connection Pool" + e);
+                LOG.info("SQL Exception is thrown while getting a connection from Connection Pool" + e);
             }
         }
     }

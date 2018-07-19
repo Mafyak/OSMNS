@@ -16,6 +16,10 @@
         <url-pattern>/Controller</url-pattern>
     </servlet-mapping>
 
+    <listener>
+        <listener-class>by.epam.listener.ConnectionPoolListener</listener-class>
+    </listener>
+
     <error-page>
         <error-code>404</error-code>
         <location>/jsp/error/error.jsp</location>
@@ -24,4 +28,14 @@
         <exception-type>java.lang.RuntimeException</exception-type>
         <location>/jsp/error/error.jsp</location>
     </error-page>
+    <jsp-config>
+        <taglib>
+            <taglib-uri>CustomTags</taglib-uri>
+            <taglib-location>/WEB-INF/tld/WelcomeTag.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>HRTrustRateTag</taglib-uri>
+            <taglib-location>/WEB-INF/tld/TrustTag.tld</taglib-location>
+        </taglib>
+    </jsp-config>
 </web-app>

@@ -1,8 +1,8 @@
 package by.epam.command;
 
-import by.epam.command.user.AddMyCompany;
-import by.epam.command.user.AddNewReviewCommand;
-import by.epam.command.user.ShowBySSNCommand;
+import by.epam.command.admin.*;
+import by.epam.command.hr.ShowHrByName;
+import by.epam.command.user.*;
 
 public enum CommandType {
     LOGIN {
@@ -10,9 +10,23 @@ public enum CommandType {
             this.command = new LoginCommand();
         }
     }, LOGOUT {
+
         {
             this.command = new LogoutCommand();
         }
+    }, SHOW_ALL_REVIEWS {
+        {
+            this.command = new ShowAllReviewsCommand();
+        }
+    }, SHOW_UNCONFIRMED_REVIEWS {
+        {
+            this.command = new ShowUnconfirmedReviewsCommand();
+        }
+    }, CONFIRM_RATING {
+        {
+            this.command = new ConfirmRatingCommand();
+        }
+
     }, EMPTY {
         {
             this.command = new LogoutCommand();
@@ -20,6 +34,14 @@ public enum CommandType {
     }, SHOW_BY_SSN {
         {
             this.command = new ShowBySSNCommand();
+        }
+    }, DELETE_RATING {
+        {
+            this.command = new DeleteRatingCommand();
+        }
+    }, SHOW_HR_BY_NAME {
+        {
+            this.command = new ShowHrByName();
         }
     }, ADD_REVIEW {
         {

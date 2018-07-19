@@ -1,13 +1,14 @@
 package by.epam.command;
 
+import by.epam.config.ConfigurationManager;
+import by.epam.entity.Page;
+
 import javax.servlet.http.HttpServletRequest;
-import java.util.ResourceBundle;
 
 public class LogoutCommand implements Command {
 
-    private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("resources/config");
-    public String execute(HttpServletRequest request) {
-        String page = resourceBundle.getString("path.page.index");
+    public Page execute(HttpServletRequest request) {
+        Page page = new Page(ConfigurationManager.getProperty("path.page.index"), true);
         request.getSession().invalidate();
         return page;
     }

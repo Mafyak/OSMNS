@@ -3,8 +3,11 @@ package by.epam.entity;
 public class UserHistory {
 
     private String company;
+    private int ratingID;
     private int idCompany;
+    private int idOfficialCompany;
     private int idHR;
+    private int idEmployee;
     private int yearEmployed;
     private int yearTerminated;
     private int rating1;
@@ -13,6 +16,7 @@ public class UserHistory {
     private int rating4;
     private int rating5;
     private int hireAgain;
+    private int confirmed;
 
     public UserHistory() {
     }
@@ -107,6 +111,37 @@ public class UserHistory {
         this.idCompany = idCompany;
     }
 
+    public int getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(int confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public int getIdEmployee() {
+        return idEmployee;
+    }
+
+    public void setIdEmployee(int idEmployee) {
+        this.idEmployee = idEmployee;
+    }
+
+    public int getRatingID() {
+        return ratingID;
+    }
+
+    public void setRatingID(int ratingID) {
+        this.ratingID = ratingID;
+    }
+
+    public int getIdOfficialCompany() {
+        return idOfficialCompany;
+    }
+
+    public void setIdOfficialCompany(int idOfficialCompany) {
+        this.idOfficialCompany = idOfficialCompany;
+    }
 
     @Override
     public String toString() {

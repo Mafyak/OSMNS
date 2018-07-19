@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>custag</short-name>
+    <uri>CustomTags</uri>
+    <tag>
+        <name>welcome-message</name>
+        <tag-class>by.epam.tags.WelcomeTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>userType</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>by.epam.entity.UserType</type>
+        </attribute>
+    </tag>
+    <tag>
+        <name>trust-rate-tag</name>
+        <tag-class>by.epam.tags.HRTrustRateTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>hrID</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

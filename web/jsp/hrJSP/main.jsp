@@ -9,10 +9,17 @@
 <link href="/jsp/css/style.css" rel="stylesheet">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setBundle basename="resources.content"/>
-<fmt:setLocale value="${locale}"/>
 <jsp:useBean id="user" scope="application" class="by.epam.entity.User"/>
 <jsp:useBean id="employee" scope="application" class="by.epam.entity.User"/>
+
+<fmt:bundle basename="resources.content">
+    <fmt:message key="main.welcome" var="Welcome"/>
+    <fmt:message key="main.search_by_SSN" var="Search_by_SSN"/>
+    <fmt:message key="main.add_new_review" var="Add_New_Review"/>
+    <fmt:message key="main.add" var="Add"/>
+    <fmt:message key="main.your_company" var="Your_company"/>
+</fmt:bundle>
+<fmt:setLocale value="${locale}"/>
 
 <html>
 <head>
@@ -22,9 +29,9 @@
 </head>
 <body>
 
-<p>Welcome, ${user.fName}!</p>
+<jsp:include page="../header.jsp" />
 <p>
-    <fmt:message key="company"/> :
+    ${Your_company} :
     <c:if test="${not empty user.company}">
         ${user.company}
     </c:if>
@@ -38,73 +45,43 @@
             <form id="addMyCompany" method="POST"
                   action="${pageContext.request.contextPath}/Controller?command=add_my_company"
                   style="display: block;">
-                <input type="text" name="companyName" placeholder="Company Name" required>
-                <input type="text" name="niche" placeholder="Niche" required>
-                <input type="text" name="location" placeholder="Location" required>
-                <input type="text" name="headcount" placeholder="Head count" required>
-                <button type="submit" name="button" value="Add">Add</button>
+                <input name="companyName" placeholder="Company Name" required>
+                <input name="niche" placeholder="Niche" required>
+                <input name="location" placeholder="Location" required>
+                <input name="headcount" placeholder="Head count" required>
+                <input name="companyOffId" placeholder="Company Registration Id" required>
+                <button name="button" value="Add">${Add}</button>
             </form>
         </div>
     </div>
 </div>
 </c:if>
-<br/>
-<a href="${pageContext.request.contextPath}/Controller?command=logout">Logout</a>
 </p>
 <hr>
-<p>Search by SSN:
+<p>${Search_by_SSN}:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
       style="display: block;">
-    <input type="text" name="SSN" placeholder="SSN" required>
-    <button type="submit" name="button" value="Search">Search me</button>
+    <input name="SSN" placeholder="SSN" required>
+    <button name="button" value="Search">Search me</button>
 </form>
+${errorShowBySsnMessage}
 </p>
-<c:if test="${not empty employee.fName}">
-    <p>Result for: ${employee.lName}, ${employee.fName}</p>
-
-    <table style="width:50%" border="1px">
-        <tr>
-            <th>Company Name</th>
-            <th>Year Employed</th>
-            <th>Year Terminated</th>
-            <th>Rating 1</th>
-            <th>Rating 2</th>
-            <th>Rating 3</th>
-            <th>Rating 4</th>
-            <th>Rating 5</th>
-            <th>Hire again</th>
-        </tr>
-        <c:forEach items="${employee.history}" var="review">
-            <tr>
-                <td>${review.company}</td>
-                <td>${review.yearEmployed}</td>
-                <td>${review.yearTerminated}</td>
-                <td>${review.rating1}</td>
-                <td>${review.rating2}</td>
-                <td>${review.rating3}</td>
-                <td>${review.rating4}</td>
-                <td>${review.rating5}</td>
-                <td>${review.hireAgain}</td>
-            </tr>
-        </c:forEach>
-    </table>
-
-
-</c:if>
-<c:if test="${empty employee.fName}"><p>Can't find an employee with such ssn.</p></c:if>
 <hr>
-<p>Add new review:
+<p>${Add_New_Review}:
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-login">
             <div class="panel-heading">
                 <div class="row">
-                    <form id="add-review" method="POST" action="${pageContext.request.contextPath}/Controller?command=add_review">
+                    <form id="add-review" method="POST"
+                          action="${pageContext.request.contextPath}/Controller?command=add_review">
                         <div class="form-group">
                             <input name="fName" class="form-control" placeholder="First Name" required>
                             <input name="lName" class="form-control" placeholder="Last Name" required>
-                            <input name="SSN" class="form-control" placeholder="Social Security Number" pattern="[0-9]+" title="Number only" required>
+                            <input name="SSN" class="form-control" placeholder="Social Security Number" pattern="[0-9]+"
+                                   title="Number only" required>
                             <input name="cName" class="form-control" placeholder="Company Name" required>
+                            <input name="cId" class="form-control" placeholder="Company ID" required>
                             <input name="yEmployed" class="form-control" placeholder="Year Employed" required>
                             <input name="yFired" class="form-control" placeholder="Year Fired" required>
                         </div>
@@ -120,7 +97,7 @@
                                    required>
                         </div>
                         <input type="submit" name="command"
-                               class="form-control btn btn-register" value="Add Review">
+                               class="form-control btn btn-register" value="${Add}">
                     </form>
                     ${reviewAddResult}
                 </div>
@@ -134,7 +111,6 @@
 <hr>
 <p>
     Here is a list of services I need to add to hr page:<br/>
-    1. Add review<br/>
     2. Show all reviews<br/>
     3. Edit review<br/>
     4. Search by name and dob<br/>

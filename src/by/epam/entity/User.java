@@ -11,16 +11,12 @@ public class User {
     private String mName;
     private String lName;
     private int SSN;
-
-
     private int id;
     private UserType type;
     private List<UserHistory> history = new ArrayList<UserHistory>();
 
-
     public User() {
     }
-
 
     public String getmName() {
         return mName;

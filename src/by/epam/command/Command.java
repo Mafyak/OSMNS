@@ -1,7 +1,8 @@
 package by.epam.command;
 
+import by.epam.entity.Page;
 import javax.servlet.http.HttpServletRequest;
 
 public interface Command {
-    public String execute(HttpServletRequest request);
+    Page execute(HttpServletRequest request);
 }

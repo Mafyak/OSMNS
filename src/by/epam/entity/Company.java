@@ -5,6 +5,8 @@ public class Company {
     private String niche;
     private String location;
     private int headcount;
+    private int companyOfficialId;
+    private int companyInnerId;
 
     public Company(){}
 
@@ -53,5 +55,21 @@ public class Company {
 
     public int getHeadcount() {
         return headcount;
+    }
+
+    public int getCompanyOfficialId() {
+        return companyOfficialId;
+    }
+
+    public int getCompanyInnerId() {
+        return companyInnerId;
+    }
+
+    public void setCompanyOfficialId(int companyOfficialId) {
+        this.companyOfficialId = companyOfficialId;
+    }
+
+    public void setCompanyInnerId(int companyInnerId) {
+        this.companyInnerId = companyInnerId;
     }
 }
