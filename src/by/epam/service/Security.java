@@ -4,7 +4,7 @@ import java.util.Base64;
 
 public class Security {
 
-    private final static String SALT = "*@#(D@@(G!+";
+    private final static String SALT = ConfigManager.message("scr.salt");
     private final static Base64.Encoder ENCODER = Base64.getEncoder();
     private final static Base64.Decoder DECODER = Base64.getDecoder();
 

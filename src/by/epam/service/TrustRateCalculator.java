@@ -15,7 +15,7 @@ public class TrustRateCalculator {
     5) If reviewer has less than 10 reviews, he gets 20% rate penalty
     6) If reviewer has less than 20 reviews, he gets 10% rate penalty
     7) If reviewer has less than 30 reviews, he gets 5% rate penalty
-
+    
     Note: HR has to have at least 2 written reviews to get rating.
      */
 
@@ -60,7 +60,7 @@ public class TrustRateCalculator {
         double mean = mean(list);
         int n = list.size();
         double dv = 0;
-        double diff = 0;
+        double diff;
         for (Integer d : list) {
             diff = d - mean;
             dv += diff * diff;
@@ -72,7 +72,7 @@ public class TrustRateCalculator {
         double mean = meanD(list);
         int n = list.size();
         double dv = 0;
-        double diff = 0;
+        double diff;
         for (Double d : list) {
             diff = d - mean;
             dv += diff * diff;

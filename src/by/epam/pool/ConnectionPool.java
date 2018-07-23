@@ -13,7 +13,7 @@ public class ConnectionPool {
     private ResourceBundle bundle = ResourceBundle.getBundle("resources/mysql");
     private Properties props = new Properties();
     private static volatile ConnectionPool instance;
-    Logger LOG = Logger.getLogger("ConnectionPool");
+    private static Logger LOG = Logger.getLogger("ConnectionPool");
 
 
     private ConnectionPool() {
@@ -26,7 +26,6 @@ public class ConnectionPool {
                 localInstance = instance;
                 if (localInstance == null) {
                     instance = localInstance = new ConnectionPool();
-                    //instance.createPool();
                 }
             }
         }
@@ -50,7 +49,6 @@ public class ConnectionPool {
         props.put("password", bundle.getString("db.pass"));
         props.put("characterEncoding", bundle.getString("db.encoding"));
         props.put("useUnicode", bundle.getString("db.useUnicode"));
-
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {

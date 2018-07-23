@@ -1,9 +1,8 @@
 package by.epam.filter;
 
-import by.epam.config.ConfigurationManager;
+import by.epam.service.ConfigManager;
 import by.epam.entity.User;
 import by.epam.entity.UserType;
-import by.epam.service.UserService;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -26,34 +25,31 @@ public class RoleFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String requestURI = "";
+        String requestURI;
         HttpServletRequest req = (HttpServletRequest) request;
         User user = new User();
         try {
             user = (User) req.getSession().getAttribute("user");
-
         } catch (Exception e) {
-            LOG.info("error " + e);
+            LOG.info("Can't get user from filter:" + e);
         }
 
         try {
             if (user.getType() == null) {
                 LOG.info("Role unknown, redirect to login page");
-                req.getRequestDispatcher(ConfigurationManager.getProperty("path.page.login")).forward(request, response);
+                req.getRequestDispatcher(ConfigManager.getProperty("path.page.login")).forward(request, response);
                 return;
             } else if (user.getType() == UserType.HR) {
                 requestURI = req.getRequestURI();
-                LOG.info("Checking user role. Role: " + user.getType() + ", requestedURI is: " + requestURI);
                 if (requestURI.contains("/jsp/adminJSP"))
-                    req.getRequestDispatcher(ConfigurationManager.getProperty("path.page.login")).forward(request, response);
+                    req.getRequestDispatcher(ConfigManager.getProperty("path.page.login")).forward(request, response);
             } else if (user.getType() == UserType.ADMIN) {
                 requestURI = req.getRequestURI();
-                LOG.info("Checking user role. Role: " + user.getType() + ", requestedURI is: " + requestURI);
                 if (requestURI.contains("/jsp/hrJSP"))
-                    req.getRequestDispatcher(ConfigurationManager.getProperty("path.page.login")).forward(request, response);
+                    req.getRequestDispatcher(ConfigManager.getProperty("path.page.login")).forward(request, response);
             }
         } catch (NullPointerException e) {
-            LOG.info("user is null");
+            LOG.info("user type is null");
         }
         chain.doFilter(request, response);
     }

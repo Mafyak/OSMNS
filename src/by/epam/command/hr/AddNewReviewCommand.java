@@ -1,16 +1,14 @@
-package by.epam.command.user;
+package by.epam.command.hr;
 
 import by.epam.command.Command;
-import by.epam.config.ConfigurationManager;
+import by.epam.exception.ServiceException;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Page;
 import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.service.UserService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 public class AddNewReviewCommand implements Command {
@@ -32,7 +30,7 @@ public class AddNewReviewCommand implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(ConfigurationManager.getProperty("mainPage"), true);
+        Page page = new Page(ConfigManager.getProperty("mainPage"), true);
         HttpSession session = request.getSession();
 
         User currentHR = (User) session.getAttribute("user");
@@ -56,14 +54,14 @@ public class AddNewReviewCommand implements Command {
 
         UserService userService = new UserService();
         LOG.info("Processing new review.");
+        LOG.info("Review data: user:" + currentHR + ", employee: " + newUser + ", review data: " + userHistory);
         try {
             userService.addReview(currentHR, newUser, userHistory);
-            request.setAttribute("reviewAddResult", "New review is added");
-        } catch (SQLException e) {
-            request.setAttribute("reviewAddResult", "Error while processing");
+            session.setAttribute("reviewAddResult", ConfigManager.message("cmd.review.newReview"));
+        } catch (ServiceException e) {
+            session.setAttribute("reviewAddResult", ConfigManager.message("msg.error.processing"));
             LOG.info("Error during new review creation: " + e);
         }
-
         LOG.info("Processing new company creation. End of command.");
         return page;
     }

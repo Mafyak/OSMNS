@@ -17,7 +17,7 @@
     </servlet-mapping>
 
     <listener>
-        <listener-class>by.epam.listener.ConnectionPoolListener</listener-class>
+        <listener-class>by.epam.listener.StartupAndShutdownListener</listener-class>
     </listener>
 
     <error-page>
@@ -33,9 +33,9 @@
             <taglib-uri>CustomTags</taglib-uri>
             <taglib-location>/WEB-INF/tld/WelcomeTag.tld</taglib-location>
         </taglib>
-        <taglib>
-            <taglib-uri>HRTrustRateTag</taglib-uri>
-            <taglib-location>/WEB-INF/tld/TrustTag.tld</taglib-location>
-        </taglib>
+        <!--<taglib>-->
+            <!--<taglib-uri>HRTrustRateTag</taglib-uri>-->
+            <!--<taglib-location>/WEB-INF/tld/WelcomeTag.tld</taglib-location>-->
+        <!--</taglib>-->
     </jsp-config>
 </web-app>

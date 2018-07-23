@@ -1,13 +1,13 @@
 package by.epam.command.admin;
 
 import by.epam.command.Command;
-import by.epam.config.ConfigurationManager;
+import by.epam.exception.ServiceException;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Page;
 import by.epam.service.AdminService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 public class DeleteRatingCommand implements Command {
@@ -22,11 +22,11 @@ public class DeleteRatingCommand implements Command {
         AdminService adminService = new AdminService();
         try {
             adminService.deleteReview(ratingID);
-        } catch (SQLException e) {
-            request.setAttribute("infoMessage", "Can't delete review.");
+        } catch (ServiceException e) {
+            request.setAttribute("infoMessage", ConfigManager.message("msg.error.processing"));
             LOG.info("Error in DeleteRatingCommand" + e);
         }
 
-        return new Page(ConfigurationManager.getProperty("path.page.admin"), true);
+        return new Page(ConfigManager.getProperty("path.page.admin"), true);
     }
 }

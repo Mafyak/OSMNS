@@ -5,27 +5,31 @@ import by.epam.entity.Company;
 import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
-
-import java.sql.SQLException;
+import by.epam.exception.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class UserService {
 
-    Logger LOG = Logger.getLogger("UserService");
+    private static Logger LOG = Logger.getLogger("UserService");
     private UserDAO userDAO;
 
     public UserService() {
         userDAO = new UserDAO();
     }
 
-    public User login(String login, String pass) {
+    public User login(String login, String pass) throws ServiceException {
         Security security = new Security();
-        return userDAO.getEntity(login, security.encryptData(pass));
+        try {
+            return userDAO.login(login, security.encryptData(pass));
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method login()");
+            throw new ServiceException("Detected DAOException in UserService method login()", e);
+        }
     }
 
-    public void register(String login, String pass, String fName, String mName, String lName) throws DAOException {
+    public void register(String login, String pass, String fName, String mName, String lName) throws ServiceException {
         Security security = new Security();
         User user = new User();
         user.setEmail(login);
@@ -33,32 +37,70 @@ public class UserService {
         user.setfName(fName);
         user.setmName(mName);
         user.setlName(lName);
-        userDAO.register(user);
+        try {
+            userDAO.register(user);
+            LOG.info("New user is registered: " + user.getlName());
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService register() method");
+            throw new ServiceException("Detected DAOException in UserService register() method", e);
+        }
     }
 
-    public void addReview(User hrHead, User employee, UserHistory history) throws SQLException {
-        userDAO.addReview(hrHead, employee, history);
+    public void addReview(User hrHead, User employee, UserHistory history) throws ServiceException  {
+        try {
+            userDAO.addReview(hrHead, employee, history);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method addReview()");
+            throw new ServiceException("Detected DAOException in UserService method addReview()", e);
+        }
     }
 
-    public User getUserBySSN(int SSN) throws DAOException {
-        return userDAO.getEntityBySSN(SSN);
+    public User getUserBySSN(int SSN) throws ServiceException  {
+        try {
+            return userDAO.getEntityBySSN(SSN);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method getUserBySSN()");
+            throw new ServiceException("Detected DAOException in UserService method getUserBySSN()", e);
+        }
     }
 
-    public void addMyCompany(User user, Company userCompany) {
-        userDAO.addMyCompany(user, userCompany);
+    public void addMyCompany(User user, Company userCompany) throws ServiceException {
+        try {
+            userDAO.addMyCompany(user, userCompany);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method addMyCompany()");
+            throw new ServiceException("Detected DAOException in UserService method addMyCompany()", e);
+        }
     }
 
-    public List<User> getHrByName(String fName, String lName) throws SQLException {
-        return userDAO.getHrByName(fName, lName);
+    public List<User> getHrByName(String fName, String lName) throws ServiceException  {
+        try {
+            return userDAO.getHrByName(fName, lName);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method getHrByName()");
+            throw new ServiceException("Detected DAOException in UserService method getHrByName()", e);
+        }
     }
 
-    public int getHRTrustRate(int idHR) throws SQLException {
-        LOG.info("before getting reviews");
-         ArrayList<Integer> allReviewsList = userDAO.getReviewsRateForHrById(idHR);
-         LOG.info("got allReviewsList");
-         ArrayList<Double> avgReviewsList = userDAO.getAVGReviewsRateForHrById(idHR);
-        LOG.info("got avgReviewsList");
-        return TrustRateCalculator.generateTrustRate(allReviewsList, avgReviewsList);
+
+    public User getHrById(int hrId) throws ServiceException  {
+        try {
+            return userDAO.getHrById(hrId);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method getHrById()");
+            throw new ServiceException("Detected DAOException in UserService method getHrById()", e);
+        }
     }
 
+    public int getHRTrustRate(int idHR) throws ServiceException  {
+        ArrayList<Integer> allReviewsList = null;
+        try {
+            allReviewsList = userDAO.getReviewsRateForHrById(idHR);
+            ArrayList<Double> avgReviewsList = userDAO.getAVGReviewsRateForHrById(idHR);
+            return TrustRateCalculator.generateTrustRate(allReviewsList, avgReviewsList);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method getHRTrustRate()");
+            throw new ServiceException("Detected DAOException in UserService method getHRTrustRate()", e);
+        }
+    }
 }

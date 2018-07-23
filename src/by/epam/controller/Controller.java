@@ -2,7 +2,7 @@ package by.epam.controller;
 
 import by.epam.command.Command;
 import by.epam.command.factory.ActionFactory;
-import by.epam.config.ConfigurationManager;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Page;
 
 import javax.servlet.RequestDispatcher;
@@ -39,8 +39,7 @@ public class Controller extends HttpServlet {
                 dispatcher.forward(request, response);
             }
         } else {
-            page.setPage(ConfigurationManager.getProperty("path.page.index"));
-            // request.getSession().setAttribute("nullPage", MessageManager.getProperty("message.nullpage"));
+            page.setPage(ConfigManager.getProperty("path.page.index"));
             request.getSession().setAttribute("nullPage", "Page not found. Business logic error.");
             response.sendRedirect(request.getContextPath() + page);
         }

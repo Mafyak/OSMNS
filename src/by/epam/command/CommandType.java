@@ -1,8 +1,10 @@
 package by.epam.command;
 
 import by.epam.command.admin.*;
+import by.epam.command.hr.AddMyCompany;
+import by.epam.command.hr.AddNewReviewCommand;
+import by.epam.command.hr.ShowBySSNCommand;
 import by.epam.command.hr.ShowHrByName;
-import by.epam.command.user.*;
 
 public enum CommandType {
     LOGIN {
@@ -10,9 +12,16 @@ public enum CommandType {
             this.command = new LoginCommand();
         }
     }, LOGOUT {
-
         {
             this.command = new LogoutCommand();
+        }
+    }, SHOW_COMPANY_NAME_COLLISIONS {
+        {
+            this.command = new ShowCompNameCollisionCommand();
+        }
+    }, REMOVE_HR {
+        {
+            this.command = new RemoveHrCommand();
         }
     }, SHOW_ALL_REVIEWS {
         {
@@ -26,7 +35,14 @@ public enum CommandType {
         {
             this.command = new ConfirmRatingCommand();
         }
-
+    }, REMOVE_COMPANY {
+        {
+            this.command = new RemoveCompanyCommand();
+        }
+    }, MERGE_COMPANY {
+        {
+            this.command = new MergeCompanyCommand();
+        }
     }, EMPTY {
         {
             this.command = new LogoutCommand();

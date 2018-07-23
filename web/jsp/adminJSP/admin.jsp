@@ -9,53 +9,67 @@
 
 <html>
 <head>
-    <title>Title</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="../css/style.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/jsp/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <script>
+        $(document).ready(function () {
+            $("#hideHrSearch").click(function () {
+                $("#contToHideHrSearch").hide();
+            });
+        });
+    </script>
+    <title>Title</title>
 </head>
 <body>
 
 <jsp:include page="../header.jsp"/>
-<br/>
-<br/>
-Here is a list of services I need to add to admin page:<br/>
-<p>Search and delete HR by name:
+<p>Search and delete HR by name OR id:
 <form id="getHrByName" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_hr_by_name"
       style="display: block;">
-    <input name="fName" placeholder="First Name" required>
-    <input name="lName" placeholder="Last Name" required>
-    <button name="button" value="Search">Search</button>
+    <input type="text" class="form-control" name="fName" placeholder="First Name">
+    <input type="text" class="form-control" name="lName" placeholder="Last Name">
+    <input type="text" class="form-control" name="hrIdToSearch" placeholder="HR id" pattern="\d{1,}"
+           title="Only digits">
+    <button type="submit" class="btn" name="button" value="Search">Search</button>
 </form>
 </p>
-<c:if test="${not empty hrList}">
-    <p>Results for:</p>
-    <table style="width:50%" border="1px">
+<p id="contToHideHrSearch">
+    <c:if test="${not empty hrList}">
+    Results for:
+<table id="table" style="width:50%" border="1px">
+    <tr>
+        <th>HR id</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Last Name</th>
+        <th>Current Company</th>
+        <th>Remove</th>
+    </tr>
+    <c:forEach items="${hrList}" var="hr">
         <tr>
-            <th>HR id</th>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Current Company</th>
+            <td>${hr.id}</td>
+            <td>${hr.fName}</td>
+            <td>${hr.mName}</td>
+            <td>${hr.lName}</td>
+            <td>${hr.company}</td>
+            <td><a href="${pageContext.request.contextPath}/Controller?command=remove_hr&hrIdToRemove=${hr.id}">
+                <input type="button" name="select" class="btn" value="Remove"/></a></td>
         </tr>
-        <c:forEach items="${hrList}" var="hr">
-            <tr>
-                <td>${hr.id}</td>
-                <td>${hr.fName}</td>
-                <td>${hr.mName}</td>
-                <td>${hr.lName}</td>
-                <td>${hr.company}</td>
-            </tr>
-        </c:forEach>
-    </table>
-    <br/>
+    </c:forEach>
+</table>
+<br/>
+<button class="btn" id="hideHrSearch">Hide Results</button>
 </c:if>
-<c:if test="${empty hrList}"><p>Can't find a HR with these first and last names.<br/>${infoMessage}</p></c:if>
+${infoSearcdDelHRMessage}<br/>
+</p>
+<hr/>
 
 Show all reviews<br/>
 <form id="showAllReviews" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_all_reviews"
       style="display: block;">
-    <button name="button" value="ShowAllReviews">Show all reviews</button>
+    <button type="submit" class="btn" name="button" value="ShowAllReviews">Show all reviews</button>
 </form>
 <c:if test="${not empty reviewsList}">
     <p>All reviews:</p>
@@ -92,23 +106,23 @@ Show all reviews<br/>
                 <td>${review.hireAgain}</td>
                 <td><c:if test="${review.confirmed==0}">
                     <a href="${pageContext.request.contextPath}/Controller?command=confirm_rating&ratingidtoconfirm=${review.ratingID}&confirmerid=${user.id}">
-                        <input type="button" name="select" value="Confirm"/></a></c:if>
+                        <input class="btn" type="button" name="select" value="Confirm"/></a></c:if>
                     <c:if test="${review.confirmed>0}">${review.confirmed}</c:if></td>
                 <td>
                     <a href="${pageContext.request.contextPath}/Controller?command=delete_rating&ratingidtodelete=${review.ratingID}">
-                        <input type="button" name="select" value="Delete"/></a></td>
+                        <input class="btn" type="button" name="select" value="Delete"/></a></td>
             </tr>
         </c:forEach>
     </table>
     <br/>
 </c:if>
-<c:if test="${empty reviewsList}"><p>Can't get reviews Please contact a developer.<br/>${infoMessage}</p></c:if>
+${ShowAllReviewsError}
 
 Show unconfirmed reviews<br/>
 <form id="showUnconfirmedReviews" method="POST"
       action="${pageContext.request.contextPath}/Controller?command=show_unconfirmed_reviews"
       style="display: block;">
-    <button name="button" value="ShowUnconfirmedReviews">Show all reviews</button>
+    <button type="submit" class="btn" name="button" value="ShowUnconfirmedReviews">Show all reviews</button>
 </form>
 <c:if test="${not empty unconfirmedReviewsList}">
     <p>All reviews:</p>
@@ -146,9 +160,50 @@ Show unconfirmed reviews<br/>
     </table>
     <br/>
 </c:if>
-<c:if test="${empty unconfirmedReviewsList}"><p>Can't get reviews Please contact a developer.<br/>${infoMessage}
-</p></c:if>
+${ShowUnconfReviewsError}
 
+Show company name collisions<br/>
+<form id="showCompanyNameCollisions" method="POST"
+      action="${pageContext.request.contextPath}/Controller?command=show_company_name_collisions"
+      style="display: block;">
+    <button type="submit" class="btn" name="button" value="ShowCompanyNameCollisions">Show company collisions</button>
+</form>
+<c:if test="${not empty companyNameCollisions}">
+    <p>Company list:</p>
+    <table style="width:50%" border="1px">
+        <tr>
+            <th>Company id</th>
+            <th>Company name</th>
+            <th>Niche</th>
+            <th>Location</th>
+            <th>Headcount</th>
+            <th>Company Tax Id</th>
+            <th>Merge</th>
+            <th>Remove</th>
+        </tr>
+        <c:forEach items="${companyNameCollisions}" var="company">
+            <tr>
+                <td>${company.companyInnerId}</td>
+                <td>${company.name}</td>
+                <td>${company.niche}</td>
+                <td>${company.location}</td>
+                <td>${company.headcount}</td>
+                <td>${company.companyOfficialId}</td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/Controller?command=merge_company&companyIdtoMerge=${company.companyInnerId}">
+                        <input class="btn" type="button" name="select" value="UseAsBase"/>
+                    </a></td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/Controller?command=remove_company&companyIdtoRemove=${company.companyInnerId}">
+                        <input class="btn" type="button" name="select" value="Remove"/></a></td>
+            </tr>
+        </c:forEach>
+    </table>
+    <br/>
+</c:if>
+${ShowCompanyNameCollisionssError}
+
+Here is a list of services I need to add to admin page:<br/>
 3. Show all users<br/>
 
 </body>

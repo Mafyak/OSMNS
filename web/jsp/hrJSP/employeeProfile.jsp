@@ -14,20 +14,24 @@
 <html>
 <head>
     <title>Employee Profile page.</title>
+    <link href="/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="/jsp/css/style.css" rel="stylesheet">
+    <script src="/jsp/js/bootstrap.min.js"></script>
 </head>
 <body>
 <jsp:include page="../header.jsp"/>
-<a href="${pageContext.request.contextPath}/jsp/hrJSP/main.jsp">Main Page</a><br/>
+<br/>
 <p>${Search_by_SSN}:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
       style="display: block;">
-    <input type="text" name="SSN" placeholder="SSN" required>
-    <button type="submit" name="button" value="Search">Search me</button>
+    <input type="text" name="SSN" class="form-control" placeholder="SSN" required>
+    <button type="submit" name="button" class="btn" value="Search">Search me</button>
 </form>
 <hr/>
+
 <c:if test="${not empty employee.fName}">
     <p>Result for: ${employee.lName}, ${employee.fName}</p>
-    <table style="width:50%" border="1px">
+    <table class="table" style="width:50%" border="1px">
         <tr>
             <th>Company Name</th>
             <th>Year Employed</th>

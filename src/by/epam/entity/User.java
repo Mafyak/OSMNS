@@ -110,6 +110,7 @@ public class User {
                 ", fName='" + fName + '\'' +
                 ", mName='" + mName + '\'' +
                 ", lName='" + lName + '\'' +
+                ", SSN=" + SSN +
                 ", id=" + id +
                 ", type=" + type +
                 ", history=" + history +

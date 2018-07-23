@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link href="/jsp/css/style.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="user" scope="application" class="by.epam.entity.User"/>
@@ -21,55 +21,33 @@
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
 
+
+
 <html>
 <head>
     <title>Main page</title>
-    <link href="/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="/jsp/css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet">
 </head>
 <body>
 
-<jsp:include page="../header.jsp" />
+<jsp:include page="../header.jsp"/>
 <p>
-    ${Your_company} :
-    <c:if test="${not empty user.company}">
-        ${user.company}
-    </c:if>
 
-    <c:if test="${empty user.company}">
-    <a class="button" href="#popup1">Add company</a>
-<div id="popup1" class="overlay">
-    <div class="popup">
-        <a class="close" href="#">&times;</a>
-        <div class="content">
-            <form id="addMyCompany" method="POST"
-                  action="${pageContext.request.contextPath}/Controller?command=add_my_company"
-                  style="display: block;">
-                <input name="companyName" placeholder="Company Name" required>
-                <input name="niche" placeholder="Niche" required>
-                <input name="location" placeholder="Location" required>
-                <input name="headcount" placeholder="Head count" required>
-                <input name="companyOffId" placeholder="Company Registration Id" required>
-                <button name="button" value="Add">${Add}</button>
-            </form>
-        </div>
-    </div>
-</div>
-</c:if>
 </p>
 <hr>
 <p>${Search_by_SSN}:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
       style="display: block;">
-    <input name="SSN" placeholder="SSN" required>
-    <button name="button" value="Search">Search me</button>
+    <input type="text" name="SSN" class="form-control" placeholder="SSN" required>
+    <button type="submit" name="button" class="btn" value="Search">Search me</button>
 </form>
 ${errorShowBySsnMessage}
 </p>
 <hr>
 <p>${Add_New_Review}:
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6">
         <div class="panel panel-login">
             <div class="panel-heading">
                 <div class="row">

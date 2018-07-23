@@ -1,6 +1,6 @@
 package by.epam.command;
 
-import by.epam.config.ConfigurationManager;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Page;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +13,6 @@ public class ChangeLanguageCommand implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        // HttpSession session = request.getSession();
 
         String lang = request.getParameter("lang");
 
@@ -27,6 +26,6 @@ public class ChangeLanguageCommand implements Command {
         }
 
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
-        return new Page(ConfigurationManager.getProperty("path.page.index"));
+        return new Page(ConfigManager.getProperty("path.page.index"));
     }
 }

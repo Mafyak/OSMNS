@@ -1,10 +1,9 @@
 package by.epam.command;
 
-import by.epam.config.ConfigurationManager;
+import by.epam.exception.ServiceException;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Page;
-import by.epam.exception.DAOException;
 import by.epam.service.UserService;
-import com.mysql.cj.xdevapi.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,11 +27,11 @@ public class RegisterCommand implements Command {
         HttpSession session = request.getSession();
         try {
             userService.register(login, pass, fName, mName, lName);
-            session.setAttribute("infoMessage", "Registration is successful. Please, sign on.");
-            page = new Page(ConfigurationManager.getProperty("path.page.login"), true);
-        } catch (DAOException e) {
-            session.setAttribute("infoMessage", "Registration failed. Please, try again.");
-            page = new Page(ConfigurationManager.getProperty("path.page.login"), true);
+            session.setAttribute("infoMessage", ConfigManager.message("cmd.reg.success"));
+            page = new Page(ConfigManager.getProperty("path.page.login"), true);
+        } catch (ServiceException e) {
+            session.setAttribute("infoMessage", ConfigManager.message("cmd.reg.failure"));
+            page = new Page(ConfigManager.getProperty("path.page.login"), true);
         }
         return page;
     }

@@ -1,16 +1,12 @@
 package by.epam.dao;
 
-import by.epam.entity.User;
 import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
-import sun.rmi.runtime.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 public abstract class AbstractDAO<T> {
@@ -23,55 +19,57 @@ public abstract class AbstractDAO<T> {
 
     private static Logger LOG = Logger.getLogger("AbstractDAO");
 
-    public void updateQuery(String query, Object... param) throws SQLException {
+    public void updateQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
-        PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement(query);
+            updateQuery(conn, query, param);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(conn);
+        }
+    }
+
+    public void updateQuery(Connection conn, String query, Object... param) throws DAOException {
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < param.length; i++) {
                 ps.setObject(i + 1, param[i]);
             }
-            LOG.info("preExecute check");
             ps.executeUpdate();
-        } finally {
-            ConnectionPool.getInstance().returnConnection(conn);
+        } catch (SQLException e) {
+            LOG.info("SQL Exception during updateQuery from AbstractDAO" + e);
+            throw new DAOException("Error during updateQuery", e);
         }
     }
 
     public void executeQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
-        PreparedStatement ps = null;
-        try {
-            ps = conn.prepareStatement(query);
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < param.length; i++) {
                 ps.setObject(i + 1, param[i]);
             }
             ps.execute();
         } catch (SQLException e) {
-            LOG.info("SQL Exception during registration command execution" + e);
-            throw new DAOException("error during new user registrations", e);
+            LOG.info("SQL Exception during executeQuery from AbstractDAO" + e);
+            throw new DAOException("Error during executeQuery", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }
     }
 
-    public Object executeForSingleResult(String query, Object... params) {
+    public Object executeForSingleResult(String query, Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
-        ResultSet rs = null;
-        PreparedStatement ps = null;
         Object result = null;
-        try {
-
-            ps = conn.prepareStatement(query);
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
                 ps.setObject(i + 1, params[i]);
             }
-            ps.executeQuery();
-            while (rs.next()) {
-                result = rs.getObject(1);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result = rs.getObject(1);
+                }
             }
         } catch (SQLException e) {
             LOG.info("SQL Exception during registration command execution" + e);
+            throw new DAOException("Error during new user registrations", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }

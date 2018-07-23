@@ -1,5 +1,6 @@
 package by.epam.tags;
 
+import by.epam.exception.ServiceException;
 import by.epam.service.UserService;
 
 import javax.servlet.jsp.JspException;
@@ -8,8 +9,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-public class HRTrustRateTag extends TagSupport{
-    Logger LOG = Logger.getLogger("HRTrustRateTag");
+public class HRTrustRateTag extends TagSupport {
+    private static Logger LOG = Logger.getLogger("HRTrustRateTag");
 
     private int hrID;
 
@@ -21,14 +22,13 @@ public class HRTrustRateTag extends TagSupport{
         UserService userService = new UserService();
         int trustRate = 0;
         try {
-            LOG.info("got to tag!");
             trustRate = userService.getHRTrustRate(hrID);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (ServiceException e) {
+            LOG.warning("SQL exception from HRTrustRate tag set up command");
         }
 
         try {
-            pageContext.getOut().write(trustRate+"%");
+            pageContext.getOut().write(trustRate + "%");
         } catch (IOException e) {
             throw new JspException(e.getMessage());
         }

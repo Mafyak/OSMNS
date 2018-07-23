@@ -1,7 +1,8 @@
-package by.epam.command.user;
+package by.epam.command.hr;
 
 import by.epam.command.Command;
-import by.epam.config.ConfigurationManager;
+import by.epam.exception.ServiceException;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Company;
 import by.epam.entity.Page;
 import by.epam.entity.User;
@@ -21,15 +22,11 @@ public class AddMyCompany implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(ConfigurationManager.getProperty("mainPage"), true);
+        Page page = new Page(ConfigManager.getProperty("mainPage"), true);
         HttpSession session = request.getSession();
 
         User currentUser = (User) session.getAttribute("user");
         Company myCompany = new Company();
-
-        LOG.info("user check:");
-        LOG.info("user info: " + currentUser.toString());
-        LOG.info("user check end");
 
         myCompany.setName(request.getParameter(company));
         myCompany.setNiche(request.getParameter(niche));
@@ -38,7 +35,12 @@ public class AddMyCompany implements Command {
         myCompany.setCompanyOfficialId(Integer.parseInt(request.getParameter(companyOffId)));
         UserService userService = new UserService();
         LOG.info("Processing new company creation: " + myCompany.toString() + ". Passing to service.");
-        userService.addMyCompany(currentUser, myCompany);
+        try {
+            userService.addMyCompany(currentUser, myCompany);
+        } catch (ServiceException e) {
+            request.setAttribute("addMyCompanyError", ConfigManager.message("msg.error.processing"));
+            LOG.info("Error during addMyCompany method: " + e);
+        }
         LOG.info("Processing new company creation. End of command.");
         return page;
     }

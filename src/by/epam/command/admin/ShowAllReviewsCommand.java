@@ -1,16 +1,14 @@
 package by.epam.command.admin;
 
 import by.epam.command.Command;
-import by.epam.config.ConfigurationManager;
+import by.epam.exception.ServiceException;
+import by.epam.service.ConfigManager;
 import by.epam.entity.Page;
 import by.epam.entity.UserHistory;
 import by.epam.service.AdminService;
-import by.epam.service.UserService;
-
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
+import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class ShowAllReviewsCommand implements Command {
 
@@ -20,12 +18,16 @@ public class ShowAllReviewsCommand implements Command {
 
         AdminService adminService = new AdminService();
         List<UserHistory> userHistories = null;
+        HttpSession session = request.getSession();
+        session.removeAttribute("hrList");
+        session.removeAttribute("unconfirmedReviewsList");
+        session.removeAttribute("companyNameCollisions");
         try {
             userHistories = adminService.getAllReviews();
-            request.setAttribute("reviewsList", userHistories);
-        } catch (SQLException e) {
-            request.setAttribute("infoMessage", "Error getting your information");
+        } catch (ServiceException e) {
+            request.setAttribute("ShowAllReviewsError", ConfigManager.message("msg.error.processing"));
         }
-        return new Page(ConfigurationManager.getProperty("path.page.admin"));
+        session.setAttribute("reviewsList", userHistories);
+        return new Page(ConfigManager.getProperty("path.page.admin"), true);
     }
 }
