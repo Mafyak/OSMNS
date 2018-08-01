@@ -1,17 +1,16 @@
 package by.epam.tags;
 
 import by.epam.exception.ServiceException;
-import by.epam.service.UserService;
+import by.epam.utils.service.UserService;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class HRTrustRateTag extends TagSupport {
-    private static Logger LOG = Logger.getLogger("HRTrustRateTag");
 
+    private static final Logger LOG = Logger.getLogger("HRTrustRateTag");
     private int hrID;
 
     public void setHrID(int hrID) {
@@ -24,7 +23,7 @@ public class HRTrustRateTag extends TagSupport {
         try {
             trustRate = userService.getHRTrustRate(hrID);
         } catch (ServiceException e) {
-            LOG.warning("SQL exception from HRTrustRate tag set up command");
+            LOG.warn("SQL exception from HRTrustRate tag set up command");
         }
 
         try {

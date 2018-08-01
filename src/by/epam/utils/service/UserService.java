@@ -1,18 +1,21 @@
-package by.epam.service;
+package by.epam.utils.service;
 
 import by.epam.dao.UserDAO;
-import by.epam.entity.Company;
 import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
 import by.epam.exception.ServiceException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import by.epam.utils.calculator.TrustRateCalculator;
+import by.epam.utils.security.Security;
+import org.apache.log4j.Logger;
 
 public class UserService {
 
-    private static Logger LOG = Logger.getLogger("UserService");
+    private static final Logger LOG = Logger.getLogger("UserService");
     private UserDAO userDAO;
 
     public UserService() {
@@ -26,6 +29,15 @@ public class UserService {
         } catch (DAOException e) {
             LOG.info("DAOException in UserService method login()");
             throw new ServiceException("Detected DAOException in UserService method login()", e);
+        }
+    }
+
+    public void updateUserInfo(User user) throws ServiceException {
+        try {
+            userDAO.updateUserInfo(user);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method updateUserInfo()");
+            throw new ServiceException("Detected DAOException in UserService method updateUserInfo()", e);
         }
     }
 
@@ -46,7 +58,7 @@ public class UserService {
         }
     }
 
-    public void addReview(User hrHead, User employee, UserHistory history) throws ServiceException  {
+    public void addReview(User hrHead, User employee, UserHistory history) throws ServiceException {
         try {
             userDAO.addReview(hrHead, employee, history);
         } catch (DAOException e) {
@@ -55,7 +67,7 @@ public class UserService {
         }
     }
 
-    public User getUserBySSN(int SSN) throws ServiceException  {
+    public User getUserBySSN(int SSN) throws ServiceException {
         try {
             return userDAO.getEntityBySSN(SSN);
         } catch (DAOException e) {
@@ -64,16 +76,16 @@ public class UserService {
         }
     }
 
-    public void addMyCompany(User user, Company userCompany) throws ServiceException {
+    public User getEmployeeBySSN(int SSN) throws ServiceException {
         try {
-            userDAO.addMyCompany(user, userCompany);
+            return userDAO.getEmployeeBySSN(SSN);
         } catch (DAOException e) {
-            LOG.info("DAOException in UserService method addMyCompany()");
-            throw new ServiceException("Detected DAOException in UserService method addMyCompany()", e);
+            LOG.info("DAOException in UserService method getUserBySSN()");
+            throw new ServiceException("Detected DAOException in UserService method getUserBySSN()", e);
         }
     }
 
-    public List<User> getHrByName(String fName, String lName) throws ServiceException  {
+    public List<User> getHrByName(String fName, String lName) throws ServiceException {
         try {
             return userDAO.getHrByName(fName, lName);
         } catch (DAOException e) {
@@ -82,8 +94,7 @@ public class UserService {
         }
     }
 
-
-    public User getHrById(int hrId) throws ServiceException  {
+    public User getHrById(int hrId) throws ServiceException {
         try {
             return userDAO.getHrById(hrId);
         } catch (DAOException e) {
@@ -92,11 +103,11 @@ public class UserService {
         }
     }
 
-    public int getHRTrustRate(int idHR) throws ServiceException  {
-        ArrayList<Integer> allReviewsList = null;
+    public int getHRTrustRate(int idHR) throws ServiceException {
+        List<Integer> allReviewsList = null;
         try {
             allReviewsList = userDAO.getReviewsRateForHrById(idHR);
-            ArrayList<Double> avgReviewsList = userDAO.getAVGReviewsRateForHrById(idHR);
+            List<Double> avgReviewsList = userDAO.getAVGReviewsRateForHrById(idHR);
             return TrustRateCalculator.generateTrustRate(allReviewsList, avgReviewsList);
         } catch (DAOException e) {
             LOG.info("DAOException in UserService method getHRTrustRate()");

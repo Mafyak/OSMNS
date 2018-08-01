@@ -101,13 +101,13 @@ h1 {
 #change_lang_ru {
     width: 25px;
     height: 15px;
-    background: url('../img/langs.jpg') -50px 0;
+    background: url('../jsp/img/langs.jpg') -50px 0;
 }
 
 #change_lang_en {
     width: 25px;
     height: 15px;
-    background: url('../img/langs.jpg') -25px 0;
+    background: url('../jsp/img/langs.jpg') -25px 0;
 }
 .button {
     font-size: 1em;

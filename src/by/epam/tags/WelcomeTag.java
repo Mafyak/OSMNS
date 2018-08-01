@@ -1,6 +1,6 @@
 package by.epam.tags;
 
-import by.epam.service.ConfigManager;
+import by.epam.utils.manager.Manager;
 import by.epam.entity.UserType;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -20,10 +20,10 @@ public class WelcomeTag extends TagSupport {
         String welcomeMessage = null;
         switch (userType) {
             case HR:
-                welcomeMessage = ConfigManager.message("tag.hr.welcome");
+                welcomeMessage = Manager.message("tag.hr.welcome");
                 break;
             case ADMIN:
-                welcomeMessage = ConfigManager.message("tag.admin.welcome");
+                welcomeMessage = Manager.message("tag.admin.welcome");
                 break;
         }
 

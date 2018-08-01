@@ -15,11 +15,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="${pageContext.request.contextPath}/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet">
-    <script src="${pageContext.request.contextPath}/jsp/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/jsp/js/jquery-1.11.1.min.js"></script>
-    <script src="${pageContext.request.contextPath}/jsp/js/login-page.js"></script>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.11.1.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/login-page.js"></script>
     <title>Login</title>
 </head>
 <body>
@@ -37,9 +37,9 @@
                         </div>
                         <div class="col-xs-2">
                             <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=en"><img id="change_lang_en"
-                                                                                       src="${pageContext.request.contextPath}/jsp/img/empty_pix.gif"></a>
+                                                                                       src="${pageContext.request.contextPath}/img/empty_pix.gif"></a>
                             <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=ru"><img id="change_lang_ru"
-                                                                                       src="${pageContext.request.contextPath}/jsp/img/empty_pix.gif"></a>
+                                                                                       src="${pageContext.request.contextPath}/img/empty_pix.gif"></a>
                         </div>
                     </div>
                     <hr>

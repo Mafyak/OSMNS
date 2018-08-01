@@ -2,9 +2,10 @@ package by.epam.command.admin;
 
 import by.epam.command.Command;
 import by.epam.exception.ServiceException;
-import by.epam.service.ConfigManager;
+import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
-import by.epam.service.AdminService;
+import by.epam.utils.service.AdminService;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class ConfirmRatingCommand implements Command {
@@ -20,8 +21,9 @@ public class ConfirmRatingCommand implements Command {
         try {
             adminService.confirmRating(ratingIdToConfirm, adminID);
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", ConfigManager.message("cmd.review.cantConfirm"));
+            request.setAttribute("infoMessage", Manager.message("cmd.review.cantConfirm"));
         }
-        return new Page(ConfigManager.getProperty("path.page.admin"), false);
+
+        return new ShowAllReviewsCommand().execute(request);
     }
 }

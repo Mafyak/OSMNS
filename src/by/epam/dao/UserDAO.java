@@ -6,50 +6,48 @@ import by.epam.entity.UserHistory;
 import by.epam.entity.UserType;
 import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
-import oracle.jdbc.proxy.annotation.Pre;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 public class UserDAO extends AbstractDAO<User> {
 
-    private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("resources/mysqlStatements");
-
-    private String entryQuery = resourceBundle.getString("GET_USER_ENTITY");
-    private String getAdminInfo = resourceBundle.getString("GET_ADMIN_ENTITY");
-    private String queryRegister = resourceBundle.getString("REGISTER_COMMAND");
-    private String queryAddHRHEADInfo = resourceBundle.getString("ADD_HRHEAD_INFO_COMMAND");
-    private String queryGetUserId = resourceBundle.getString("GET_USER_ID");
-    private String queryGetEmplBySSN = resourceBundle.getString("GET_EMPLOYEE_BY_SSN");
-    private String queryGetEmplIdBySSN = resourceBundle.getString("GET_EMPLOYEE_ID_BY_SSN");
-    private String queryGetEmplHistById = resourceBundle.getString("GET_EMPLOYEE_HISTORY_BY_ID");
-    private String queryAddCompany = resourceBundle.getString("ADD_COMPANY");
-    private String queryAddReview = resourceBundle.getString("ADD_REVIEW");
-    private String queryGetHrByName = resourceBundle.getString("GET_HR_BY_NAME");
-    private String queryGetHrById = resourceBundle.getString("GET_HR_BY_ID");
-    private String queryAddEmployeeBySSN = resourceBundle.getString("ADD_EMPLOYEE_BY_SSN");
-    private String queryGetCompanyId = resourceBundle.getString("GET_COMPANY_ID_BY_NAME");
-    private String queryGetCompanyIdByOffId = resourceBundle.getString("GET_COMPANY_ID_BY_OFF_ID");
-    private String getReviewsOfSingleHrById = resourceBundle.getString("GET_REVIEWS_OF_SINGLE_HR_BY_ID");
-    private String getAVGReviewsOfSingleHrById = resourceBundle.getString("GET_AVG_REVIEWS_OF_SINGLE_HR_BY_ID");
-    private String querySetCompanyId = resourceBundle.getString("SET_COMPANY_TO_USER");
-
-    private static Logger LOG = Logger.getLogger("UserDAO");
+    private final static Logger LOG = Logger.getLogger("UserDAO");
+    private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/mysqlStatements");
+    private String entryQuery = RESOURCE_BUNDLE.getString("GET_USER_ENTITY");
+    private String getAdminInfo = RESOURCE_BUNDLE.getString("GET_ADMIN_ENTITY");
+    private String queryRegister = RESOURCE_BUNDLE.getString("REGISTER_COMMAND");
+    private String queryAddHRHEADInfo = RESOURCE_BUNDLE.getString("ADD_HRHEAD_INFO_COMMAND");
+    private String queryUpdateHrheadInfo = RESOURCE_BUNDLE.getString("UPDATE_HRHEAD_INFO");
+    private String queryUpdateHrheadCred = RESOURCE_BUNDLE.getString("UPDATE_HRHEAD_CRED");
+    private String queryGetUserId = RESOURCE_BUNDLE.getString("GET_USER_ID");
+    private String queryGetEmplBySSN = RESOURCE_BUNDLE.getString("GET_EMPLOYEE_BY_SSN");
+    private String queryGetEmplIdBySSN = RESOURCE_BUNDLE.getString("GET_EMPLOYEE_ID_BY_SSN");
+    private String queryGetEmplHistById = RESOURCE_BUNDLE.getString("GET_EMPLOYEE_HISTORY_BY_ID");
+    private String queryAddReview = RESOURCE_BUNDLE.getString("ADD_REVIEW");
+    private String queryGetHrByName = RESOURCE_BUNDLE.getString("GET_HR_BY_NAME");
+    private String queryGetHrById = RESOURCE_BUNDLE.getString("GET_HR_BY_ID");
+    private String queryAddEmployeeBySSN = RESOURCE_BUNDLE.getString("ADD_EMPLOYEE_BY_SSN");
+    private String getReviewsOfSingleHrById = RESOURCE_BUNDLE.getString("GET_REVIEWS_OF_SINGLE_HR_BY_ID");
+    private String getAVGReviewsOfSingleHrById = RESOURCE_BUNDLE.getString("GET_AVG_REVIEWS_OF_SINGLE_HR_BY_ID");
+    private String querySetCompanyId = RESOURCE_BUNDLE.getString("SET_COMPANY_TO_USER");
 
     public UserDAO() {
     }
 
     public User login(Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
-        User user = null;
+        User user;
         try (PreparedStatement ps = conn.prepareStatement(entryQuery)) {
             ps.setObject(1, params[0]); //login
             ps.setObject(2, params[1]); //password
             try (ResultSet rs = ps.executeQuery()) {
                 user = new User();
+                Company company;
                 while (rs.next()) {
                     UserType role = rs.getInt("role") == 0 ? UserType.ADMIN : UserType.HR;
                     user.setId(rs.getInt("idLogin"));
@@ -59,7 +57,14 @@ public class UserDAO extends AbstractDAO<User> {
                         user.setPass(rs.getString("pass"));
                         user.setfName(rs.getString("fName"));
                         user.setlName(rs.getString("lName"));
-                        user.setCompany(rs.getString("name"));
+                        company = new Company();
+                        company.setName(rs.getString("name"));
+                        company.setCompanyInnerId(rs.getInt("idCompany"));
+                        company.setNiche(rs.getString("niche"));
+                        company.setLocation(rs.getString("location"));
+                        company.setHeadcount(rs.getInt("headcount"));
+                        company.setCompanyOfficialId(rs.getInt("offCompId"));
+                        user.setCompany(company);
                     }
                     if (role == UserType.ADMIN) {
                         String fullName = executeForSingleResult(getAdminInfo, user.getId()).toString();
@@ -86,6 +91,11 @@ public class UserDAO extends AbstractDAO<User> {
         user.setId(userId);
     }
 
+    public void updateUserInfo(User user) throws DAOException {
+        updateQuery(queryUpdateHrheadInfo, user.getfName(), user.getlName(), user.getCompany().getCompanyOfficialId(), user.getId());
+        updateQuery(queryUpdateHrheadCred, user.getEmail(), user.getId());
+    }
+
     public void addHrHeadInfo(User user) throws DAOException {
         updateQuery(queryAddHRHEADInfo, user.getId(), user.getfName(), user.getmName(), user.getlName());
     }
@@ -103,81 +113,39 @@ public class UserDAO extends AbstractDAO<User> {
         } else return (int) executeForSingleResult(queryGetEmplIdBySSN, SSN);
     }
 
-    public User getEmployeeBySSN(int SSN, Connection conn) throws DAOException {
+    public User getEmployeeBySSN(int SSN) throws DAOException {
+        Connection conn = ConnectionPool.getInstance().getConnection();
         User employee = new User();
         try (PreparedStatement ps = conn.prepareStatement(queryGetEmplBySSN)) {
             ps.setInt(1, SSN);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    employee.setId(rs.getInt(1));
-                    employee.setfName(rs.getString(2));
-                    employee.setlName(rs.getString(3));
+                    employee.setId(rs.getInt("idEmployee"));
+                    employee.setfName(rs.getString("fName"));
+                    employee.setlName(rs.getString("lName"));
+                    employee.setSSN(SSN);
                 }
             }
         } catch (SQLException e) {
             LOG.info("SQL Exception during getEmployeeBySSN method in UserDAO" + e);
             throw new DAOException("Can't get user Id by SSN", e);
-        }
-        return employee;
-    }
-
-    public User getEntityBySSN(int SSN) throws DAOException {
-        Connection conn = ConnectionPool.getInstance().getConnection();
-        User employee = null;
-        UserHistory userHistory;
-        try (PreparedStatement ps = conn.prepareStatement(queryGetEmplHistById)) {
-            employee = getEmployeeBySSN(SSN, conn);
-            ps.setInt(1, employee.getId());
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    userHistory = new UserHistory();
-                    userHistory.setCompany(rs.getString("name"));
-                    userHistory.setIdHR(rs.getInt("idHR"));
-                    userHistory.setYearEmployed(rs.getInt("yearEmployed"));
-                    userHistory.setYearTerminated(rs.getInt("yearTerminated"));
-                    userHistory.setRating1(rs.getInt("rating1"));
-                    userHistory.setRating2(rs.getInt("rating2"));
-                    userHistory.setRating3(rs.getInt("rating3"));
-                    userHistory.setRating4(rs.getInt("rating4"));
-                    userHistory.setRating5(rs.getInt("rating5"));
-                    userHistory.setHireAgain(rs.getInt("hireAgain"));
-                    employee.addHistory(userHistory);
-                }
-            }
-        } catch (SQLException e) {
-            LOG.info("SQL Exception during getEntityBySSN method in UserDAO");
-            throw new DAOException("SQL Exception during getEntityBySSN command execution", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }
         return employee;
     }
 
-    public int getCompanyIdByOfficialId(int companyOfficialId) throws DAOException {
-        if (executeForSingleResult(queryGetCompanyIdByOffId, companyOfficialId) == null) {
-            return 0;
-        } else return (int) executeForSingleResult(queryGetCompanyIdByOffId, companyOfficialId);
-    }
-
-    public int getCompanyIdByName(String companyName) throws DAOException {
-        return (int) executeForSingleResult(queryGetCompanyId, companyName);
-    }
-
-    public void addCompany(Company companyName) throws DAOException {
-        executeQuery(queryAddCompany, companyName.getName(), companyName.getNiche(), companyName.getLocation(),
-                companyName.getHeadcount(), companyName.getCompanyOfficialId());
-        LOG.info("New company is added:" + companyName.getName());
+    public User getEntityBySSN(int SSN) throws DAOException {
+        Connection conn = ConnectionPool.getInstance().getConnection();
+        User employee = getEmployeeBySSN(SSN);
+        List<UserHistory> userHistory = getReviews(queryGetEmplHistById, employee.getId());
+        for (UserHistory hist : userHistory)
+            employee.addHistory(hist);
+        return employee;
     }
 
     public void setCompanyId(Company company, User user) throws DAOException {
         updateQuery(querySetCompanyId, company.getCompanyInnerId(), user.getId());
-    }
-
-    public void addMyCompany(User user, Company companyName) throws DAOException {
-        addCompany(companyName);
-        LOG.info("New company is added:" + companyName.getName());
-        companyName.setCompanyInnerId(getCompanyIdByName(companyName.getName()));
-        setCompanyId(companyName, user);
     }
 
     public void registerEmployee(User employee) throws DAOException {
@@ -185,107 +153,36 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public void addReview(User hrHead, User employee, UserHistory userHistory) throws DAOException {
-        //tries to find employee with this SSN
-        employee.setId(getEmployeeIdBySSN(employee.getSSN()));
-        if (employee.getId() == 0) {
-            LOG.info("Employee info is not found in DB, creating new employee...");
-            //creates new employee if not found
-            registerEmployee(employee);
-            LOG.info("New employee is created");
-            employee.setId(getEmployeeIdBySSN(employee.getSSN()));
-            LOG.info("Employee id is:" + employee.getId());
-        }
-        int companyId = getCompanyIdByOfficialId(userHistory.getIdCompany());
-        if (companyId == 0) {
-            LOG.info("Company with official ID " + userHistory.getIdCompany() +
-                    "can't be found. Creating new one...");
-            Company company = new Company();
-            company.setName(userHistory.getCompany());
-            company.setLocation("");
-            company.setHeadcount(0);
-            company.setNiche("");
-            company.setCompanyOfficialId(userHistory.getIdOfficialCompany());
-            addCompany(company);
-            LOG.info("Company " + company.getName() + " was added.");
-            company.setCompanyInnerId(getCompanyIdByName(company.getName()));
-            companyId = company.getCompanyInnerId();
-        }
-        addReviewHelp(companyId, hrHead, employee, userHistory);
-    }
-
-    public void addReviewHelp(int companyId, User hrHead, User employee, UserHistory userHistory) throws DAOException {
         double aveRating = (userHistory.getRating1() + userHistory.getRating2() +
                 userHistory.getRating3() + userHistory.getRating4() + userHistory.getRating5()) / 5.0;
         int getHireAgain = (userHistory.getHireAgain().equals("Yes") ? 1 : 0);
+        Company company = hrHead.getCompany();
+        int companyId = company.getCompanyInnerId();
         updateQuery(queryAddReview, companyId, hrHead.getId(), employee.getId(), userHistory.getYearEmployed(),
                 userHistory.getYearTerminated(), userHistory.getRating1(), userHistory.getRating2(),
                 userHistory.getRating3(), userHistory.getRating4(), userHistory.getRating5(), aveRating, getHireAgain);
     }
 
     public User getHrById(int hrId) throws DAOException {
-        Connection conn = ConnectionPool.getInstance().getConnection();
-        User user = null;
-        try (PreparedStatement ps = conn.prepareStatement(queryGetHrById)) {
-            ps.setInt(1, hrId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    user = new User();
-                    user.setId(rs.getInt(1));
-                    user.setfName(rs.getString(2));
-                    user.setmName(rs.getString(3));
-                    user.setlName(rs.getString(4));
-                    user.setCompany(rs.getString(5));
-                }
-            }
-        } catch (SQLException e) {
-            LOG.info("SQL Exception during getHrById method in UserDAO");
-            throw new DAOException("SQL Exception during getHrById command execution", e);
-        } finally {
-            ConnectionPool.getInstance().returnConnection(conn);
-        }
-        return user;
+        return getHrWithCompanyDataList(queryGetHrById, hrId).get(0);
     }
 
     public List<User> getHrByName(String fName, String lName) throws DAOException {
-        Connection conn = ConnectionPool.getInstance().getConnection();
-        List<User> hrList = null;
-        try (PreparedStatement ps = conn.prepareStatement(queryGetHrByName)) {
-            ps.setString(1, fName);
-            ps.setString(2, lName);
-            try (ResultSet rs = ps.executeQuery()) {
-                hrList = new ArrayList<>();
-                User hr = null;
-                while (rs.next()) {
-                    hr = new User();
-                    hr.setId(rs.getInt(1));
-                    hr.setfName(rs.getString(2));
-                    hr.setmName(rs.getString(3));
-                    hr.setlName(rs.getString(4));
-                    hr.setCompany(rs.getString(5));
-                    hrList.add(hr);
-                }
-            }
-        } catch (SQLException e) {
-            LOG.info("SQL Exception during getHrByName method in UserDAO");
-            throw new DAOException("SQL Exception during getHrByName command execution", e);
-        } finally {
-            ConnectionPool.getInstance().returnConnection(conn);
-        }
-        return hrList;
+        return getHrWithCompanyDataList(queryGetHrByName, fName, lName);
     }
 
-    public ArrayList<Integer> getReviewsRateForHrById(int idHR) throws DAOException {
+    public List<Integer> getReviewsRateForHrById(int idHR) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
-        ArrayList<Integer> ratingList = new ArrayList<>();
+        List<Integer> ratingList = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(getReviewsOfSingleHrById)) {
             ps.setInt(1, idHR);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    ratingList.add(rs.getInt(1));
-                    ratingList.add(rs.getInt(2));
-                    ratingList.add(rs.getInt(3));
-                    ratingList.add(rs.getInt(4));
-                    ratingList.add(rs.getInt(5));
+                    ratingList.add(rs.getInt("rating1"));
+                    ratingList.add(rs.getInt("rating2"));
+                    ratingList.add(rs.getInt("rating3"));
+                    ratingList.add(rs.getInt("rating4"));
+                    ratingList.add(rs.getInt("rating5"));
                 }
             }
         } catch (SQLException e) {
@@ -297,14 +194,14 @@ public class UserDAO extends AbstractDAO<User> {
         return ratingList;
     }
 
-    public ArrayList<Double> getAVGReviewsRateForHrById(int idHR) throws DAOException {
+    public List<Double> getAVGReviewsRateForHrById(int idHR) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
-        ArrayList<Double> ratingAVGSList = new ArrayList<>();
+        List<Double> ratingAVGSList = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(getAVGReviewsOfSingleHrById)) {
             ps.setInt(1, idHR);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    ratingAVGSList.add(rs.getDouble(1));
+                    ratingAVGSList.add(rs.getDouble("totalRating"));
                 }
             }
         } catch (SQLException e) {

@@ -1,14 +1,11 @@
 package by.epam;
 
 import by.epam.entity.User;
-import by.epam.exception.DAOException;
 import by.epam.exception.ServiceException;
-import by.epam.service.UserService;
+import by.epam.utils.service.UserService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.rmi.ServerException;
 
 public class UserRegistrationTest {
     @Test

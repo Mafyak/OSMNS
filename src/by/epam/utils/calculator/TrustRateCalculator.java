@@ -1,6 +1,7 @@
-package by.epam.service;
+package by.epam.utils.calculator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrustRateCalculator {
 
@@ -23,7 +24,7 @@ public class TrustRateCalculator {
     public TrustRateCalculator() {
     }
 
-    public static int generateTrustRate(ArrayList<Integer> allReviews, ArrayList<Double> avgReviews) {
+    public static int generateTrustRate(List<Integer> allReviews, List<Double> avgReviews) {
         double allStaDiv = getStandardDeviation(allReviews);
         double avgStaDiv = getStandardDeviationD(avgReviews);
         int size = avgReviews.size();
@@ -40,7 +41,7 @@ public class TrustRateCalculator {
         return (int) result;
     }
 
-    public static strictfp double mean(ArrayList<Integer> list) {
+    public static strictfp double mean(List<Integer> list) {
         double sum = 0;
         for (Integer d : list) {
             sum += d;
@@ -48,7 +49,7 @@ public class TrustRateCalculator {
         return sum / list.size();
     }
 
-    public static strictfp double meanD(ArrayList<Double> list) {
+    public static strictfp double meanD(List<Double> list) {
         double sum = 0;
         for (Double d : list) {
             sum += d;
@@ -56,7 +57,7 @@ public class TrustRateCalculator {
         return sum / list.size();
     }
 
-    public static strictfp double getStandardDeviation(ArrayList<Integer> list) {
+    public static strictfp double getStandardDeviation(List<Integer> list) {
         double mean = mean(list);
         int n = list.size();
         double dv = 0;
@@ -68,7 +69,7 @@ public class TrustRateCalculator {
         return Math.sqrt(dv / (n - 1));
     }
 
-    public static strictfp double getStandardDeviationD(ArrayList<Double> list) {
+    public static strictfp double getStandardDeviationD(List<Double> list) {
         double mean = meanD(list);
         int n = list.size();
         double dv = 0;

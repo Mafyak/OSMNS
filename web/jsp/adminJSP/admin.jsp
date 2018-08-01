@@ -9,9 +9,9 @@
 
 <html>
 <head>
-    <link href="${pageContext.request.contextPath}/jsp/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet"/>
-    <script src="../js/jquery.min.js"></script>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
+    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <script>
         $(document).ready(function () {
@@ -24,7 +24,7 @@
 </head>
 <body>
 
-<jsp:include page="../header.jsp"/>
+<jsp:include page="../pageParts/header.jsp"/>
 <p>Search and delete HR by name OR id:
 <form id="getHrByName" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_hr_by_name"
       style="display: block;">
@@ -35,7 +35,7 @@
     <button type="submit" class="btn" name="button" value="Search">Search</button>
 </form>
 </p>
-<p id="contToHideHrSearch">
+<p>
     <c:if test="${not empty hrList}">
     Results for:
 <table id="table" style="width:50%" border="1px">
@@ -53,26 +53,28 @@
             <td>${hr.fName}</td>
             <td>${hr.mName}</td>
             <td>${hr.lName}</td>
-            <td>${hr.company}</td>
+            <td>${hr.company.name}</td>
             <td><a href="${pageContext.request.contextPath}/Controller?command=remove_hr&hrIdToRemove=${hr.id}">
                 <input type="button" name="select" class="btn" value="Remove"/></a></td>
         </tr>
     </c:forEach>
 </table>
 <br/>
-<button class="btn" id="hideHrSearch">Hide Results</button>
 </c:if>
 ${infoSearcdDelHRMessage}<br/>
 </p>
 <hr/>
 
 Show all reviews<br/>
-<form id="showAllReviews" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_all_reviews"
+<form id="showAllReviews" method="POST"
+      action="${pageContext.request.contextPath}/Controller?command=show_all_reviews&page=1"
       style="display: block;">
     <button type="submit" class="btn" name="button" value="ShowAllReviews">Show all reviews</button>
 </form>
 <c:if test="${not empty reviewsList}">
-    <p>All reviews:</p>
+    <p id="contToHideHrSearch">
+        <button class="btn" id="hideHrSearch">Hide Results</button>
+        All reviews:
     <table style="width:50%" border="1px">
         <tr>
             <th>Rating id</th>
@@ -114,6 +116,11 @@ Show all reviews<br/>
             </tr>
         </c:forEach>
     </table>
+    <c:forEach var="i" step="1" begin="1" end="${pages}">
+        <a href="${pageContext.request.contextPath}/Controller?command=show_all_reviews&page=${i}">
+            <input class="btn" type="button" name="page" value="${i}"/></a>
+    </c:forEach>
+    </p>
     <br/>
 </c:if>
 ${ShowAllReviewsError}
@@ -122,7 +129,7 @@ Show unconfirmed reviews<br/>
 <form id="showUnconfirmedReviews" method="POST"
       action="${pageContext.request.contextPath}/Controller?command=show_unconfirmed_reviews"
       style="display: block;">
-    <button type="submit" class="btn" name="button" value="ShowUnconfirmedReviews">Show all reviews</button>
+    <button type="submit" class="btn" name="button" value="ShowUnconfirmedReviews">Show Unconfirmed reviews</button>
 </form>
 <c:if test="${not empty unconfirmedReviewsList}">
     <p>All reviews:</p>

@@ -1,20 +1,26 @@
-package by.epam.command;
+package by.epam.command.common;
 
-import by.epam.service.ConfigManager;
+import by.epam.command.Command;
+import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class ChangeLanguageCommand implements Command {
-    private final static Logger LOG = Logger.getLogger("ChangeLanguageCommand");
+
+    private final static Logger LOG = Logger.getLogger(ChangeLanguageCommand.class);
 
     @Override
     public Page execute(HttpServletRequest request) {
 
         String lang = request.getParameter("lang");
+        String uri2 = request.getHeader("Referer");
+        LOG.info("uri2: " + uri2);
+        String referer = uri2.substring(21);
+        LOG.info("referer: " + referer);
 
         Locale locale;
         switch (lang) {
@@ -26,6 +32,11 @@ public class ChangeLanguageCommand implements Command {
         }
 
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
-        return new Page(ConfigManager.getProperty("path.page.index"));
+
+        if (referer.contains("Controller") || referer.equals("/")) {
+            return new Page(Manager.getProperty("path.page.index"));
+        } else {
+            return new Page(referer);
+        }
     }
 }

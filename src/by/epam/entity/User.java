@@ -6,7 +6,7 @@ import java.util.List;
 public class User {
     private String email;
     private String pass;
-    private String company;
+    private Company company;
     private String fName;
     private String mName;
     private String lName;
@@ -60,11 +60,11 @@ public class User {
         return type;
     }
 
-    public String getCompany() {
+    public Company getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 

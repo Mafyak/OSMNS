@@ -1,12 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: WorkBase
-  Date: 6/30/2018
-  Time: 3:58 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="user" scope="application" class="by.epam.entity.User"/>
@@ -18,74 +11,86 @@
     <fmt:message key="main.add_new_review" var="Add_New_Review"/>
     <fmt:message key="main.add" var="Add"/>
     <fmt:message key="main.your_company" var="Your_company"/>
+    <fmt:message key="rev.rating1" var="rating1"/>
+    <fmt:message key="rev.rating2" var="rating2"/>
+    <fmt:message key="rev.rating3" var="rating3"/>
+    <fmt:message key="rev.rating4" var="rating4"/>
+    <fmt:message key="rev.rating5" var="rating5"/>
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
-
 
 
 <html>
 <head>
     <title>Main page</title>
-    <link href="${pageContext.request.contextPath}/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="${pageContext.request.contextPath}/jsp/css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
 <body>
 
-<jsp:include page="../header.jsp"/>
-<p>
+<jsp:include page="../pageParts/header.jsp"/>
 
-</p>
-<hr>
-<p>${Search_by_SSN}:
-<form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
-      style="display: block;">
-    <input type="text" name="SSN" class="form-control" placeholder="SSN" required>
-    <button type="submit" name="button" class="btn" value="Search">Search me</button>
-</form>
-${errorShowBySsnMessage}
-</p>
-<hr>
 <p>${Add_New_Review}:
-<div class="row">
-    <div class="col-md-6">
-        <div class="panel panel-login">
-            <div class="panel-heading">
-                <div class="row">
-                    <form id="add-review" method="POST"
-                          action="${pageContext.request.contextPath}/Controller?command=add_review">
-                        <div class="form-group">
-                            <input name="fName" class="form-control" placeholder="First Name" required>
-                            <input name="lName" class="form-control" placeholder="Last Name" required>
-                            <input name="SSN" class="form-control" placeholder="Social Security Number" pattern="[0-9]+"
-                                   title="Number only" required>
-                            <input name="cName" class="form-control" placeholder="Company Name" required>
-                            <input name="cId" class="form-control" placeholder="Company ID" required>
-                            <input name="yEmployed" class="form-control" placeholder="Year Employed" required>
-                            <input name="yFired" class="form-control" placeholder="Year Fired" required>
-                        </div>
-                        <div class="form-group">
-                            <input name="rating1" class="form-control" placeholder="Rating1" required>
-                            <input name="rating2" class="form-control" placeholder="Rating2" required>
-                            <input name="rating3" class="form-control" placeholder="Rating3" required>
-                            <input name="rating4" class="form-control" placeholder="Rating4" required>
-                            <input name="rating5" class="form-control" placeholder="Rating5" required>
-                        </div>
-                        <div class="form-group">
-                            <input name="hireAgain" class="form-control" placeholder="Hire again (Yes or No)"
-                                   required>
-                        </div>
-                        <input type="submit" name="command"
-                               class="form-control btn btn-register" value="${Add}">
-                    </form>
-                    ${reviewAddResult}
+<div class="panel panel-login">
+    <div class="panel-heading">
+        <form id="find-employee" method="POST"
+              action="${pageContext.request.contextPath}/Controller?command=find_employee">
+            <div class="row">
+                <div class="form-group">
+                    Lookup employee:
+                    <input name="SSN" class="form-control" placeholder="Social Security Number" pattern="[0-9]+"
+                           title="Number only" required>
+                    <input type="submit" name="command" class="btn" value="${Add}">
                 </div>
             </div>
+        </form>
+        <c:if test="${emptyDataFlag}">
+            <div class="col-md-8 col-md-offset-4">
+                <table class="table" style="width:50%" border="1px">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>SSN</th>
+                    </tr>
+                    <tr>
+                        <td>${employee.fName}</td>
+                        <td>${employee.lName}</td>
+                        <td>${employee.SSN}</td>
+                    </tr>
+                </table>
+            </div>
+        </c:if>
+        <hr/>
+        <br/>
+        <div class="row">
+            <form id="add-review" method="POST"
+                  action="${pageContext.request.contextPath}/Controller?command=add_review">
+                <div class="form-group">
+                    <input name="yEmployed" class="form-control" placeholder="Year Employed" required>
+                    <input name="yFired" class="form-control" placeholder="Year Fired" required>
+                </div>
+                Rate employee 0 to 10 based on qualities:
+                <div class="form-group">
+                    <input name="rating1" class="form-control" placeholder="${rating1}" required>
+                    <input name="rating2" class="form-control" placeholder="${rating2}" required>
+                    <input name="rating3" class="form-control" placeholder="${rating3}" required>
+                    <input name="rating4" class="form-control" placeholder="${rating4}" required>
+                    <input name="rating5" class="form-control" placeholder="${rating5}" required>
+                </div>
+                <div class="form-group">
+                    <input name="hireAgain" class="form-control" placeholder="Hire again (Yes or No)" required>
+                    <input type="submit" name="command" class="btn" value="${Add}">
+                </div>
+                <div class="form-group">
+                    ${reviewAddResult}
+                </div>
+            </form>
         </div>
     </div>
 </div>
-</p>
-
-
+<br/>
+<hr/>
+<br/>
 <hr>
 <p>
     Here is a list of services I need to add to hr page:<br/>

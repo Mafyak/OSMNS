@@ -1,6 +1,7 @@
-package by.epam.command;
+package by.epam.command.common;
 
-import by.epam.service.ConfigManager;
+import by.epam.command.Command;
+import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LogoutCommand implements Command {
 
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(ConfigManager.getProperty("path.page.index"), true);
+        Page page = new Page(Manager.getProperty("path.page.index"), true);
         request.getSession().invalidate();
         return page;
     }

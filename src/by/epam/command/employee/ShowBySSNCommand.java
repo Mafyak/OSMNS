@@ -1,23 +1,23 @@
-package by.epam.command.hr;
+package by.epam.command.employee;
 
 import by.epam.command.Command;
 import by.epam.exception.ServiceException;
-import by.epam.service.ConfigManager;
+import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 import by.epam.entity.User;
-import by.epam.service.UserService;
+import by.epam.utils.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class ShowBySSNCommand implements Command {
 
-    private static Logger LOG = Logger.getLogger("ShowBySSNCommand");
+    private static final Logger LOG = Logger.getLogger(ShowBySSNCommand.class);
     private static final String SSN = "SSN";
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(ConfigManager.getProperty("path.page.emplProfile"), true);
+        Page page = new Page(Manager.getProperty("path.page.emplProfile"), true);
         String employeeSSN = request.getParameter(SSN);
         UserService userService = new UserService();
         User employee = null;
@@ -25,8 +25,8 @@ public class ShowBySSNCommand implements Command {
             employee = userService.getUserBySSN(Integer.parseInt(employeeSSN));
         } catch (ServiceException e) {
             LOG.info("Error while getting data");
-            request.setAttribute("errorShowBySsnMessage",
-                    ConfigManager.message("cmd.ssn.noDataPerSSN"));
+            request.setAttribute("noDataPerSSN",
+                    Manager.message("cmd.ssn.noDataPerSSN"));
         }
         LOG.info("employee: " + employee);
         HttpSession session = request.getSession();

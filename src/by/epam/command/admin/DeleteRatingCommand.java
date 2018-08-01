@@ -2,17 +2,16 @@ package by.epam.command.admin;
 
 import by.epam.command.Command;
 import by.epam.exception.ServiceException;
-import by.epam.service.ConfigManager;
+import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
-import by.epam.service.AdminService;
+import by.epam.utils.service.AdminService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
-import java.util.logging.Logger;
 
 public class DeleteRatingCommand implements Command {
 
-    private static Logger LOG = Logger.getLogger("DeleteRatingCommand");
+    private static final Logger LOG = Logger.getLogger(DeleteRatingCommand.class);
 
     @Override
     public Page execute(HttpServletRequest request) {
@@ -23,10 +22,10 @@ public class DeleteRatingCommand implements Command {
         try {
             adminService.deleteReview(ratingID);
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", ConfigManager.message("msg.error.processing"));
+            request.setAttribute("infoMessage", Manager.message("msg.error.processing"));
             LOG.info("Error in DeleteRatingCommand" + e);
         }
 
-        return new Page(ConfigManager.getProperty("path.page.admin"), true);
+        return new ShowAllReviewsCommand().execute(request);
     }
 }

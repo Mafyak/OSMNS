@@ -1,10 +1,9 @@
-package by.epam.command.admin;
+package by.epam.command.hr;
 
 import by.epam.command.Command;
 import by.epam.entity.Page;
 import by.epam.exception.ServiceException;
-import by.epam.service.AdminService;
-import by.epam.service.ConfigManager;
+import by.epam.utils.service.AdminService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +19,6 @@ public class RemoveHrCommand implements Command {
 
         }
 
-        return new Page(ConfigManager.getProperty("path.page.admin"));
+        return new ShowHrByName().execute(request);
     }
 }

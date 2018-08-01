@@ -14,12 +14,12 @@
 <html>
 <head>
     <title>Employee Profile page.</title>
-    <link href="/jsp/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="/jsp/css/style.css" rel="stylesheet">
-    <script src="/jsp/js/bootstrap.min.js"></script>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 </head>
 <body>
-<jsp:include page="../header.jsp"/>
+<jsp:include page="../pageParts/header.jsp"/>
 <br/>
 <p>${Search_by_SSN}:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
@@ -60,6 +60,6 @@
         </c:forEach>
     </table>
 </c:if>
-<c:if test="${empty employee.fName}"><p>Can't find an employee with such ssn.</p></c:if>
+${noDataPerSSN}
 </body>
 </html>

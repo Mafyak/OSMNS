@@ -1,6 +1,6 @@
 package by.epam;
 
-import by.epam.service.TrustRateCalculator;
+import by.epam.utils.calculator.TrustRateCalculator;
 import org.junit.Assert;
 import org.junit.Test;
 

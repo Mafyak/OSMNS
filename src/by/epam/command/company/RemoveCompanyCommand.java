@@ -1,10 +1,10 @@
-package by.epam.command.admin;
+package by.epam.command.company;
 
 import by.epam.command.Command;
 import by.epam.entity.Page;
 import by.epam.exception.ServiceException;
-import by.epam.service.AdminService;
-import by.epam.service.ConfigManager;
+import by.epam.utils.service.CompanyService;
+import by.epam.utils.manager.Manager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,12 +15,12 @@ public class RemoveCompanyCommand implements Command {
     public Page execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
         int companyId = Integer.parseInt(request.getParameter("companyIdtoRemove"));
-        AdminService adminService = new AdminService();
+        CompanyService companyService = new CompanyService();
         try {
-            adminService.removeCompByInnerId(companyId);
+            companyService.removeCompByInnerId(companyId);
         } catch (ServiceException e) {
-            session.setAttribute("ShowCompanyNameCollisionssError", ConfigManager.message("msg.error.processing"));
+            session.setAttribute("ShowCompanyNameCollisionssError", Manager.message("msg.error.processing"));
         }
-        return new Page(ConfigManager.getProperty("path.page.admin"));
+        return new ShowCompNameCollisionCommand().execute(request);
     }
 }

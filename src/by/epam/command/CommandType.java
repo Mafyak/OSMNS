@@ -1,10 +1,13 @@
 package by.epam.command;
 
 import by.epam.command.admin.*;
-import by.epam.command.hr.AddMyCompany;
-import by.epam.command.hr.AddNewReviewCommand;
-import by.epam.command.hr.ShowBySSNCommand;
-import by.epam.command.hr.ShowHrByName;
+import by.epam.command.common.*;
+import by.epam.command.company.MergeCompanyCommand;
+import by.epam.command.company.RemoveCompanyCommand;
+import by.epam.command.company.ShowCompNameCollisionCommand;
+import by.epam.command.employee.FindEmployeeCommand;
+import by.epam.command.employee.ShowBySSNCommand;
+import by.epam.command.hr.*;
 
 public enum CommandType {
     LOGIN {
@@ -14,6 +17,10 @@ public enum CommandType {
     }, LOGOUT {
         {
             this.command = new LogoutCommand();
+        }
+    }, UPDATE_INFO {
+        {
+            this.command = new UpdateInfoCommand();
         }
     }, SHOW_COMPANY_NAME_COLLISIONS {
         {
@@ -47,7 +54,12 @@ public enum CommandType {
         {
             this.command = new LogoutCommand();
         }
+    }, FIND_EMPLOYEE {
+        {
+            this.command = new FindEmployeeCommand();
+        }
     }, SHOW_BY_SSN {
+
         {
             this.command = new ShowBySSNCommand();
         }

@@ -1,19 +1,19 @@
 package by.epam.pool;
 
-
 import java.sql.*;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
-public class ConnectionPool {
+public class ConnectionPool{
+
     private BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(10, true);
-    private ResourceBundle bundle = ResourceBundle.getBundle("resources/mysql");
-    private Properties props = new Properties();
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/mysql");
+    private static final Logger LOG = Logger.getLogger("ConnectionPool");
     private static volatile ConnectionPool instance;
-    private static Logger LOG = Logger.getLogger("ConnectionPool");
+    private Properties props = new Properties();
 
 
     private ConnectionPool() {
@@ -44,11 +44,11 @@ public class ConnectionPool {
     }
 
     public void createPool() {
-        String url = bundle.getString("db.url");
-        props.put("user", bundle.getString("db.user"));
-        props.put("password", bundle.getString("db.pass"));
-        props.put("characterEncoding", bundle.getString("db.encoding"));
-        props.put("useUnicode", bundle.getString("db.useUnicode"));
+        String url = RESOURCE_BUNDLE.getString("db.url");
+        props.put("user", RESOURCE_BUNDLE.getString("db.user"));
+        props.put("password", RESOURCE_BUNDLE.getString("db.pass"));
+        props.put("characterEncoding", RESOURCE_BUNDLE.getString("db.encoding"));
+        props.put("useUnicode", RESOURCE_BUNDLE.getString("db.useUnicode"));
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
