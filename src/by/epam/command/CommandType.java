@@ -5,6 +5,7 @@ import by.epam.command.common.*;
 import by.epam.command.company.MergeCompanyCommand;
 import by.epam.command.company.RemoveCompanyCommand;
 import by.epam.command.company.ShowCompNameCollisionCommand;
+import by.epam.command.employee.AddNewEmployee;
 import by.epam.command.employee.FindEmployeeCommand;
 import by.epam.command.employee.ShowBySSNCommand;
 import by.epam.command.hr.*;
@@ -59,7 +60,6 @@ public enum CommandType {
             this.command = new FindEmployeeCommand();
         }
     }, SHOW_BY_SSN {
-
         {
             this.command = new ShowBySSNCommand();
         }
@@ -70,6 +70,14 @@ public enum CommandType {
     }, SHOW_HR_BY_NAME {
         {
             this.command = new ShowHrByName();
+        }
+    }, ADD_EMPLOYEE {
+        {
+            this.command = new AddNewEmployee();
+        }
+    }, RECOVER_PASSWORD {
+        {
+            this.command = new RecoverPassCommand();
         }
     }, ADD_REVIEW {
         {

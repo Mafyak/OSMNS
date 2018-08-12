@@ -15,6 +15,7 @@ Request from ${pageContext.errorData.requestURI} is failed <br/>
 Servlet name or type: ${pageContext.errorData.servletName} <br/>
 Status code: ${pageContext.errorData.statusCode} <br/>
 Exception: ${pageContext.errorData.throwable} <br/>
-Go back to <a href="http://localhost:8080">login page</a>
+Details: ${pageContext.errorData.throwable.printStackTrace()} <br/>
+Go back to <a href="http://80.211.75.20:8080/OSMNS/">login page</a>
 </body>
 </html>

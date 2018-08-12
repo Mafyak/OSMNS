@@ -2,6 +2,7 @@ package by.epam.utils.service;
 
 import by.epam.dao.CompanyDAO;
 import by.epam.entity.Company;
+import by.epam.entity.User;
 import by.epam.exception.DAOException;
 import by.epam.exception.ServiceException;
 import org.apache.log4j.Logger;
@@ -29,10 +30,21 @@ public class CompanyService {
         try {
             companyDAO.addCompany(userCompany);
         } catch (DAOException e) {
-            LOG.info("DAOException in UserService method addMyCompany()");
-            throw new ServiceException("Detected DAOException in UserService method addMyCompany()", e);
+            LOG.info("DAOException in UserService method addCompany()");
+            throw new ServiceException("Detected DAOException in UserService method addCompany()", e);
         }
     }
+
+
+    public void setMyCompany(User user, Company userCompany) throws ServiceException {
+        try {
+            companyDAO.setMyCompany(user, userCompany);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method setMyCompany()");
+            throw new ServiceException("Detected DAOException in UserService method setMyCompany()", e);
+        }
+    }
+
 
     public List<Company> getCompNameCollisions() throws ServiceException {
         try {

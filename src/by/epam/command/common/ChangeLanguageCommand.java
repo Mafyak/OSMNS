@@ -5,8 +5,10 @@ import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
+
 import org.apache.log4j.Logger;
 
 public class ChangeLanguageCommand implements Command {
@@ -17,10 +19,12 @@ public class ChangeLanguageCommand implements Command {
     public Page execute(HttpServletRequest request) {
 
         String lang = request.getParameter("lang");
-        String uri2 = request.getHeader("Referer");
-        LOG.info("uri2: " + uri2);
-        String referer = uri2.substring(21);
+        String uri = request.getHeader("Referer");
+        int uriLength = Integer.parseInt(Manager.getProperty("url.length"));
+
+        String referer = uri.substring(uriLength);
         LOG.info("referer: " + referer);
+        LOG.info("ur2: " + request.getRequestURL());
 
         Locale locale;
         switch (lang) {
@@ -32,11 +36,15 @@ public class ChangeLanguageCommand implements Command {
         }
 
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
+        HttpSession session = request.getSession();
 
-        if (referer.contains("Controller") || referer.equals("/")) {
-            return new Page(Manager.getProperty("path.page.index"));
-        } else {
+        if (!uri.contains("Controller"))
+            session.setAttribute("page", referer);
+
+        String actualUri = (String) session.getAttribute("page");
+        if (actualUri.isEmpty())
             return new Page(referer);
-        }
+        else
+            return new Page(actualUri);
     }
 }

@@ -5,8 +5,6 @@ import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
 import by.epam.exception.ServiceException;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import by.epam.utils.calculator.TrustRateCalculator;
@@ -29,6 +27,27 @@ public class UserService {
         } catch (DAOException e) {
             LOG.info("DAOException in UserService method login()");
             throw new ServiceException("Detected DAOException in UserService method login()", e);
+        }
+    }
+
+    public void setNewPassword(String login, String pass) throws ServiceException {
+        Security security = new Security();
+        try {
+            userDAO.setNewPassword(login, security.encryptData(pass));
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method setNewPassword()");
+            throw new ServiceException("Detected DAOException in UserService method setNewPassword()", e);
+        }
+    }
+
+
+
+    public void addNewEmployee(User user) throws ServiceException{
+        try{
+            userDAO.registerEmployee(user);
+        } catch (DAOException e){
+            LOG.info("DAOException in UserService method addNewEmployee()");
+            throw new ServiceException("DAOException in UserService method addNewEmployee()");
         }
     }
 

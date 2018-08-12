@@ -6,13 +6,24 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:bundle basename="resources.content">
+    <fmt:message key="adm.search_delete_hr" var="Search_and_del_hr"/>
+    <fmt:message key="adm.results_for" var="results"/>
+    <fmt:message key="adm.show_all_revs" var="show_all_revs"/>
+    <fmt:message key="adm.show_unconf_revs" var="show_unconf_revs"/>
+    <fmt:message key="adm.show_collisions" var="show_collisions"/>
+    <fmt:message key="cmn.fName" var="fName"/>
+    <fmt:message key="cmn.lName" var="lName"/>
+    <fmt:message key="cmn.search" var="search"/>
+</fmt:bundle>
 
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
     <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <script>
         $(document).ready(function () {
             $("#hideHrSearch").click(function () {
@@ -20,24 +31,25 @@
             });
         });
     </script>
+
     <title>Title</title>
 </head>
 <body>
 
 <jsp:include page="../pageParts/header.jsp"/>
-<p>Search and delete HR by name OR id:
+<p>${Search_and_del_hr}:
 <form id="getHrByName" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_hr_by_name"
       style="display: block;">
-    <input type="text" class="form-control" name="fName" placeholder="First Name">
-    <input type="text" class="form-control" name="lName" placeholder="Last Name">
+    <input type="text" class="form-control" name="fName" placeholder="${fName}">
+    <input type="text" class="form-control" name="lName" placeholder="${lName}">
     <input type="text" class="form-control" name="hrIdToSearch" placeholder="HR id" pattern="\d{1,}"
            title="Only digits">
-    <button type="submit" class="btn" name="button" value="Search">Search</button>
+    <button type="submit" class="btn" name="button" value="Search">${search}</button>
 </form>
 </p>
 <p>
     <c:if test="${not empty hrList}">
-    Results for:
+    ${results}:
 <table id="table" style="width:50%" border="1px">
     <tr>
         <th>HR id</th>
@@ -65,11 +77,11 @@ ${infoSearcdDelHRMessage}<br/>
 </p>
 <hr/>
 
-Show all reviews<br/>
+${show_all_revs}<br/>
 <form id="showAllReviews" method="POST"
       action="${pageContext.request.contextPath}/Controller?command=show_all_reviews&page=1"
       style="display: block;">
-    <button type="submit" class="btn" name="button" value="ShowAllReviews">Show all reviews</button>
+    <button type="submit" class="btn" name="button" value="ShowAllReviews">${show_all_revs}</button>
 </form>
 <c:if test="${not empty reviewsList}">
     <p id="contToHideHrSearch">
@@ -107,8 +119,7 @@ Show all reviews<br/>
                 <td>${review.rating5}</td>
                 <td>${review.hireAgain}</td>
                 <td><c:if test="${review.confirmed==0}">
-                    <a href="${pageContext.request.contextPath}/Controller?command=confirm_rating&ratingidtoconfirm=${review.ratingID}&confirmerid=${user.id}">
-                        <input class="btn" type="button" name="select" value="Confirm"/></a></c:if>
+                    Not confirmed</c:if>
                     <c:if test="${review.confirmed>0}">${review.confirmed}</c:if></td>
                 <td>
                     <a href="${pageContext.request.contextPath}/Controller?command=delete_rating&ratingidtodelete=${review.ratingID}">
@@ -125,11 +136,11 @@ Show all reviews<br/>
 </c:if>
 ${ShowAllReviewsError}
 
-Show unconfirmed reviews<br/>
+${show_unconf_revs}<br/>
 <form id="showUnconfirmedReviews" method="POST"
       action="${pageContext.request.contextPath}/Controller?command=show_unconfirmed_reviews"
       style="display: block;">
-    <button type="submit" class="btn" name="button" value="ShowUnconfirmedReviews">Show Unconfirmed reviews</button>
+    <button type="submit" class="btn" name="button" value="ShowUnconfirmedReviews">${show_unconf_revs}</button>
 </form>
 <c:if test="${not empty unconfirmedReviewsList}">
     <p>All reviews:</p>
@@ -161,7 +172,8 @@ Show unconfirmed reviews<br/>
                 <td>${review.rating4}</td>
                 <td>${review.rating5}</td>
                 <td>${review.hireAgain}</td>
-                <td>${review.confirmed}</td>
+                <td><a href="${pageContext.request.contextPath}/Controller?command=confirm_rating&ratingidtoconfirm=${review.ratingID}&confirmerid=${user.id}">
+                        <input class="btn" type="button" name="select" value="Confirm"/></a></td>
             </tr>
         </c:forEach>
     </table>
@@ -169,11 +181,11 @@ Show unconfirmed reviews<br/>
 </c:if>
 ${ShowUnconfReviewsError}
 
-Show company name collisions<br/>
+${show_collisions}<br/>
 <form id="showCompanyNameCollisions" method="POST"
       action="${pageContext.request.contextPath}/Controller?command=show_company_name_collisions"
       style="display: block;">
-    <button type="submit" class="btn" name="button" value="ShowCompanyNameCollisions">Show company collisions</button>
+    <button type="submit" class="btn" name="button" value="ShowCompanyNameCollisions">${show_collisions}</button>
 </form>
 <c:if test="${not empty companyNameCollisions}">
     <p>Company list:</p>
@@ -190,18 +202,18 @@ Show company name collisions<br/>
         </tr>
         <c:forEach items="${companyNameCollisions}" var="company">
             <tr>
-                <td>${company.companyInnerId}</td>
+                <td>${company.id}</td>
                 <td>${company.name}</td>
                 <td>${company.niche}</td>
                 <td>${company.location}</td>
                 <td>${company.headcount}</td>
                 <td>${company.companyOfficialId}</td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/Controller?command=merge_company&companyIdtoMerge=${company.companyInnerId}">
+                    <a href="${pageContext.request.contextPath}/Controller?command=merge_company&companyIdtoMerge=${company.id}">
                         <input class="btn" type="button" name="select" value="UseAsBase"/>
                     </a></td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/Controller?command=remove_company&companyIdtoRemove=${company.companyInnerId}">
+                    <a href="${pageContext.request.contextPath}/Controller?command=remove_company&companyIdtoRemove=${company.id}">
                         <input class="btn" type="button" name="select" value="Remove"/></a></td>
             </tr>
         </c:forEach>

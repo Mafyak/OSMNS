@@ -98,8 +98,8 @@ public class UserHistory {
         return rating5;
     }
 
-    public String getHireAgain() {
-        return (hireAgain == 1) ? "Yes" : "No";
+    public int getHireAgain() {
+        return hireAgain;
     }
 
     public int getIdCompany() {

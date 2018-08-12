@@ -1,6 +1,7 @@
 package by.epam.dao;
 
 import by.epam.entity.Company;
+import by.epam.entity.User;
 import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
 import by.epam.utils.service.CompanyService;
@@ -24,6 +25,7 @@ public class CompanyDAO extends AbstractDAO {
     private String queryGetCompByOffId = RESOURCE_BUNDLE.getString("GET_COMPANY_BY_OFF_ID");
     private String updateCompanyInfo = RESOURCE_BUNDLE.getString("UPDATE_COMPANY_INFO");
     private String queryAddCompany = RESOURCE_BUNDLE.getString("ADD_COMPANY");
+    private String querySetMyCompany = RESOURCE_BUNDLE.getString("SET_MY_COMPANY");
     private String queryGetCompanyId = RESOURCE_BUNDLE.getString("GET_COMPANY_ID_BY_NAME");
     private String queryGetCompanyIdByOffId = RESOURCE_BUNDLE.getString("GET_COMPANY_ID_BY_OFF_ID");
 
@@ -34,7 +36,7 @@ public class CompanyDAO extends AbstractDAO {
              ResultSet rs = ps.executeQuery(queryGetCompNameCollis)) {
             while (rs.next()) {
                 Company company = new Company();
-                company.setCompanyInnerId(rs.getInt("idCompany"));
+                company.setId(rs.getInt("idCompany"));
                 company.setName(rs.getString("name"));
                 company.setNiche(rs.getString("niche"));
                 company.setLocation(rs.getString("location"));
@@ -87,7 +89,7 @@ public class CompanyDAO extends AbstractDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 company = new Company();
                 while (rs.next()) {
-                    company.setCompanyInnerId(compId);
+                    company.setId(compId);
                     company.setName(rs.getString("name"));
                     company.setNiche(rs.getString("niche"));
                     company.setLocation(rs.getString("location"));
@@ -112,7 +114,7 @@ public class CompanyDAO extends AbstractDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 company = new Company();
                 while (rs.next()) {
-                    company.setCompanyInnerId(rs.getInt("idCompany"));
+                    company.setId(rs.getInt("idCompany"));
                     company.setName(rs.getString("name"));
                     company.setNiche(rs.getString("niche"));
                     company.setLocation(rs.getString("location"));
@@ -132,8 +134,11 @@ public class CompanyDAO extends AbstractDAO {
     //doesn't work properly - doesn't change company id in history.
     public void removeCompByInnerId(int compId) throws DAOException {
         int duplId = (int) executeForSingleResult(queryFind2ndcompId, compId, compId);
+        LOG.info("Test 1");
         updateQuery(fixCompDuplInHistory, duplId, compId);
+        LOG.info("Test 2");
         updateQuery(fixCompDuplInHrhead, duplId, compId);
+        LOG.info("Test 3");
         updateQuery(queryDeleteCompById, compId);
     }
 
@@ -151,6 +156,10 @@ public class CompanyDAO extends AbstractDAO {
         executeQuery(queryAddCompany, companyName.getName(), companyName.getNiche(), companyName.getLocation(),
                 companyName.getHeadcount(), companyName.getCompanyOfficialId());
         LOG.info("New company is added:" + companyName.getName());
+    }
+
+    public void setMyCompany(User hr, Company companyName) throws DAOException {
+        updateQuery(querySetMyCompany, getCompanyByOffId(companyName.getCompanyOfficialId()).getId(), hr.getId());
     }
 
 }

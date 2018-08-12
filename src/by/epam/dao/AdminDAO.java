@@ -3,11 +3,14 @@ package by.epam.dao;
 import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
+import org.apache.log4j.Logger;
+
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class AdminDAO extends AbstractDAO<User> {
 
+    private static final Logger LOG = Logger.getLogger(AdminDAO.class);
     private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/mysqlStatements");
     private String getAllReviews = RESOURCE_BUNDLE.getString("GET_ALL_REVIEWS");
     private String getPagedReviews = RESOURCE_BUNDLE.getString("GET_PAGED_REVIEWS");
@@ -38,13 +41,13 @@ public class AdminDAO extends AbstractDAO<User> {
     }
 
     public void deleteReviewById(int reviewIdToDelete) throws DAOException {
+        LOG.info("Processing Review deletion by Id #" + reviewIdToDelete);
         updateQuery(queryDeleteReviewById, reviewIdToDelete);
     }
 
     public void removeHrById(int hrId) throws DAOException {
         updateQuery(queryDeleteHrById, hrId);
     }
-
 
 
 }

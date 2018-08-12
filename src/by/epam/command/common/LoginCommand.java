@@ -8,6 +8,7 @@ import by.epam.entity.User;
 import by.epam.utils.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 public class LoginCommand implements Command {
@@ -22,8 +23,10 @@ public class LoginCommand implements Command {
         String pass = request.getParameter(PARAM_NAME_PASSWORD);
         UserService userService = new UserService();
         try {
+            LOG.info("Login: " + login + ", pass: " + pass);
             User user = userService.login(login, pass);
             request.getSession().setAttribute("user", user);
+            LOG.info("User info: " + user);
             page = new Page(getProperPage(user), true);
         } catch (ServiceException e) {
             request.setAttribute("errorLoginPassMessage", Manager.message("cmd.login.error"));

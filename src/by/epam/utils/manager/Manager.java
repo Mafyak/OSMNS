@@ -18,6 +18,4 @@ public class Manager {
     public static String message(String key) {
         return MESSAGE_BUNDLE.getString(key);
     }
-
-
 }

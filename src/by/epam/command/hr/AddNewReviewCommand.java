@@ -34,7 +34,7 @@ public class AddNewReviewCommand implements Command {
         User employee = (User) session.getAttribute("employee");
 
         UserHistory userHistory = new UserHistory();
-        userHistory.setIdCompany(currentHR.getCompany().getCompanyInnerId());
+        userHistory.setIdCompany(currentHR.getCompany().getId());
         userHistory.setIdOfficialCompany(currentHR.getCompany().getCompanyOfficialId());
         userHistory.setYearEmployed(Integer.parseInt(request.getParameter(Y_EMPLOYED)));
         userHistory.setYearTerminated(Integer.parseInt(request.getParameter(Y_FIRED)));
@@ -49,7 +49,7 @@ public class AddNewReviewCommand implements Command {
         SessionCleaner sessionCleaner = new SessionCleaner();
         sessionCleaner.cleanSession(session);
 
-        LOG.info("Review data: user:" + currentHR + ", employee: " + employee + ", review data: " + userHistory);
+        LOG.info("\nReview data: user:" + currentHR + ",\nemployee: " + employee + ",\nreview data: " + userHistory);
         try {
             userService.addReview(currentHR, employee, userHistory);
             session.setAttribute("reviewAddResult", Manager.message("cmd.review.newReview"));

@@ -36,10 +36,12 @@
                             <a href="#" id="register-form-link">${Register}</a>
                         </div>
                         <div class="col-xs-2">
-                            <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=en"><img id="change_lang_en"
-                                                                                       src="${pageContext.request.contextPath}/img/empty_pix.gif"></a>
-                            <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=ru"><img id="change_lang_ru"
-                                                                                       src="${pageContext.request.contextPath}/img/empty_pix.gif"></a>
+                            <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=en"><img
+                                    id="change_lang_en"
+                                    src="${pageContext.request.contextPath}/img/empty_pix.gif"></a>
+                            <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=ru"><img
+                                    id="change_lang_ru"
+                                    src="${pageContext.request.contextPath}/img/empty_pix.gif"></a>
                         </div>
                     </div>
                     <hr>
@@ -50,12 +52,15 @@
                             <form id="login-form" method="POST" action="Controller" style="display: block;">
                                 <div class="form-group">
                                     <input type="text" name="login" id="username" tabindex="1" class="form-control"
-                                           placeholder="${Email}" value="" required>
+                                           placeholder="${Email}" value="">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" name="password" id="password" tabindex="2"
-                                           class="form-control" placeholder="${Password}" required>
+                                           class="form-control" placeholder="${Password}">
                                 </div>
+                                <a href="#"
+                                   onclick="document.getElementById('recover-form').style.display='block';return false;"
+                                   id="close_popup">Forgot Password?</a>
                                 <div class="form-group">
                                     ${infoMessage}
                                     <div class="row">
@@ -65,7 +70,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <form method="POST" action="Controller">
+                                    <div class="form-group" id="recover-form" style="display: none;">
+                                        <div class="form-group">
+                                            <hr/>
+                                            <input type="text" name="recovEm" id="recovEm" class="form-control"
+                                                   placeholder="Enter Email To recover password">
+                                        </div>
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="submit" name="command" id="pass-recover"
+                                                   class="form-control btn btn-login" value="Recover_password">
+                                        </div>
+                                    </div>
+                                </form>
                             </form>
+
 
                             <form id="register-form" action="Controller" method="POST" style="display: none;">
                                 <div class="form-group">

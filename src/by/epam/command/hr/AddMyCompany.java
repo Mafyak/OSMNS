@@ -37,7 +37,9 @@ public class AddMyCompany implements Command {
         LOG.info("Processing new COMPANY_NAME creation: " + myCompany.toString() + ". Passing to service.");
         try {
             companyService.addCompany(myCompany);
+            companyService.setMyCompany(currentUser, myCompany);
             currentUser.setCompany(myCompany);
+            session.setAttribute("user", currentUser);
         } catch (ServiceException e) {
             request.setAttribute("addMyCompanyError", Manager.message("msg.error.processing"));
             LOG.info("Error during addMyCompany method: " + e);

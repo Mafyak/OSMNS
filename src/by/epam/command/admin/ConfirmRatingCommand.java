@@ -24,6 +24,6 @@ public class ConfirmRatingCommand implements Command {
             request.setAttribute("infoMessage", Manager.message("cmd.review.cantConfirm"));
         }
 
-        return new ShowAllReviewsCommand().execute(request);
+        return new ShowUnconfirmedReviewsCommand().execute(request);
     }
 }

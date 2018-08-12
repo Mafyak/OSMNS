@@ -17,6 +17,7 @@
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/sorttable.js"></script>
 </head>
 <body>
 <jsp:include page="../pageParts/header.jsp"/>
@@ -31,7 +32,8 @@
 
 <c:if test="${not empty employee.fName}">
     <p>Result for: ${employee.lName}, ${employee.fName}</p>
-    <table class="table" style="width:50%" border="1px">
+   <!-- <table class="table" class="sortable" style="width:50%" border="1px"> -->
+        <table class="sortable" style="width:50%" border="1px">
         <tr>
             <th>Company Name</th>
             <th>Year Employed</th>
@@ -54,7 +56,8 @@
                 <td>${review.rating3}</td>
                 <td>${review.rating4}</td>
                 <td>${review.rating5}</td>
-                <td>${review.hireAgain}</td>
+                <td><c:if test="${review.hireAgain eq 1}">Yes</c:if>
+                    <c:if test="${review.hireAgain eq 0}">No</c:if></td>
                 <td><custag:trust-rate-tag hrID="${review.idHR}"/></td>
             </tr>
         </c:forEach>

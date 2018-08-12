@@ -25,6 +25,7 @@ public class UserDAO extends AbstractDAO<User> {
     private String queryUpdateHrheadInfo = RESOURCE_BUNDLE.getString("UPDATE_HRHEAD_INFO");
     private String queryUpdateHrheadCred = RESOURCE_BUNDLE.getString("UPDATE_HRHEAD_CRED");
     private String queryGetUserId = RESOURCE_BUNDLE.getString("GET_USER_ID");
+    private String querySetNewPassword = RESOURCE_BUNDLE.getString("SET_NEW_PASS");
     private String queryGetEmplBySSN = RESOURCE_BUNDLE.getString("GET_EMPLOYEE_BY_SSN");
     private String queryGetEmplIdBySSN = RESOURCE_BUNDLE.getString("GET_EMPLOYEE_ID_BY_SSN");
     private String queryGetEmplHistById = RESOURCE_BUNDLE.getString("GET_EMPLOYEE_HISTORY_BY_ID");
@@ -47,24 +48,29 @@ public class UserDAO extends AbstractDAO<User> {
             ps.setObject(2, params[1]); //password
             try (ResultSet rs = ps.executeQuery()) {
                 user = new User();
+                LOG.info("Login check point 1");
                 Company company;
                 while (rs.next()) {
                     UserType role = rs.getInt("role") == 0 ? UserType.ADMIN : UserType.HR;
                     user.setId(rs.getInt("idLogin"));
                     user.setType(role);
+                    LOG.info("Login check point 2");
                     if (role == UserType.HR) {
                         user.setEmail(rs.getString("email"));
                         user.setPass(rs.getString("pass"));
                         user.setfName(rs.getString("fName"));
                         user.setlName(rs.getString("lName"));
+                        LOG.info("Login check point 3");
                         company = new Company();
                         company.setName(rs.getString("name"));
-                        company.setCompanyInnerId(rs.getInt("idCompany"));
+                        company.setId(rs.getInt("idCompany"));
                         company.setNiche(rs.getString("niche"));
+                        LOG.info("Login check point 4");
                         company.setLocation(rs.getString("location"));
                         company.setHeadcount(rs.getInt("headcount"));
                         company.setCompanyOfficialId(rs.getInt("offCompId"));
                         user.setCompany(company);
+                        LOG.info("Login check point 5");
                     }
                     if (role == UserType.ADMIN) {
                         String fullName = executeForSingleResult(getAdminInfo, user.getId()).toString();
@@ -80,6 +86,16 @@ public class UserDAO extends AbstractDAO<User> {
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }
+    }
+
+
+    public void setNewPassword(String login, String pass) throws DAOException {
+        if ((updateQuery(querySetNewPassword, pass, login)) == 0)
+            throw new DAOException("Such login does not exist");
+    }
+
+    public void addNewEmployee(User user) throws DAOException {
+        executeQuery(queryAddEmployeeBySSN);
     }
 
     public void registerUser(User user) throws DAOException {
@@ -126,6 +142,7 @@ public class UserDAO extends AbstractDAO<User> {
                     employee.setSSN(SSN);
                 }
             }
+            LOG.info("Employee " + employee.getfName() + " is retrieved from db.");
         } catch (SQLException e) {
             LOG.info("SQL Exception during getEmployeeBySSN method in UserDAO" + e);
             throw new DAOException("Can't get user Id by SSN", e);
@@ -136,8 +153,8 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public User getEntityBySSN(int SSN) throws DAOException {
-        Connection conn = ConnectionPool.getInstance().getConnection();
         User employee = getEmployeeBySSN(SSN);
+        LOG.info("Passed getEntityBySSN in UserDAO, id: " + employee.getId());
         List<UserHistory> userHistory = getReviews(queryGetEmplHistById, employee.getId());
         for (UserHistory hist : userHistory)
             employee.addHistory(hist);
@@ -145,19 +162,23 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public void setCompanyId(Company company, User user) throws DAOException {
-        updateQuery(querySetCompanyId, company.getCompanyInnerId(), user.getId());
+        updateQuery(querySetCompanyId, company.getId(), user.getId());
     }
 
     public void registerEmployee(User employee) throws DAOException {
-        updateQuery(queryAddEmployeeBySSN, employee.getfName(), employee.getlName(), employee.getSSN());
+        updateQuery(queryAddEmployeeBySSN, employee.getfName(), employee.getlName(), employee.getmName(), employee.getSSN());
+        employee.setId(getEmployeeIdBySSN(employee.getSSN()));
     }
 
     public void addReview(User hrHead, User employee, UserHistory userHistory) throws DAOException {
         double aveRating = (userHistory.getRating1() + userHistory.getRating2() +
                 userHistory.getRating3() + userHistory.getRating4() + userHistory.getRating5()) / 5.0;
-        int getHireAgain = (userHistory.getHireAgain().equals("Yes") ? 1 : 0);
+        int getHireAgain = userHistory.getHireAgain();
         Company company = hrHead.getCompany();
-        int companyId = company.getCompanyInnerId();
+        LOG.info("Company data: " + company);
+        CompanyDAO companyDAO = new CompanyDAO();
+        int companyId = companyDAO.getCompanyIdByOfficialId(company.getCompanyOfficialId());
+        LOG.info("company id: " + companyId + ", hr head id: " + hrHead.getId());
         updateQuery(queryAddReview, companyId, hrHead.getId(), employee.getId(), userHistory.getYearEmployed(),
                 userHistory.getYearTerminated(), userHistory.getRating1(), userHistory.getRating2(),
                 userHistory.getRating3(), userHistory.getRating4(), userHistory.getRating5(), aveRating, getHireAgain);

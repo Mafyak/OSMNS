@@ -1,14 +1,16 @@
 package by.epam.entity;
 
-public class Company {
+public class Company extends Entity {
     private String name;
+    private int id;
+
     private String niche;
     private String location;
     private int headcount;
     private int companyOfficialId;
-    private int companyInnerId;
 
-    public Company(){}
+    public Company() {
+    }
 
     public Company(String name, String niche, String location, int headcount) {
         this.name = name;
@@ -61,15 +63,27 @@ public class Company {
         return companyOfficialId;
     }
 
-    public int getCompanyInnerId() {
-        return companyInnerId;
+    public int getId() {
+        return id;
     }
 
     public void setCompanyOfficialId(int companyOfficialId) {
         this.companyOfficialId = companyOfficialId;
     }
 
-    public void setCompanyInnerId(int companyInnerId) {
-        this.companyInnerId = companyInnerId;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "name='" + name + '\'' +
+                ", niche='" + niche + '\'' +
+                ", location='" + location + '\'' +
+                ", headcount=" + headcount +
+                ", companyOfficialId=" + companyOfficialId +
+                ", id=" + id +
+                '}';
     }
 }

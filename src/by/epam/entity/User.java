@@ -3,7 +3,7 @@ package by.epam.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User extends Entity {
     private String email;
     private String pass;
     private Company company;
@@ -13,9 +13,10 @@ public class User {
     private int SSN;
     private int id;
     private UserType type;
-    private List<UserHistory> history = new ArrayList<UserHistory>();
+    private List<UserHistory> history;
 
     public User() {
+        history = new ArrayList<>();
     }
 
     public String getmName() {
@@ -56,6 +57,11 @@ public class User {
         return id;
     }
 
+    @Override
+    public String getName() {
+        return fName + " " + mName + " " + lName;
+    }
+
     public UserType getType() {
         return type;
     }
@@ -78,6 +84,23 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public void setName(String name) {
+        switch (name.split(" ").length) {
+            case (1):
+                fName = name.split(" ")[0];
+                lName = name.split(" ")[1];
+                break;
+            case (2):
+                fName = name.split(" ")[0];
+                mName = name.split(" ")[1];
+                lName = name.split(" ")[2];
+                break;
+            default:
+                fName = name;
+        }
     }
 
     public void setType(UserType type) {

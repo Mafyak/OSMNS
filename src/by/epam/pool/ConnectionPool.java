@@ -5,16 +5,17 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+
 import org.apache.log4j.Logger;
 
-public class ConnectionPool{
+public class ConnectionPool {
 
     private BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(10, true);
+    private BlockingQueue<Connection> takenConnections = new ArrayBlockingQueue<>(10, true);
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/mysql");
     private static final Logger LOG = Logger.getLogger("ConnectionPool");
     private static volatile ConnectionPool instance;
     private Properties props = new Properties();
-
 
     private ConnectionPool() {
     }
@@ -34,6 +35,13 @@ public class ConnectionPool{
 
     public void closePool() {
         for (Connection conn : pool) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                LOG.info("Connection " + conn + " can't be closed.");
+            }
+        }
+        for (Connection conn : takenConnections) {
             try {
                 conn.close();
             } catch (SQLException e) {
@@ -68,6 +76,7 @@ public class ConnectionPool{
         Connection conn = null;
         try {
             conn = pool.take();
+            takenConnections.add(conn);
         } catch (InterruptedException e) {
             LOG.info("SQL Exception is thrown while getting a connection from Connection Pool" + e);
         }
@@ -78,6 +87,7 @@ public class ConnectionPool{
         if (conn != null) {
             try {
                 pool.put(conn);
+                takenConnections.remove(conn);
             } catch (InterruptedException e) {
                 LOG.info("SQL Exception is thrown while getting a connection from Connection Pool" + e);
             }
