@@ -44,9 +44,9 @@ public class ShowAllReviewsCommand implements Command {
             userHistories = adminService.getPagedReviews(index);
             session.setAttribute("pages", size);
         } catch (ServiceException e) {
-            request.setAttribute("ShowAllReviewsError", Manager.message("msg.error.processing"));
+            request.setAttribute("ShowAllReviewsError", Manager.getMan().message("msg.error.processing"));
         }
         session.setAttribute("reviewsList", userHistories);
-        return new Page(Manager.getProperty("path.page.admin"), true);
+        return new Page(Manager.getMan().getPage("admin_page"), true);
     }
 }

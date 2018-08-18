@@ -33,7 +33,7 @@ public class ShowHrByName implements Command {
             session.removeAttribute("unconfirmedReviewsList");
             session.removeAttribute("companyNameCollisions");
             LOG.info("hrId is set in ShowHrByName field");
-            return new Page(Manager.getProperty("path.page.admin"), true);
+            return new Page(Manager.getMan().getPage("admin_page"), true);
         } catch (NumberFormatException | ServiceException e) {
             LOG.info("hrId is not set in ShowHrByName field");
         }
@@ -42,11 +42,11 @@ public class ShowHrByName implements Command {
             if (!fName.isEmpty() && !lName.isEmpty()) {
                 hrList = userService.getHrByName(fName, lName);
             } else
-                session.setAttribute("infoSearcdDelHRMessage", Manager.message("cmd.showHR.error"));
+                session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));
         } catch (ServiceException e) {
-            session.setAttribute("infoSearcdDelHRMessage", Manager.message("cmd.showHR.error"));
+            session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));
         }
         session.setAttribute("hrList", hrList);
-        return new Page(Manager.getProperty("path.page.admin"), true);
+        return new Page(Manager.getMan().getPage("admin_page"), true);
     }
 }

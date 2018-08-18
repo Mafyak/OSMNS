@@ -8,6 +8,9 @@
     <fmt:message key="cmn.lName" var="lName"/>
     <fmt:message key="cmn.login" var="Login"/>
     <fmt:message key="cmn.register" var="Register"/>
+    <fmt:message key="cmn.forgotPass" var="forgotPass"/>
+    <fmt:message key="cmn.emailToRecPass" var="emailToRecPass"/>
+    <fmt:message key="cmn.recovPass" var="recovPass"/>
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
 
@@ -60,31 +63,32 @@
                                 </div>
                                 <a href="#"
                                    onclick="document.getElementById('recover-form').style.display='block';return false;"
-                                   id="close_popup">Forgot Password?</a>
+                                   id="close_popup">${forgotPass}?</a>
                                 <div class="form-group">
                                     ${infoMessage}
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" name="command" id="login-submit" tabindex="4"
-                                                   class="form-control btn btn-login" value="Login">
+                                            <button type="submit" name="command" id="login-submit"
+                                                    class="form-control btn btn-login" value="Login">${Login}</button>
                                         </div>
                                     </div>
                                 </div>
-                                <form method="POST" action="Controller">
-                                    <div class="form-group" id="recover-form" style="display: none;">
-                                        <div class="form-group">
-                                            <hr/>
-                                            <input type="text" name="recovEm" id="recovEm" class="form-control"
-                                                   placeholder="Enter Email To recover password">
-                                        </div>
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" name="command" id="pass-recover"
-                                                   class="form-control btn btn-login" value="Recover_password">
-                                        </div>
-                                    </div>
-                                </form>
                             </form>
-
+                            <form method="POST" action="Controller">
+                                <div class="form-group" id="recover-form" style="display: none;">
+                                    <div class="form-group">
+                                        <hr/>
+                                        <input type="text" name="recovEm" id="recovEm" class="form-control"
+                                               placeholder="${emailToRecPass}">
+                                    </div>
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <button type="submit" name="command" id="pass-recover"
+                                                class="form-control btn btn-login"
+                                                value="Recover_password">${recovPass}</button>
+                                    </div>
+                                </div>
+                            </form>
+                            </form>
 
                             <form id="register-form" action="Controller" method="POST" style="display: none;">
                                 <div class="form-group">
@@ -109,8 +113,9 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" name="command" id="register-submit" tabindex="4"
-                                                   class="form-control btn btn-register" value="Register">
+                                            <button type="submit" name="command" id="register-submit"
+                                                    class="form-control btn btn-register"
+                                                    value="Register">${Register}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -122,6 +127,5 @@
         </div>
     </div>
 </div>
-</form>
 </body>
 </html>

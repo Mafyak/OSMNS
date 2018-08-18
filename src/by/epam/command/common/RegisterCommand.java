@@ -28,11 +28,11 @@ public class RegisterCommand implements Command {
         HttpSession session = request.getSession();
         try {
             userService.register(login, pass, fName, mName, lName);
-            session.setAttribute("infoMessage", Manager.message("cmd.reg.success"));
-            page = new Page(Manager.getProperty("path.page.login"), true);
+            session.setAttribute("infoMessage", Manager.getMan().message("cmd.reg.success"));
+            page = new Page(Manager.getMan().getPage("login_page"), true);
         } catch (ServiceException e) {
-            session.setAttribute("infoMessage", Manager.message("cmd.reg.failure"));
-            page = new Page(Manager.getProperty("path.page.login"), true);
+            session.setAttribute("infoMessage", Manager.getMan().message("cmd.reg.failure"));
+            page = new Page(Manager.getMan().getPage("login_page"), true);
         }
         return page;
     }

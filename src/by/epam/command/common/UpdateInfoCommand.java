@@ -6,10 +6,8 @@ import by.epam.entity.Page;
 import by.epam.entity.User;
 import by.epam.exception.ServiceException;
 import by.epam.utils.service.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import by.epam.utils.manager.Manager;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 public class UpdateInfoCommand implements Command {
@@ -17,7 +15,7 @@ public class UpdateInfoCommand implements Command {
     private static final String PARAM_FIRST_NAME = "fName";
     private static final String PARAM_LAST_NAME = "lName";
     private static final String PARAM_EMAIL = "email";
-    private static final String PARAM_PASSWORD = "pass";
+    //private static final String PARAM_PASSWORD = "pass";
     private static final String PARAM_COMP_OFF_ID = "cOffId";
     private static final Logger LOG = Logger.getLogger("LoginCommand");
 
@@ -41,13 +39,16 @@ public class UpdateInfoCommand implements Command {
         try {
             Company company = companyService.getCompanyByOffId(cOffId);
             user.setCompany(company);
+            LOG.info("Company is set to: " + company.getName());
+            if (company.getName() == null)
+                request.getSession().setAttribute("errorMessage", Manager.getMan().message("msg.error.processing"));
             userService.updateUserInfo(user);
-
             request.getSession().setAttribute("user", user);
+            LOG.info("Ready to forward");
         } catch (ServiceException e) {
             LOG.info("DAO Exception during updateUserInfo method in UserDAO" + e);
-            request.getSession().setAttribute("errorMessage", Manager.message("msg.error.processing"));
+            request.getSession().setAttribute("errorMessage", Manager.getMan().message("msg.error.processing"));
         }
-        return new Page(Manager.getProperty("path.page.settings"));
+        return new Page(Manager.getMan().getPage("settings_page"));
     }
 }

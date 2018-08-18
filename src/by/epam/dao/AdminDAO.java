@@ -48,6 +48,4 @@ public class AdminDAO extends AbstractDAO<User> {
     public void removeHrById(int hrId) throws DAOException {
         updateQuery(queryDeleteHrById, hrId);
     }
-
-
 }

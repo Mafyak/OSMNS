@@ -10,10 +10,7 @@ import by.epam.utils.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-
-import java.util.Comparator;
 
 public class ShowBySSNCommand implements Command {
 
@@ -22,26 +19,36 @@ public class ShowBySSNCommand implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(Manager.getProperty("path.page.emplProfile"), true);
+        Page page = new Page(Manager.getMan().getPage("emp_profile_page"), true);
         String employeeSSN = request.getParameter(SSN);
         UserService userService = new UserService();
-        User employee = null;
+        User employee = new User();
+        HttpSession session = request.getSession();
+        session.removeAttribute("noDataPerSSN");
+
         try {
             employee = userService.getUserBySSN(Integer.parseInt(employeeSSN));
         } catch (ServiceException e) {
             LOG.info("Error while getting data");
-            request.setAttribute("noDataPerSSN",
-                    Manager.message("cmd.ssn.noDataPerSSN"));
+            session.setAttribute("noDataPerSSN",
+                    Manager.getMan().message("cmd.ssn.noDataPerSSN"));
         }
-        LOG.info("employee: " + employee);
-        HttpSession session = request.getSession();
 
-        try{
+        if (employee.getId() == 0) {
+            LOG.info("Employee is empty");
+            session.setAttribute("noDataPerSSN",
+                    Manager.getMan().message("cmd.ssn.noDataPerSSN"));
+        }
+
+        LOG.info("employee: " + employee);
+
+        try {
             employee.getHistory().sort(
-                    (UserHistory o1, UserHistory o2)->(o1.getYearEmployed() < o2.getYearEmployed()) ? 1 : 0);
-        } catch (NullPointerException e){
+                    (UserHistory o1, UserHistory o2) -> (o1.getYearEmployed() < o2.getYearEmployed()) ? 1 : 0);
+        } catch (NullPointerException e) {
             LOG.info("No history for employee: " + employee);
         }
+
         session.setAttribute("employee", employee);
         return page;
     }

@@ -1,8 +1,8 @@
 package by.epam.entity;
 
 public abstract class Entity {
-    int id;
-    String name;
+    private int id;
+    private String name;
 
     public abstract int getId();
 

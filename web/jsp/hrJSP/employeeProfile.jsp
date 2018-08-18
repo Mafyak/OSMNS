@@ -8,6 +8,19 @@
     <fmt:message key="main.search_by_SSN" var="Search_by_SSN"/>
     <fmt:message key="main.add" var="Add"/>
     <fmt:message key="main.your_company" var="Your_company"/>
+    <fmt:message key="cmn.ssn" var="ssn"/>
+    <fmt:message key="cmn.search" var="search"/>
+    <fmt:message key="rev.rating1" var="rating1"/>
+    <fmt:message key="rev.rating2" var="rating2"/>
+    <fmt:message key="rev.rating3" var="rating3"/>
+    <fmt:message key="rev.rating4" var="rating4"/>
+    <fmt:message key="rev.rating5" var="rating5"/>
+    <fmt:message key="rev.yearFired" var="yearFired"/>
+    <fmt:message key="rev.yearEmpld" var="yearEmpld"/>
+    <fmt:message key="rev.rate_employee" var="rate_employee"/>
+    <fmt:message key="hr.trust.rate" var="trustRate"/>
+    <fmt:message key="company" var="cСompany"/>
+    <fmt:message key="hr.hire_again" var="hire_again"/>
 </fmt:bundle>
 
 
@@ -25,8 +38,8 @@
 <p>${Search_by_SSN}:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
       style="display: block;">
-    <input type="text" name="SSN" class="form-control" placeholder="SSN" required>
-    <button type="submit" name="button" class="btn" value="Search">Search me</button>
+    <input type="text" name="SSN" class="form-control" placeholder="${ssn}" pattern="\d+" title="Digits only" required>
+    <button type="submit" name="button" class="btn"  value="Search">${search}</button>
 </form>
 <hr/>
 
@@ -35,16 +48,16 @@
    <!-- <table class="table" class="sortable" style="width:50%" border="1px"> -->
         <table class="sortable" style="width:50%" border="1px">
         <tr>
-            <th>Company Name</th>
-            <th>Year Employed</th>
-            <th>Year Terminated</th>
-            <th>Rating 1</th>
-            <th>Rating 2</th>
-            <th>Rating 3</th>
-            <th>Rating 4</th>
-            <th>Rating 5</th>
-            <th>Hire again</th>
-            <th>HR trust rate</th>
+            <th>${cСompany}</th>
+            <th>${yearEmpld}</th>
+            <th>${yearFired}</th>
+            <th>${rating1}</th>
+            <th>${rating2}</th>
+            <th>${rating3}</th>
+            <th>${rating4}</th>
+            <th>${rating5}</th>
+            <th>${hire_again}</th>
+            <th>${trustRate}</th>
         </tr>
         <c:forEach items="${employee.history}" var="review">
             <tr>

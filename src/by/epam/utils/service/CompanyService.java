@@ -35,7 +35,6 @@ public class CompanyService {
         }
     }
 
-
     public void setMyCompany(User user, Company userCompany) throws ServiceException {
         try {
             companyDAO.setMyCompany(user, userCompany);
@@ -44,7 +43,6 @@ public class CompanyService {
             throw new ServiceException("Detected DAOException in UserService method setMyCompany()", e);
         }
     }
-
 
     public List<Company> getCompNameCollisions() throws ServiceException {
         try {

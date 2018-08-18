@@ -11,7 +11,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import org.apache.log4j.Logger;
 
 public class UserDAO extends AbstractDAO<User> {
@@ -98,11 +97,11 @@ public class UserDAO extends AbstractDAO<User> {
         executeQuery(queryAddEmployeeBySSN);
     }
 
-    public void registerUser(User user) throws DAOException {
+    private void registerUser(User user) throws DAOException {
         executeQuery(queryRegister, user.getEmail(), user.getPass());
     }
 
-    public void setUserIdByEmailAndPass(User user) throws DAOException {
+    private void setUserIdByEmailAndPass(User user) throws DAOException {
         int userId = (int) executeForSingleResult(queryGetUserId, user.getEmail(), user.getPass());
         user.setId(userId);
     }
@@ -112,7 +111,7 @@ public class UserDAO extends AbstractDAO<User> {
         updateQuery(queryUpdateHrheadCred, user.getEmail(), user.getId());
     }
 
-    public void addHrHeadInfo(User user) throws DAOException {
+    private void addHrHeadInfo(User user) throws DAOException {
         updateQuery(queryAddHRHEADInfo, user.getId(), user.getfName(), user.getmName(), user.getlName());
     }
 
@@ -123,7 +122,7 @@ public class UserDAO extends AbstractDAO<User> {
         LOG.info("New user is added:" + user.getEmail());
     }
 
-    public int getEmployeeIdBySSN(int SSN) throws DAOException {
+    private int getEmployeeIdBySSN(int SSN) throws DAOException {
         if (executeForSingleResult(queryGetEmplIdBySSN, SSN) == null) {
             return 0;
         } else return (int) executeForSingleResult(queryGetEmplIdBySSN, SSN);

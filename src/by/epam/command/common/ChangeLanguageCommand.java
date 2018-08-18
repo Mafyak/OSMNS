@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
-
 import org.apache.log4j.Logger;
 
 public class ChangeLanguageCommand implements Command {
@@ -20,7 +19,7 @@ public class ChangeLanguageCommand implements Command {
 
         String lang = request.getParameter("lang");
         String uri = request.getHeader("Referer");
-        int uriLength = Integer.parseInt(Manager.getProperty("url.length"));
+        int uriLength = Integer.parseInt(Manager.getMan().getPage("url.length"));
 
         String referer = uri.substring(uriLength);
         LOG.info("referer: " + referer);
@@ -37,6 +36,7 @@ public class ChangeLanguageCommand implements Command {
 
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
         HttpSession session = request.getSession();
+        session.removeAttribute("infoMessage");
 
         if (!uri.contains("Controller"))
             session.setAttribute("page", referer);

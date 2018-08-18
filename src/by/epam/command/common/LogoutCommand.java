@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LogoutCommand implements Command {
 
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(Manager.getProperty("path.page.index"), true);
+        Page page = new Page(Manager.getMan().getPage("index_page"), true);
         request.getSession().invalidate();
         return page;
     }

@@ -7,8 +7,10 @@ import by.epam.exception.ServiceException;
 import by.epam.utils.manager.Manager;
 import by.epam.utils.service.UserService;
 import org.apache.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.ResourceBundle;
 
 public class AddNewEmployee implements Command {
@@ -18,12 +20,19 @@ public class AddNewEmployee implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(Manager.getProperty("mainPage"), true);
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Page page = new Page(Manager.getMan().getPage("hr_main_page"), true);
 
         HttpSession session = request.getSession();
+        session.removeAttribute("infoAddingEmpl");
         User currentHR = (User) session.getAttribute("user");
         String fName = request.getParameter("empFName");
         String mName = request.getParameter("empMName");
+        LOG.info("name: " + fName);
         String lName = request.getParameter("empLName");
         int ssn = Integer.parseInt(request.getParameter("empSSN"));
         User employee = new User();
@@ -36,11 +45,11 @@ public class AddNewEmployee implements Command {
         UserService userService = new UserService();
         try {
             userService.addNewEmployee(employee);
-            request.setAttribute("infoAddingEmpl",
+            session.setAttribute("infoAddingEmpl",
                     langBundle.getString("hr.succ.addEmpl"));
         } catch (ServiceException e) {
             LOG.info("Error adding employee");
-            request.setAttribute("infoAddingEmpl",
+            session.setAttribute("infoAddingEmpl",
                     langBundle.getString("hr.err.addEmpl"));
         }
 

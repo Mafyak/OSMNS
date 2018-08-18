@@ -64,12 +64,18 @@ public class ConnectionPool {
         }
         for (int i = 0; i < 10; i++) {
             try {
+                LOG.info("trying to add conn");
+                LOG.info("pool size: " + pool.size() + ", # of tries:" + i);
                 pool.add(DriverManager.getConnection(url, props));
             } catch (SQLException e) {
                 LOG.info("SQL Exception is thrown while filling Connection Pool" + e);
             }
         }
         LOG.info("Connection pool is set and ready to go.");
+    }
+
+    public boolean isAlive() {
+        return pool.size() == 10;
     }
 
     public Connection getConnection() {

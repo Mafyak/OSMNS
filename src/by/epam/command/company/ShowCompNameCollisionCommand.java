@@ -33,6 +33,6 @@ public class ShowCompNameCollisionCommand implements Command {
         }
         session.setAttribute("companyNameCollisions", list);
 
-        return new Page(Manager.getProperty("path.page.admin"), true);
+        return new Page(Manager.getMan().getPage("admin_page"), true);
     }
 }

@@ -40,8 +40,6 @@ public class UserService {
         }
     }
 
-
-
     public void addNewEmployee(User user) throws ServiceException{
         try{
             userDAO.registerEmployee(user);
@@ -123,7 +121,7 @@ public class UserService {
     }
 
     public int getHRTrustRate(int idHR) throws ServiceException {
-        List<Integer> allReviewsList = null;
+        List<Integer> allReviewsList;
         try {
             allReviewsList = userDAO.getReviewsRateForHrById(idHR);
             List<Double> avgReviewsList = userDAO.getAVGReviewsRateForHrById(idHR);

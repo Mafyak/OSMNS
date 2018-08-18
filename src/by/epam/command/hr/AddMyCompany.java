@@ -22,7 +22,7 @@ public class AddMyCompany implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(Manager.getProperty("mainPage"), true);
+        Page page = new Page(Manager.getMan().getPage("hr_main_page"), true);
         HttpSession session = request.getSession();
 
         User currentUser = (User) session.getAttribute("user");
@@ -41,7 +41,7 @@ public class AddMyCompany implements Command {
             currentUser.setCompany(myCompany);
             session.setAttribute("user", currentUser);
         } catch (ServiceException e) {
-            request.setAttribute("addMyCompanyError", Manager.message("msg.error.processing"));
+            request.setAttribute("addMyCompanyError", Manager.getMan().message("msg.error.processing"));
             LOG.info("Error during addMyCompany method: " + e);
         }
         LOG.info("Processing new COMPANY_NAME creation. End of command.");

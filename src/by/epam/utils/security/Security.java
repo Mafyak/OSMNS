@@ -1,12 +1,11 @@
 package by.epam.utils.security;
 
 import by.epam.utils.manager.Manager;
-
 import java.util.Base64;
 
 public class Security {
 
-    private final static String SALT = Manager.message("scr.salt");
+    private final static String SALT = Manager.getMan().message("scr.salt");
     private final static Base64.Encoder ENCODER = Base64.getEncoder();
     private final static Base64.Decoder DECODER = Base64.getDecoder();
 

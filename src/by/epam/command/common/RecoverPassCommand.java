@@ -29,11 +29,12 @@ public class RecoverPassCommand implements Command {
                     "Your temporary password is: " + newPass + ". Please, log in and change it to permanent at your earliest " +
                     "convenience!";
             sendMail.send(email, body);
+            LOG.info("Recover email for user email " + email + " has been sent");
             request.setAttribute("infoMessage", "Recover email has been sent");
         } catch (ServiceException e) {
             request.setAttribute("infoMessage", "Can't recover email... You sure you're registered?");
         }
 
-        return new Page(Manager.getProperty("path.page.login"));
+        return new Page(Manager.getMan().getPage("login_page"));
     }
 }

@@ -1,21 +1,48 @@
 package by.epam.utils.manager;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Manager {
-    private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/pages");
+
+    private final static ResourceBundle PAGE_BUNDLE = ResourceBundle.getBundle("resources/pages");
     private final static ResourceBundle MESSAGE_BUNDLE = ResourceBundle.getBundle("resources/messages");
+    private final static ResourceBundle CONFIG_BUNDLE = ResourceBundle.getBundle("resources/config");
+    private static volatile Manager instance;
 
     private Manager() {
     }
 
-    // Get config property
-    public static String getProperty(String key) {
-        return RESOURCE_BUNDLE.getString(key);
+    public static Manager getMan() {
+        Manager localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Manager.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new Manager();
+                }
+            }
+        }
+        return localInstance;
+    }
+
+    // Get page
+    public String getPage(String key) {
+        return PAGE_BUNDLE.getString(key);
+    }
+
+    // Get config
+    public String getConfig(String key) {
+        return CONFIG_BUNDLE.getString(key);
     }
 
     // Get messages
-    public static String message(String key) {
+    public String message(String key) {
         return MESSAGE_BUNDLE.getString(key);
+    }
+
+    // Get messages
+    public String message(String key, Locale locale) {
+        return ResourceBundle.getBundle("resources/content", locale).getString(key);
     }
 }

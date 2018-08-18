@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ConfirmRatingCommand implements Command {
 
-
     @Override
     public Page execute(HttpServletRequest request) {
 
@@ -21,7 +20,7 @@ public class ConfirmRatingCommand implements Command {
         try {
             adminService.confirmRating(ratingIdToConfirm, adminID);
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", Manager.message("cmd.review.cantConfirm"));
+            request.setAttribute("infoMessage", Manager.getMan().message("cmd.review.cantConfirm"));
         }
 
         return new ShowUnconfirmedReviewsCommand().execute(request);

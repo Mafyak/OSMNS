@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ShowUnconfirmedReviewsCommand implements Command {
 
-
     @Override
     public Page execute(HttpServletRequest request) {
 
@@ -26,8 +25,8 @@ public class ShowUnconfirmedReviewsCommand implements Command {
             userHistories = adminService.getUnconfirmedReviews();
             session.setAttribute("unconfirmedReviewsList", userHistories);
         } catch (ServiceException e) {
-            session.setAttribute("ShowUnconfReviewsError", Manager.message("cmd.adm.noUncRev"));
+            session.setAttribute("ShowUnconfReviewsError", Manager.getMan().message("cmd.adm.noUncRev"));
         }
-        return new Page(Manager.getProperty("path.page.admin"), true);
+        return new Page(Manager.getMan().getPage("admin_page"), true);
     }
 }

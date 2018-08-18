@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+import java.util.Locale;
 
 public class AddNewReviewCommand implements Command {
 
@@ -27,11 +29,24 @@ public class AddNewReviewCommand implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(Manager.getProperty("mainPage"), true);
+        Page page = new Page(Manager.getMan().getPage("hr_main_page"), true);
         HttpSession session = request.getSession();
 
         User currentHR = (User) session.getAttribute("user");
         User employee = (User) session.getAttribute("employee");
+        Locale locale = (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);
+        if (locale == null)
+            locale = Locale.getDefault();
+
+        if (employee == null) {
+            session.setAttribute("infoMessage", Manager.getMan().message("msg.error.emptEmpl", locale));
+            return page;
+        }
+
+        if (currentHR.getCompany() == null) {
+            session.setAttribute("infoMessage", Manager.getMan().message("msg.error.emptComp", locale));
+            return page;
+        }
 
         UserHistory userHistory = new UserHistory();
         userHistory.setIdCompany(currentHR.getCompany().getId());
@@ -52,9 +67,9 @@ public class AddNewReviewCommand implements Command {
         LOG.info("\nReview data: user:" + currentHR + ",\nemployee: " + employee + ",\nreview data: " + userHistory);
         try {
             userService.addReview(currentHR, employee, userHistory);
-            session.setAttribute("reviewAddResult", Manager.message("cmd.review.newReview"));
-        } catch (ServiceException e) {
-            session.setAttribute("reviewAddResult", Manager.message("msg.error.processing"));
+            session.setAttribute("infoMessage", Manager.getMan().message("cmd.review.newReview"));
+        } catch (ServiceException | NullPointerException e) {
+            session.setAttribute("infoMessage", Manager.getMan().message("msg.error.processing"));
             LOG.info("Error during new review creation: " + e);
         }
         LOG.info("Processing new company creation. End of command.");

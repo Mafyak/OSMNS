@@ -142,7 +142,7 @@ public class CompanyDAO extends AbstractDAO {
         updateQuery(queryDeleteCompById, compId);
     }
 
-    public int getCompanyIdByOfficialId(int companyOfficialId) throws DAOException {
+    int getCompanyIdByOfficialId(int companyOfficialId) throws DAOException {
         if (executeForSingleResult(queryGetCompanyIdByOffId, companyOfficialId) == null) {
             return 0;
         } else return (int) executeForSingleResult(queryGetCompanyIdByOffId, companyOfficialId);

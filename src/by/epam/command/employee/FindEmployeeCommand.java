@@ -18,22 +18,22 @@ public class FindEmployeeCommand implements Command {
 
     @Override
     public Page execute(HttpServletRequest request) {
-        Page page = new Page(Manager.getProperty("mainPage"), true);
+        Page page = new Page(Manager.getMan().getPage("hr_main_page"), true);
         String employeeSSN = request.getParameter(SSN);
         boolean emptyDataFlag = false;
 
         UserService userService = new UserService();
         User employee = null;
+        HttpSession session = request.getSession();
         try {
             employee = userService.getEmployeeBySSN(Integer.parseInt(employeeSSN));
             emptyDataFlag = true;
         } catch (ServiceException e) {
             LOG.info("Error while getting data");
-            request.setAttribute("noDataPerSSN",
-                    Manager.message("cmd.ssn.noDataPerSSN"));
+            session.setAttribute("noDataPerSSN",
+                    Manager.getMan().message("cmd.ssn.noDataPerSSN"));
         }
         LOG.info("employee: " + employee);
-        HttpSession session = request.getSession();
         session.setAttribute("employee", employee);
         session.setAttribute("emptyDataFlag", emptyDataFlag);
         return page;

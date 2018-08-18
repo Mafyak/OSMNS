@@ -18,19 +18,19 @@
             <div class="row">
                 <c:if test="${user.type eq 'HR'}">
                     <div class="col-xs-2">
-                        <a href="${pageContext.request.contextPath}/jsp/hrJSP/main.jsp">${main_page}</a>
+                        <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=hr_main_page">${main_page}</a>
                     </div>
                     <div class="col-xs-2">
-                        <a href="${pageContext.request.contextPath}/jsp/hrJSP/employeeProfile.jsp">${search_by_ssn}</a>
+                        <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=path.page.emplProfile">${search_by_ssn}</a>
                     </div>
                     <div class="col-xs-2 mr-sm-2">
-                        <a href="${pageContext.request.contextPath}/jsp/common/mySettings.jsp">${mySettings}</a>
+                        <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=settings_page">${mySettings}</a>
                     </div>
                 </c:if>
 
                 <c:if test="${user.type eq 'ADMIN'}">
                     <div class="col-xs-2">
-                        <a href="${pageContext.request.contextPath}/jsp/adminJSP/admin.jsp">${main_page}</a>
+                        <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=admin_page">${main_page}</a>
                     </div>
                 </c:if>
 

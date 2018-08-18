@@ -120,7 +120,6 @@ public class User extends Entity {
     }
 
     public int getSSN() {
-
         return SSN;
     }
 

@@ -8,6 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
     <title>Error page</title>
 </head>
 <body>
@@ -16,6 +21,6 @@ Servlet name or type: ${pageContext.errorData.servletName} <br/>
 Status code: ${pageContext.errorData.statusCode} <br/>
 Exception: ${pageContext.errorData.throwable} <br/>
 Details: ${pageContext.errorData.throwable.printStackTrace()} <br/>
-Go back to <a href="http://80.211.75.20:8080/OSMNS/">login page</a>
+<button onclick="goBack()">Go Back</button>
 </body>
 </html>

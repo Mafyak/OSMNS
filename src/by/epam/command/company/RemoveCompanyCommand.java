@@ -19,7 +19,7 @@ public class RemoveCompanyCommand implements Command {
         try {
             companyService.removeCompByInnerId(companyId);
         } catch (ServiceException e) {
-            session.setAttribute("ShowCompanyNameCollisionssError", Manager.message("msg.error.processing"));
+            session.setAttribute("ShowCompanyNameCollisionssError", Manager.getMan().message("msg.error.processing"));
         }
         return new ShowCompNameCollisionCommand().execute(request);
     }

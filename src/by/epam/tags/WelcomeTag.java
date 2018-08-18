@@ -20,10 +20,10 @@ public class WelcomeTag extends TagSupport {
         String welcomeMessage = null;
         switch (userType) {
             case HR:
-                welcomeMessage = Manager.message("tag.hr.welcome");
+                welcomeMessage = Manager.getMan().message("tag.hr.welcome");
                 break;
             case ADMIN:
-                welcomeMessage = Manager.message("tag.admin.welcome");
+                welcomeMessage = Manager.getMan().message("tag.admin.welcome");
                 break;
         }
 

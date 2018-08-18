@@ -17,12 +17,11 @@ public class DeleteRatingCommand implements Command {
     public Page execute(HttpServletRequest request) {
 
         int ratingID = Integer.parseInt(request.getParameter("ratingidtodelete"));
-
         AdminService adminService = new AdminService();
         try {
             adminService.deleteReview(ratingID);
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", Manager.message("msg.error.processing"));
+            request.setAttribute("infoMessage", Manager.getMan().message("msg.error.processing"));
             LOG.info("Error in DeleteRatingCommand" + e);
         }
 

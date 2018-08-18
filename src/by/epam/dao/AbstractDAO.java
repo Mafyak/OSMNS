@@ -14,11 +14,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-public abstract class AbstractDAO<T> {
+abstract class AbstractDAO<T> {
 
     private static final Logger LOG = Logger.getLogger(AbstractDAO.class);
 
-    public int updateQuery(String query, Object... param) throws DAOException {
+    int updateQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         try {
            return updateQuery(conn, query, param);
@@ -27,7 +27,7 @@ public abstract class AbstractDAO<T> {
         }
     }
 
-    public int updateQuery(Connection conn, String query, Object... param) throws DAOException {
+    private int updateQuery(Connection conn, String query, Object... param) throws DAOException {
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < param.length; i++) {
                 ps.setObject(i + 1, param[i]);
@@ -40,7 +40,7 @@ public abstract class AbstractDAO<T> {
         }
     }
 
-    public void executeQuery(String query, Object... param) throws DAOException {
+    void executeQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < param.length; i++) {
@@ -55,7 +55,7 @@ public abstract class AbstractDAO<T> {
         }
     }
 
-    public Object executeForSingleResult(String query, Object... params) throws DAOException {
+    Object executeForSingleResult(String query, Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         Object result = null;
         try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -76,7 +76,7 @@ public abstract class AbstractDAO<T> {
         return result;
     }
 
-    public List<UserHistory> getReviews(String query, Object... params) throws DAOException {
+    List<UserHistory> getReviews(String query, Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         List<UserHistory> userHistories;
         UserHistory userHistory;
@@ -123,7 +123,7 @@ public abstract class AbstractDAO<T> {
         return userHistories;
     }
 
-    public List<User> getHrWithCompanyDataList(String query, Object... params) throws DAOException {
+    List<User> getHrWithCompanyDataList(String query, Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         List<User> userList = new ArrayList<>();
         User user;

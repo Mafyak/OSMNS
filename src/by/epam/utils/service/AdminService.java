@@ -4,14 +4,12 @@ import by.epam.dao.AdminDAO;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
 import by.epam.exception.ServiceException;
-
 import java.util.List;
-
 import org.apache.log4j.Logger;
 
 public class AdminService {
 
-    private AdminDAO adminDAO = new AdminDAO();
+    private final AdminDAO adminDAO = new AdminDAO();
     private static final Logger LOG = Logger.getLogger(AdminService.class);
 
     public List<UserHistory> getAllReviews() throws ServiceException {
@@ -75,5 +73,4 @@ public class AdminService {
             LOG.info("Error while removing HR:" + e);
         }
     }
-
 }

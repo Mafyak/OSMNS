@@ -23,6 +23,10 @@ public enum CommandType {
         {
             this.command = new UpdateInfoCommand();
         }
+    }, GOTO {
+        {
+            this.command = new GoToPageCommand();
+        }
     }, SHOW_COMPANY_NAME_COLLISIONS {
         {
             this.command = new ShowCompNameCollisionCommand();

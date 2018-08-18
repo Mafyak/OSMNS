@@ -39,7 +39,8 @@ public class Controller extends HttpServlet {
                 dispatcher.forward(request, response);
             }
         } else {
-            page.setPage(Manager.getProperty("path.page.index"));
+            page = new Page();
+            page.setPage(Manager.getMan().getPage("index_page"));
             request.getSession().setAttribute("nullPage", "Page not found. Business logic error.");
             response.sendRedirect(request.getContextPath() + page);
         }

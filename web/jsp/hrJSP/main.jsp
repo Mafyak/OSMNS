@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -17,17 +17,19 @@
     <fmt:message key="rev.rating3" var="rating3"/>
     <fmt:message key="rev.rating4" var="rating4"/>
     <fmt:message key="rev.rating5" var="rating5"/>
+    <fmt:message key="rev.yearFired" var="yearFired"/>
+    <fmt:message key="rev.yearEmpld" var="yearEmpld"/>
     <fmt:message key="rev.rate_employee" var="rate_employee"/>
-    <fmt:message key="hr.lookup_emp" var="lookup_emp"/>
-    <fmt:message key="hr.lookup_emp" var="lookup_emp"/>
     <fmt:message key="hr.hire_again" var="hire_again"/>
+    <fmt:message key="hr.lookup_emp" var="lookup_emp"/>
     <fmt:message key="cmn.fName" var="empFName"/>
     <fmt:message key="cmn.lName" var="empLName"/>
     <fmt:message key="cmn.mName" var="empMName"/>
     <fmt:message key="cmn.ssn" var="ssn"/>
+    <fmt:message key="cmn.yes" var="yes"/>
+    <fmt:message key="cmn.no" var="no"/>
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
-
 
 <html>
 <head>
@@ -46,10 +48,11 @@
               action="${pageContext.request.contextPath}/Controller?command=add_employee">
             <div class="row">
                 <div class="form-group">
-                        <input name="empFName" class="form-control" placeholder="${empFName}" required>
-                        <input name="empMName" class="form-control" placeholder="${empMName}" required>
-                        <input name="empLName" class="form-control" placeholder="${empLName}" required>
-                        <input name="empSSN" class="form-control" placeholder="${ssn}" required>
+                    <input name="empFName" class="form-control" placeholder="${empFName}" required>
+                    <input name="empMName" class="form-control" placeholder="${empMName}" required>
+                    <input name="empLName" class="form-control" placeholder="${empLName}" required>
+                    <input name="empSSN" class="form-control" pattern="\d+" title="Digits only" placeholder="${ssn}"
+                           required>
                     <input type="submit" name="command" class="btn" value="${Add_new_employee}">
                 </div>
                 ${infoAddingEmpl}
@@ -61,25 +64,20 @@
 </p>
 
 
-
-
 <p>${Add_New_Review}:
 <div class="panel panel-login">
     <div class="panel-heading">
-
-
-
         <form id="find-employee" method="POST"
-                             action="${pageContext.request.contextPath}/Controller?command=find_employee">
-        <div class="row">
-            <div class="form-group">
-                ${lookup_emp}:
-                <input name="SSN" class="form-control" placeholder="${ssn}" pattern="[0-9]+"
-                       title="Number only" required>
-                <input type="submit" name="command" class="btn" value="${Search_simple}">
+              action="${pageContext.request.contextPath}/Controller?command=find_employee">
+            <div class="row">
+                <div class="form-group">
+                    ${lookup_emp}:
+                    <input name="SSN" class="form-control" placeholder="${ssn}" pattern="[0-9]+"
+                           title="Number only" required>
+                    <input type="submit" name="command" class="btn" value="${Search_simple}">
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
 
         <c:if test="${emptyDataFlag}">
             <div class="col-md-8 col-md-offset-4">
@@ -103,8 +101,8 @@
             <form id="add-review" method="POST"
                   action="${pageContext.request.contextPath}/Controller?command=add_review">
                 <div class="form-group">
-                    <input name="yEmployed" class="form-control" placeholder="Year Employed" required>
-                    <input name="yFired" class="form-control" placeholder="Year Fired" required>
+                    <input name="yEmployed" class="form-control" placeholder="${yearEmpld}" required>
+                    <input name="yFired" class="form-control" placeholder="${yearFired}" required>
                 </div>
                 ${rate_employee}:
                 <div class="form-group">
@@ -115,11 +113,15 @@
                     <input name="rating5" class="form-control" placeholder="${rating5}" required>
                 </div>
                 <div class="form-group">
-                    <input name="hireAgain" class="form-control" placeholder="${hire_again}? (Yes or No)" required>
+                    ${hire_again}?
+                    <select name="hireAgain" class="form-control">
+                        <option value="Yes">${yes}</option>
+                        <option value="No">${no}</option>
+                    </select>
                     <input type="submit" name="command" class="btn" value="${Add_New_Review}">
                 </div>
                 <div class="form-group">
-                    ${reviewAddResult}
+                    ${infoMessage}
                 </div>
             </form>
         </div>
@@ -129,12 +131,5 @@
 <hr/>
 <br/>
 <hr>
-<p>
-    Here is a list of services I need to add to hr page:<br/>
-    2. Show all reviews<br/>
-    3. Edit review<br/>
-    4. Search by name and dob<br/>
-    5. Hire again field in search by SSN doesn't work properly<br/>
-</p>
 </body>
 </html>

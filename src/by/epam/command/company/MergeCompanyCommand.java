@@ -22,7 +22,7 @@ public class MergeCompanyCommand implements Command {
             companyService.mergeCompByInnerId(companyId);
         } catch (ServiceException e) {
             LOG.info("Can't merge companies.");
-            session.setAttribute("ShowCompanyNameCollisionssError", Manager.message("msg.error.processing"));
+            session.setAttribute("ShowCompanyNameCollisionssError", Manager.getMan().message("msg.error.processing"));
         }
         return new ShowCompNameCollisionCommand().execute(request);
     }

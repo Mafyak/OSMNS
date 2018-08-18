@@ -9,7 +9,9 @@ public class StartupAndShutdownListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        ConnectionPool.getInstance().createPool();
+        while (!ConnectionPool.getInstance().isAlive()) {
+            ConnectionPool.getInstance().createPool();
+        }
     }
 
     @Override

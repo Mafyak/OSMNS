@@ -18,7 +18,7 @@ public class ActionFactory {
             CommandType commandType = CommandType.valueOf(action.toUpperCase());
             current = commandType.getCurrentCommand();
         } catch (IllegalArgumentException e) {
-            request.setAttribute("wrongAction", Manager.message("cmd.cmd.notFound"));
+            request.setAttribute("wrongAction", Manager.getMan().message("cmd.cmd.notFound"));
             LOG.info("CommandType" + action + " unknown");
         }
         return current;

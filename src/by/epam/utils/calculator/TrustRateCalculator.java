@@ -1,6 +1,5 @@
 package by.epam.utils.calculator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrustRateCalculator {
@@ -19,7 +18,6 @@ public class TrustRateCalculator {
     
     Note: HR has to have at least 2 written reviews to get rating.
      */
-
 
     public TrustRateCalculator() {
     }
@@ -41,7 +39,7 @@ public class TrustRateCalculator {
         return (int) result;
     }
 
-    public static strictfp double mean(List<Integer> list) {
+    private static strictfp double mean(List<Integer> list) {
         double sum = 0;
         for (Integer d : list) {
             sum += d;
@@ -49,7 +47,7 @@ public class TrustRateCalculator {
         return sum / list.size();
     }
 
-    public static strictfp double meanD(List<Double> list) {
+    private static strictfp double meanD(List<Double> list) {
         double sum = 0;
         for (Double d : list) {
             sum += d;
