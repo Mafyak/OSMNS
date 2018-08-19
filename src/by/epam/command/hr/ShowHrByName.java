@@ -6,23 +6,29 @@ import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 import by.epam.entity.User;
 import by.epam.utils.service.UserService;
+import by.epam.utils.session.SessionCleaner;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class ShowHrByName implements Command {
-    private static final Logger LOG = Logger.getLogger("ShowHrByName");
+    private static final Logger LOG = Logger.getLogger(ShowHrByName.class);
 
     @Override
     public Page execute(HttpServletRequest request) {
+        HttpSession session = request.getSession();
         String fName = request.getParameter("fName");
+        if (fName==null)
+            fName = (String) session.getAttribute("fName");
         String lName = request.getParameter("lName");
+        if (lName==null)
+            lName = (String) session.getAttribute("lName");
         UserService userService = new UserService();
         List<User> hrList = null;
-        HttpSession session = request.getSession();
+        //SessionCleaner.getCleaner().cleanSession(session);
 
         try {
             int hrId = Integer.parseInt(request.getParameter("hrIdToSearch"));
@@ -36,10 +42,13 @@ public class ShowHrByName implements Command {
             return new Page(Manager.getMan().getPage("admin_page"), true);
         } catch (NumberFormatException | ServiceException e) {
             LOG.info("hrId is not set in ShowHrByName field");
+            session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));
         }
 
         try {
-            if (!fName.isEmpty() && !lName.isEmpty()) {
+            if (!(fName == null) && !(lName == null)) {
+                session.setAttribute("fName", fName);
+                session.setAttribute("lName", lName);
                 hrList = userService.getHrByName(fName, lName);
             } else
                 session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));

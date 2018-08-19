@@ -86,4 +86,30 @@ public class Company extends Entity {
                 ", id=" + id +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Company company = (Company) o;
+
+        if (id != company.id) return false;
+        if (headcount != company.headcount) return false;
+        if (companyOfficialId != company.companyOfficialId) return false;
+        if (!name.equals(company.name)) return false;
+        if (niche != null ? !niche.equals(company.niche) : company.niche != null) return false;
+        return location != null ? location.equals(company.location) : company.location == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + id;
+        result = 31 * result + (niche != null ? niche.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + headcount;
+        result = 31 * result + companyOfficialId;
+        return result;
+    }
 }

@@ -27,7 +27,7 @@ abstract class AbstractDAO<T> {
         }
     }
 
-    private int updateQuery(Connection conn, String query, Object... param) throws DAOException {
+    int updateQuery(Connection conn, String query, Object... param) throws DAOException {
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < param.length; i++) {
                 ps.setObject(i + 1, param[i]);
@@ -130,23 +130,28 @@ abstract class AbstractDAO<T> {
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
                 ps.setObject(i + 1, params[i]);
+                LOG.info("param " + (i+1) + " equals to: " + params[i]);
             }
             try (ResultSet rs = ps.executeQuery()) {
                 Company company;
                 while (rs.next()) {
+                    LOG.info("Checkpoint 1");
                     user = new User();
                     user.setId(rs.getInt("idHRhead"));
                     user.setfName(rs.getString("fName"));
                     user.setmName(rs.getString("mName"));
+                    LOG.info("Checkpoint 2");
                     user.setlName(rs.getString("lName"));
                     company = new Company();
                     company.setName(rs.getString("name"));
                     company.setId(rs.getInt("idCompany"));
                     company.setNiche(rs.getString("niche"));
+                    LOG.info("Checkpoint 3");
                     company.setLocation(rs.getString("location"));
                     company.setHeadcount(rs.getInt("headcount"));
                     company.setCompanyOfficialId(rs.getInt("offCompId"));
                     company.setId(rs.getInt("idCompany"));
+                    LOG.info("Checkpoint 4");
                     user.setCompany(company);
                     userList.add(user);
                 }

@@ -10,6 +10,8 @@ import by.epam.utils.service.UserService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.jstl.core.Config;
+import java.util.Locale;
 
 public class RecoverPassCommand implements Command {
 
@@ -19,20 +21,20 @@ public class RecoverPassCommand implements Command {
     public Page execute(HttpServletRequest request) {
         SendMail sendMail = new SendMail();
         String email = request.getParameter("recovEm");
+        Locale locale = (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);
 
         UserService userService = new UserService();
         PasswordGenerator passwordGenerator = new PasswordGenerator();
         String newPass = passwordGenerator.generate();
         try {
             userService.setNewPassword(email, newPass);
-            String body = "Dear user, your password was changed based on \"Forgot Password\" request from main page!! " +
-                    "Your temporary password is: " + newPass + ". Please, log in and change it to permanent at your earliest " +
-                    "convenience!";
+            String body = Manager.getMan().message("cmn.emailLetterP1", locale) + newPass +
+                    Manager.getMan().message("cmn.emailLetterP2", locale);
             sendMail.send(email, body);
             LOG.info("Recover email for user email " + email + " has been sent");
-            request.setAttribute("infoMessage", "Recover email has been sent");
+            request.setAttribute("infoMessage", Manager.getMan().message("cmn.email.passwRecEmailSent", locale));
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", "Can't recover email... You sure you're registered?");
+            request.setAttribute("infoMessage", Manager.getMan().message("cmn.email.passwRecEmailNOTSent", locale));
         }
 
         return new Page(Manager.getMan().getPage("login_page"));

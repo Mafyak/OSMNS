@@ -17,6 +17,37 @@
     <fmt:message key="cmn.fName" var="fName"/>
     <fmt:message key="cmn.lName" var="lName"/>
     <fmt:message key="cmn.search" var="search"/>
+    <fmt:message key="cmn.title" var="title"/>
+    <fmt:message key="cmn.digitsOnly" var="digitsOnly"/>
+    <fmt:message key="company" var="cСompany"/>
+    <fmt:message key="cmn.fName" var="cmnFName"/>
+    <fmt:message key="cmn.lName" var="cmnLName"/>
+    <fmt:message key="cmn.mName" var="empMName"/>
+    <fmt:message key="cmn.hrid" var="hrIdLang"/>
+    <fmt:message key="cmn.remove" var="remove"/>
+    <fmt:message key="rev.rating1" var="rating1"/>
+    <fmt:message key="rev.rating2" var="rating2"/>
+    <fmt:message key="rev.rating3" var="rating3"/>
+    <fmt:message key="rev.rating4" var="rating4"/>
+    <fmt:message key="rev.rating5" var="rating5"/>
+    <fmt:message key="rev.yearFired" var="yearFired"/>
+    <fmt:message key="rev.yearEmpld" var="yearEmpld"/>
+    <fmt:message key="hr.hire_again" var="hire_again"/>
+    <fmt:message key="cmn.hideResults" var="hideResults"/>
+    <fmt:message key="cmn.allReviews" var="allReviews"/>
+    <fmt:message key="cmn.ratingID" var="ratingID"/>
+    <fmt:message key="cmn.companyID" var="companyID"/>
+    <fmt:message key="cmn.employeeID" var="employeeID"/>
+    <fmt:message key="cmn.confirmed" var="confirmed"/>
+    <fmt:message key="cmn.not.confirmed" var="notConfirmed"/>
+    <fmt:message key="comp.loc" var="cLoc"/>
+    <fmt:message key="comp.taxID" var="cTaxId"/>
+    <fmt:message key="adm.companyList" var="companyList"/>
+    <fmt:message key="comp.niche" var="niche"/>
+    <fmt:message key="comp.headcount" var="headcount"/>
+    <fmt:message key="cmn.merge" var="merge"/>
+    <fmt:message key="cmn.useAsBase" var="useAsBase"/>
+    <fmt:message key="cmn.confirm" var="confirm"/>
 </fmt:bundle>
 
 <html>
@@ -32,7 +63,7 @@
         });
     </script>
 
-    <title>Title</title>
+    <title>${title}</title>
 </head>
 <body>
 
@@ -42,8 +73,8 @@
       style="display: block;">
     <input type="text" class="form-control" name="fName" placeholder="${fName}">
     <input type="text" class="form-control" name="lName" placeholder="${lName}">
-    <input type="text" class="form-control" name="hrIdToSearch" placeholder="HR id" pattern="\d{1,}"
-           title="Only digits">
+    <input type="text" class="form-control" name="hrIdToSearch" placeholder="${hrIdLang}" pattern="\d{1,}"
+           title="${digitsOnly}">
     <button type="submit" class="btn" name="button" value="Search">${search}</button>
 </form>
 </p>
@@ -52,12 +83,12 @@
     ${results}:
 <table id="table" style="width:50%" border="1px">
     <tr>
-        <th>HR id</th>
-        <th>First Name</th>
-        <th>Middle Name</th>
-        <th>Last Name</th>
-        <th>Current Company</th>
-        <th>Remove</th>
+        <th>${hrIdLang}</th>
+        <th>${cmnFName}</th>
+        <th>${empMName}</th>
+        <th>${cmnLName}</th>
+        <th>${cСompany}</th>
+        <th>${remove}</th>
     </tr>
     <c:forEach items="${hrList}" var="hr">
         <tr>
@@ -67,7 +98,7 @@
             <td>${hr.lName}</td>
             <td>${hr.company.name}</td>
             <td><a href="${pageContext.request.contextPath}/Controller?command=remove_hr&hrIdToRemove=${hr.id}">
-                <input type="button" name="select" class="btn" value="Remove"/></a></td>
+                <input type="button" name="select" class="btn" value="${remove}"/></a></td>
         </tr>
     </c:forEach>
 </table>
@@ -85,24 +116,24 @@ ${show_all_revs}<br/>
 </form>
 <c:if test="${not empty reviewsList}">
     <p id="contToHideHrSearch">
-        <button class="btn" id="hideHrSearch">Hide Results</button>
-        All reviews:
+        <button class="btn" id="hideHrSearch">${hideResults}</button>
+        ${allReviews}:
     <table style="width:50%" border="1px">
         <tr>
-            <th>Rating id</th>
-            <th>Company id</th>
-            <th>HR id</th>
-            <th>Employee id</th>
-            <th>Year Employed</th>
-            <th>Year Terminated</th>
-            <th>Rating 1</th>
-            <th>Rating 2</th>
-            <th>Rating 3</th>
-            <th>Rating 4</th>
-            <th>Rating 5</th>
-            <th>Hire again</th>
-            <th>Confirmed</th>
-            <th>Remove</th>
+            <th>${ratingID}</th>
+            <th>${companyID}</th>
+            <th>${hrIdLang}</th>
+            <th>${employeeID}</th>
+            <th>${yearEmpld}</th>
+            <th>${yearFired}</th>
+            <th>${rating1}</th>
+            <th>${rating2}</th>
+            <th>${rating3}</th>
+            <th>${rating4}</th>
+            <th>${rating5}</th>
+            <th>${hire_again}</th>
+            <th>${confirmed}</th>
+            <th>${remove}</th>
         </tr>
         <c:forEach items="${reviewsList}" var="review">
             <tr>
@@ -119,11 +150,11 @@ ${show_all_revs}<br/>
                 <td>${review.rating5}</td>
                 <td>${review.hireAgain}</td>
                 <td><c:if test="${review.confirmed==0}">
-                    Not confirmed</c:if>
+                    ${notConfirmed}</c:if>
                     <c:if test="${review.confirmed>0}">${review.confirmed}</c:if></td>
                 <td>
                     <a href="${pageContext.request.contextPath}/Controller?command=delete_rating&ratingidtodelete=${review.ratingID}">
-                        <input class="btn" type="button" name="select" value="Delete"/></a></td>
+                        <input class="btn" type="button" name="select" value="${remove}"/></a></td>
             </tr>
         </c:forEach>
     </table>
@@ -143,21 +174,21 @@ ${show_unconf_revs}<br/>
     <button type="submit" class="btn" name="button" value="ShowUnconfirmedReviews">${show_unconf_revs}</button>
 </form>
 <c:if test="${not empty unconfirmedReviewsList}">
-    <p>All reviews:</p>
+    <p>${allReviews}:</p>
     <table style="width:50%" border="1px">
         <tr>
-            <th>Company id</th>
-            <th>HR id</th>
-            <th>Employee id</th>
-            <th>Year Employed</th>
-            <th>Year Terminated</th>
-            <th>Rating 1</th>
-            <th>Rating 2</th>
-            <th>Rating 3</th>
-            <th>Rating 4</th>
-            <th>Rating 5</th>
-            <th>Hire again</th>
-            <th>Confirmed</th>
+            <th>${companyID}</th>
+            <th>${hrIdLang}</th>
+            <th>${employeeID}</th>
+            <th>${yearEmpld}</th>
+            <th>${yearFired}</th>
+            <th>${rating1}</th>
+            <th>${rating2}</th>
+            <th>${rating3}</th>
+            <th>${rating4}</th>
+            <th>${rating5}</th>
+            <th>${hire_again}</th>
+            <th>${confirmed}</th>
         </tr>
         <c:forEach items="${unconfirmedReviewsList}" var="review">
             <tr>
@@ -173,7 +204,7 @@ ${show_unconf_revs}<br/>
                 <td>${review.rating5}</td>
                 <td>${review.hireAgain}</td>
                 <td><a href="${pageContext.request.contextPath}/Controller?command=confirm_rating&ratingidtoconfirm=${review.ratingID}&confirmerid=${user.id}">
-                        <input class="btn" type="button" name="select" value="Confirm"/></a></td>
+                        <input class="btn" type="button" name="select" value="${confirm}"/></a></td>
             </tr>
         </c:forEach>
     </table>
@@ -188,17 +219,17 @@ ${show_collisions}<br/>
     <button type="submit" class="btn" name="button" value="ShowCompanyNameCollisions">${show_collisions}</button>
 </form>
 <c:if test="${not empty companyNameCollisions}">
-    <p>Company list:</p>
+    <p>${companyList}:</p>
     <table style="width:50%" border="1px">
         <tr>
-            <th>Company id</th>
-            <th>Company name</th>
-            <th>Niche</th>
-            <th>Location</th>
-            <th>Headcount</th>
-            <th>Company Tax Id</th>
-            <th>Merge</th>
-            <th>Remove</th>
+            <th>${companyID}</th>
+            <th>${cСompany}</th>
+            <th>${niche}</th>
+            <th>${cLoc}</th>
+            <th>${headcount}</th>
+            <th>${cTaxId}</th>
+            <th>${merge}</th>
+            <th>${remove}</th>
         </tr>
         <c:forEach items="${companyNameCollisions}" var="company">
             <tr>
@@ -210,20 +241,16 @@ ${show_collisions}<br/>
                 <td>${company.companyOfficialId}</td>
                 <td>
                     <a href="${pageContext.request.contextPath}/Controller?command=merge_company&companyIdtoMerge=${company.id}">
-                        <input class="btn" type="button" name="select" value="UseAsBase"/>
+                        <input class="btn" type="button" name="select" value="${useAsBase}"/>
                     </a></td>
                 <td>
                     <a href="${pageContext.request.contextPath}/Controller?command=remove_company&companyIdtoRemove=${company.id}">
-                        <input class="btn" type="button" name="select" value="Remove"/></a></td>
+                        <input class="btn" type="button" name="select" value="${remove}"/></a></td>
             </tr>
         </c:forEach>
     </table>
     <br/>
 </c:if>
 ${ShowCompanyNameCollisionssError}
-
-Here is a list of services I need to add to admin page:<br/>
-3. Show all users<br/>
-
 </body>
 </html>

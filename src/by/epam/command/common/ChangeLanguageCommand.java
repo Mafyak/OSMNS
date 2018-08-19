@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
+
+import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
 
 public class ChangeLanguageCommand implements Command {
@@ -23,7 +25,6 @@ public class ChangeLanguageCommand implements Command {
 
         String referer = uri.substring(uriLength);
         LOG.info("referer: " + referer);
-        LOG.info("ur2: " + request.getRequestURL());
 
         Locale locale;
         switch (lang) {
@@ -34,17 +35,45 @@ public class ChangeLanguageCommand implements Command {
                 locale = new Locale("en", "US");
         }
 
-        Config.set(request.getSession(), Config.FMT_LOCALE, locale);
         HttpSession session = request.getSession();
-        session.removeAttribute("infoMessage");
+        String link = (String) session.getAttribute("page");
+        SessionCleaner.getCleaner().cleanSession(session);
+        Config.set(session, Config.FMT_LOCALE, locale);
+        String actualUri = null;
+        LOG.info("uri: " + uri);
+        LOG.info("link: " + link);
+
+        if (referer.contains("goTo&page=")) {
+            String goToPage = referer.substring(referer.lastIndexOf("=") + 1, referer.length());
+            session.setAttribute("page", goToPage);
+            return new Page(Manager.getMan().getPage(goToPage));
+        }
+
+        if (!referer.contains("Controller")) {
+            session.setAttribute("page", referer);
+            LOG.info("returning new Page(referer)");
+            return new Page(referer);
+        }
+
+        if (link != null) {
+            if (link.contains("_"))
+                actualUri = Manager.getMan().getPage(link);
+            if (link.equals("/"))
+                return new Page(Manager.getMan().getPage("index_page"));
+            if (link.contains(".jsp"))
+                return new Page(link);
+        }
 
         if (!uri.contains("Controller"))
             session.setAttribute("page", referer);
 
-        String actualUri = (String) session.getAttribute("page");
-        if (actualUri.isEmpty())
-            return new Page(referer);
-        else
-            return new Page(actualUri);
+
+        if (referer.equals("/Controller")) {
+            session.setAttribute("page", "index_page");
+            return new Page(Manager.getMan().getPage("index_page"));
+        }
+
+        LOG.info("returning new Page(actualUri)");
+        return new Page(actualUri);
     }
 }

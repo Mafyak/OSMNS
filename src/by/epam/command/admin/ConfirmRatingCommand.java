@@ -7,6 +7,8 @@ import by.epam.entity.Page;
 import by.epam.utils.service.AdminService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.jstl.core.Config;
+import java.util.Locale;
 
 public class ConfirmRatingCommand implements Command {
 
@@ -15,12 +17,13 @@ public class ConfirmRatingCommand implements Command {
 
         int adminID = Integer.parseInt(request.getParameter("confirmerid"));
         int ratingIdToConfirm = Integer.parseInt(request.getParameter("ratingidtoconfirm"));
+        Locale locale = (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);
 
         AdminService adminService = new AdminService();
         try {
             adminService.confirmRating(ratingIdToConfirm, adminID);
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", Manager.getMan().message("cmd.review.cantConfirm"));
+            request.setAttribute("infoMessage", Manager.getMan().message("cmd.review.cantConfirm", locale));
         }
 
         return new ShowUnconfirmedReviewsCommand().execute(request);

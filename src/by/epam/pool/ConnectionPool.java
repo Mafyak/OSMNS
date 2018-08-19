@@ -2,20 +2,20 @@ package by.epam.pool;
 
 import java.sql.*;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import by.epam.utils.manager.Manager;
 import org.apache.log4j.Logger;
 
 public class ConnectionPool {
 
-    private BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(10, true);
-    private BlockingQueue<Connection> takenConnections = new ArrayBlockingQueue<>(10, true);
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/mysql");
+    private static final int AMOUNT_OF_CONNECTIONS = Integer.parseInt(Manager.getMan().getConfig("conn.quant"));
+    private static final BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(AMOUNT_OF_CONNECTIONS, true);
+    private static final BlockingQueue<Connection> takenConnections = new ArrayBlockingQueue<>(AMOUNT_OF_CONNECTIONS, true);
     private static final Logger LOG = Logger.getLogger("ConnectionPool");
+    private static final Properties props = new Properties();
     private static volatile ConnectionPool instance;
-    private Properties props = new Properties();
 
     private ConnectionPool() {
     }
@@ -52,30 +52,33 @@ public class ConnectionPool {
     }
 
     public void createPool() {
-        String url = RESOURCE_BUNDLE.getString("db.url");
-        props.put("user", RESOURCE_BUNDLE.getString("db.user"));
-        props.put("password", RESOURCE_BUNDLE.getString("db.pass"));
-        props.put("characterEncoding", RESOURCE_BUNDLE.getString("db.encoding"));
-        props.put("useUnicode", RESOURCE_BUNDLE.getString("db.useUnicode"));
+        String url = Manager.getMan().getConfig("db.url");
+        props.put("user", Manager.getMan().getConfig("db.user"));
+        props.put("password", Manager.getMan().getConfig("db.pass"));
+        props.put("characterEncoding", Manager.getMan().getConfig("db.encoding"));
+        props.put("useUnicode", Manager.getMan().getConfig("db.useUnicode"));
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             LOG.info("Error while creating connection pool");
         }
-        for (int i = 0; i < 10; i++) {
+        LOG.info("trying to add connections...");
+        int x = (pool.size() == 0) ? AMOUNT_OF_CONNECTIONS : (AMOUNT_OF_CONNECTIONS - pool.size());
+
+        for (int i = 0; i < x; i++) {
             try {
-                LOG.info("trying to add conn");
                 LOG.info("pool size: " + pool.size() + ", # of tries:" + i);
                 pool.add(DriverManager.getConnection(url, props));
             } catch (SQLException e) {
                 LOG.info("SQL Exception is thrown while filling Connection Pool" + e);
             }
         }
-        LOG.info("Connection pool is set and ready to go.");
+        if (isAlive())
+            LOG.info("Connection pool is set and ready to go.");
     }
 
     public boolean isAlive() {
-        return pool.size() == 10;
+        return pool.size() == AMOUNT_OF_CONNECTIONS;
     }
 
     public Connection getConnection() {

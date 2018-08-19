@@ -8,6 +8,8 @@ import by.epam.utils.service.AdminService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.jstl.core.Config;
+import java.util.Locale;
 
 public class DeleteRatingCommand implements Command {
 
@@ -16,12 +18,13 @@ public class DeleteRatingCommand implements Command {
     @Override
     public Page execute(HttpServletRequest request) {
 
+        Locale locale = (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);
         int ratingID = Integer.parseInt(request.getParameter("ratingidtodelete"));
         AdminService adminService = new AdminService();
         try {
             adminService.deleteReview(ratingID);
         } catch (ServiceException e) {
-            request.setAttribute("infoMessage", Manager.getMan().message("msg.error.processing"));
+            request.setAttribute("infoMessage", Manager.getMan().message("msg.error.processing", locale));
             LOG.info("Error in DeleteRatingCommand" + e);
         }
 

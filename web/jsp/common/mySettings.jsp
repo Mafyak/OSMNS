@@ -5,7 +5,6 @@
 <jsp:useBean id="user" scope="application" class="by.epam.entity.User"/>
 
 <fmt:bundle basename="resources.content">
-
     <fmt:message key="company" var="cСompany"/>
     <fmt:message key="cmn.fName" var="cmnFName"/>
     <fmt:message key="cmn.lName" var="cmnLName"/>
@@ -14,12 +13,14 @@
     <fmt:message key="comp.loc" var="cLoc"/>
     <fmt:message key="comp.taxID" var="cTaxId"/>
     <fmt:message key="cmn.update" var="update"/>
+    <fmt:message key="cmn.digitsOnly" var="digitsOnly"/>
+    <fmt:message key="cmn.settings" var="settings"/>
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
 
 <html>
 <head>
-    <title>Main page</title>
+    <title>${settings}</title>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
@@ -63,7 +64,7 @@
                 </tr>
                 <tr>
                     <th>${cTaxId}</th>
-                    <td><input type="text" name="cOffId" class="form-control" pattern="\d+" title="Digits only"
+                    <td><input type="text" name="cOffId" class="form-control" pattern="\d+" title="${digitsOnly}"
                                value="${user.company.companyOfficialId}" required>
                     </td>
                 </tr>
@@ -76,9 +77,12 @@
                 </tr>
                 </tbody>
             </table>
+            <p style="align-content: center">${companyMessage}<br/>${infoMessage}</p>
         </div>
     </div>
 </form>
-${errorMessage}
+
+<br/>
+
 </body>
 </html>

@@ -4,11 +4,18 @@ import by.epam.command.Command;
 import by.epam.entity.Company;
 import by.epam.entity.Page;
 import by.epam.entity.User;
+import by.epam.entity.UserType;
 import by.epam.exception.ServiceException;
 import by.epam.utils.service.*;
 import by.epam.utils.manager.Manager;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+
 import org.apache.log4j.Logger;
+
+import java.util.Locale;
 
 public class UpdateInfoCommand implements Command {
 
@@ -21,7 +28,13 @@ public class UpdateInfoCommand implements Command {
 
     public Page execute(HttpServletRequest request) {
 
-        User user = (User) request.getSession().getAttribute("user");
+        HttpSession session = request.getSession();
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
+        LOG.info("locale: " + locale);
+        User user = (User) session.getAttribute("user");
+        String backupEmail = user.getEmail();
+        String backupPass = user.getPass();
+        UserType backupType = user.getType();
         LOG.info("Current user: " + user.toString());
         String fName = request.getParameter(PARAM_FIRST_NAME);
         String lName = request.getParameter(PARAM_LAST_NAME);
@@ -41,14 +54,27 @@ public class UpdateInfoCommand implements Command {
             user.setCompany(company);
             LOG.info("Company is set to: " + company.getName());
             if (company.getName() == null)
-                request.getSession().setAttribute("errorMessage", Manager.getMan().message("msg.error.processing"));
+                session.setAttribute("companyMessage", Manager.getMan().message("msg.noCompany", locale));
             userService.updateUserInfo(user);
-            request.getSession().setAttribute("user", user);
+            session.setAttribute("user", user);
+            session.setAttribute("infoMessage", Manager.getMan().message("cmn.done", locale));
             LOG.info("Ready to forward");
         } catch (ServiceException e) {
-            LOG.info("DAO Exception during updateUserInfo method in UserDAO" + e);
-            request.getSession().setAttribute("errorMessage", Manager.getMan().message("msg.error.processing"));
+            LOG.info("ServiceException Exception during updateUserInfo method in UpdateInfoCommand" + e);
+            session.setAttribute("infoMessage", Manager.getMan().message("msg.error.processing", locale));
+            try {
+                LOG.info("user: " + user);
+                user = userService.getHrById(user.getId());
+                user.setEmail(backupEmail);
+                user.setPass(backupPass);
+                user.setType(backupType);
+                LOG.info("user: " + user);
+                session.setAttribute("user", user);
+                session.setAttribute("page", Manager.getMan().getPage("settings_page"));
+            } catch (ServiceException e1) {
+                LOG.info("ServiceException Exception during user recover in UpdateInfoCommand" + e);
+            }
         }
-        return new Page(Manager.getMan().getPage("settings_page"));
+        return new Page(Manager.getMan().getPage("settings_page"), true);
     }
 }

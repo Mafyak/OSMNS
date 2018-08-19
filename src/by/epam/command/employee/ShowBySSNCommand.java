@@ -1,6 +1,7 @@
 package by.epam.command.employee;
 
 import by.epam.command.Command;
+import by.epam.command.common.GoToPageCommand;
 import by.epam.entity.UserHistory;
 import by.epam.exception.ServiceException;
 import by.epam.utils.manager.Manager;
@@ -10,7 +11,12 @@ import by.epam.utils.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+
+import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
+
+import java.util.Locale;
 
 public class ShowBySSNCommand implements Command {
 
@@ -22,22 +28,23 @@ public class ShowBySSNCommand implements Command {
         Page page = new Page(Manager.getMan().getPage("emp_profile_page"), true);
         String employeeSSN = request.getParameter(SSN);
         UserService userService = new UserService();
-        User employee = new User();
+        User employee = null;
         HttpSession session = request.getSession();
-        session.removeAttribute("noDataPerSSN");
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
+        SessionCleaner.getCleaner().cleanSession(session);
 
         try {
             employee = userService.getUserBySSN(Integer.parseInt(employeeSSN));
         } catch (ServiceException e) {
             LOG.info("Error while getting data");
             session.setAttribute("noDataPerSSN",
-                    Manager.getMan().message("cmd.ssn.noDataPerSSN"));
+                    Manager.getMan().message("cmd.ssn.noDataPerSSN", locale));
         }
 
         if (employee.getId() == 0) {
             LOG.info("Employee is empty");
             session.setAttribute("noDataPerSSN",
-                    Manager.getMan().message("cmd.ssn.noDataPerSSN"));
+                    Manager.getMan().message("cmd.ssn.noDataPerSSN", locale));
         }
 
         LOG.info("employee: " + employee);
@@ -50,6 +57,8 @@ public class ShowBySSNCommand implements Command {
         }
 
         session.setAttribute("employee", employee);
-        return page;
+        session.setAttribute("pageObj", page);
+        return new GoToPageCommand().execute(request);
+        //return page;
     }
 }

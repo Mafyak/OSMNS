@@ -8,7 +8,10 @@ import by.epam.utils.service.CompanyService;
 import by.epam.utils.manager.Manager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 import java.util.List;
+import java.util.Locale;
+
 import org.apache.log4j.Logger;
 
 public class ShowCompNameCollisionCommand implements Command {
@@ -19,6 +22,7 @@ public class ShowCompNameCollisionCommand implements Command {
     public Page execute(HttpServletRequest request) {
 
         HttpSession session = request.getSession();
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
         CompanyService companyService = new CompanyService();
         List<Company> list = null;
         session.removeAttribute("hrList");
@@ -29,7 +33,7 @@ public class ShowCompNameCollisionCommand implements Command {
             list = companyService.getCompNameCollisions();
         } catch (ServiceException e) {
             LOG.info("Error while getting company name collisions." + e);
-            session.setAttribute("ShowCompanyNameCollisionssError", "Collisions are not found");
+            session.setAttribute("ShowCompanyNameCollisionssError", Manager.getMan().message("adm.noCollis", locale));
         }
         session.setAttribute("companyNameCollisions", list);
 

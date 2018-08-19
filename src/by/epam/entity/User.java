@@ -37,7 +37,6 @@ public class User extends Entity {
     }
 
     public String getfName() {
-
         return fName;
     }
 

@@ -21,8 +21,10 @@
     <fmt:message key="hr.trust.rate" var="trustRate"/>
     <fmt:message key="company" var="cСompany"/>
     <fmt:message key="hr.hire_again" var="hire_again"/>
+    <fmt:message key="cmn.digitsOnly" var="digitsOnly"/>
+    <fmt:message key="cmn.yes" var="yes"/>
+    <fmt:message key="cmn.no" var="no"/>
 </fmt:bundle>
-
 
 <html>
 <head>
@@ -38,7 +40,7 @@
 <p>${Search_by_SSN}:
 <form id="getBySSN" method="POST" action="${pageContext.request.contextPath}/Controller?command=show_by_ssn"
       style="display: block;">
-    <input type="text" name="SSN" class="form-control" placeholder="${ssn}" pattern="\d+" title="Digits only" required>
+    <input type="text" name="SSN" class="form-control" placeholder="${ssn}" pattern="\d+" title="${digitsOnly}" required>
     <button type="submit" name="button" class="btn"  value="Search">${search}</button>
 </form>
 <hr/>
@@ -69,8 +71,8 @@
                 <td>${review.rating3}</td>
                 <td>${review.rating4}</td>
                 <td>${review.rating5}</td>
-                <td><c:if test="${review.hireAgain eq 1}">Yes</c:if>
-                    <c:if test="${review.hireAgain eq 0}">No</c:if></td>
+                <td><c:if test="${review.hireAgain eq 1}">${yes}</c:if>
+                    <c:if test="${review.hireAgain eq 0}">${no}</c:if></td>
                 <td><custag:trust-rate-tag hrID="${review.idHR}"/></td>
             </tr>
         </c:forEach>

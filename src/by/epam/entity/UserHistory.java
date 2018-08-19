@@ -62,7 +62,6 @@ public class UserHistory {
     }
 
     public String getCompany() {
-
         return company;
     }
 
@@ -107,7 +106,6 @@ public class UserHistory {
     }
 
     public void setIdCompany(int idCompany) {
-
         this.idCompany = idCompany;
     }
 
@@ -157,5 +155,49 @@ public class UserHistory {
                 ", rating5=" + rating5 +
                 ", hireAgain=" + hireAgain +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserHistory that = (UserHistory) o;
+
+        if (ratingID != that.ratingID) return false;
+        if (idCompany != that.idCompany) return false;
+        if (idOfficialCompany != that.idOfficialCompany) return false;
+        if (idHR != that.idHR) return false;
+        if (idEmployee != that.idEmployee) return false;
+        if (yearEmployed != that.yearEmployed) return false;
+        if (yearTerminated != that.yearTerminated) return false;
+        if (rating1 != that.rating1) return false;
+        if (rating2 != that.rating2) return false;
+        if (rating3 != that.rating3) return false;
+        if (rating4 != that.rating4) return false;
+        if (rating5 != that.rating5) return false;
+        if (hireAgain != that.hireAgain) return false;
+        if (confirmed != that.confirmed) return false;
+        return company != null ? company.equals(that.company) : that.company == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = company != null ? company.hashCode() : 0;
+        result = 31 * result + ratingID;
+        result = 31 * result + idCompany;
+        result = 31 * result + idOfficialCompany;
+        result = 31 * result + idHR;
+        result = 31 * result + idEmployee;
+        result = 31 * result + yearEmployed;
+        result = 31 * result + yearTerminated;
+        result = 31 * result + rating1;
+        result = 31 * result + rating2;
+        result = 31 * result + rating3;
+        result = 31 * result + rating4;
+        result = 31 * result + rating5;
+        result = 31 * result + hireAgain;
+        result = 31 * result + confirmed;
+        return result;
     }
 }

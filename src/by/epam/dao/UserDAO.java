@@ -11,13 +11,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import org.apache.log4j.Logger;
 
 public class UserDAO extends AbstractDAO<User> {
 
     private final static Logger LOG = Logger.getLogger("UserDAO");
     private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("resources/mysqlStatements");
-    private String entryQuery = RESOURCE_BUNDLE.getString("GET_USER_ENTITY");
+    private String getUserQuery = RESOURCE_BUNDLE.getString("GET_USER_ENTITY");
     private String getAdminInfo = RESOURCE_BUNDLE.getString("GET_ADMIN_ENTITY");
     private String queryRegister = RESOURCE_BUNDLE.getString("REGISTER_COMMAND");
     private String queryAddHRHEADInfo = RESOURCE_BUNDLE.getString("ADD_HRHEAD_INFO_COMMAND");
@@ -42,7 +43,7 @@ public class UserDAO extends AbstractDAO<User> {
     public User login(Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         User user;
-        try (PreparedStatement ps = conn.prepareStatement(entryQuery)) {
+        try (PreparedStatement ps = conn.prepareStatement(getUserQuery)) {
             ps.setObject(1, params[0]); //login
             ps.setObject(2, params[1]); //password
             try (ResultSet rs = ps.executeQuery()) {
@@ -101,7 +102,7 @@ public class UserDAO extends AbstractDAO<User> {
         executeQuery(queryRegister, user.getEmail(), user.getPass());
     }
 
-    private void setUserIdByEmailAndPass(User user) throws DAOException {
+    public void setUserIdByEmailAndPass(User user) throws DAOException {
         int userId = (int) executeForSingleResult(queryGetUserId, user.getEmail(), user.getPass());
         user.setId(userId);
     }
@@ -117,6 +118,7 @@ public class UserDAO extends AbstractDAO<User> {
 
     public void register(User user) throws DAOException {
         registerUser(user);
+        LOG.info("New user registration is done, user login: " + user.getEmail());
         setUserIdByEmailAndPass(user);
         addHrHeadInfo(user);
         LOG.info("New user is added:" + user.getEmail());
@@ -184,7 +186,13 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public User getHrById(int hrId) throws DAOException {
-        return getHrWithCompanyDataList(queryGetHrById, hrId).get(0);
+        User user;
+        try {
+            user = getHrWithCompanyDataList(queryGetHrById, hrId).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            throw new DAOException("Data is empty");
+        }
+        return user;
     }
 
     public List<User> getHrByName(String fName, String lName) throws DAOException {

@@ -1,11 +1,16 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: WorkBase
-  Date: 6/30/2018
-  Time: 3:59 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<fmt:bundle basename="resources.content">
+    <fmt:message key="err.errorPage" var="errorPage"/>
+    <fmt:message key="cmn.servletName" var="servletName"/>
+    <fmt:message key="cmn.requestFrom" var="requestFrom"/>
+    <fmt:message key="cmn.isFailed" var="isFailed"/>
+    <fmt:message key="cmn.statusCode" var="statusCode"/>
+    <fmt:message key="cmn.exception" var="exception"/>
+    <fmt:message key="cmn.details" var="details"/>
+    <fmt:message key="cmn.goBack" var="goBack"/>
+</fmt:bundle>
+
 <html>
 <head>
     <script>
@@ -13,14 +18,14 @@
             window.history.back();
         }
     </script>
-    <title>Error page</title>
+    <title>${errorPage}</title>
 </head>
 <body>
-Request from ${pageContext.errorData.requestURI} is failed <br/>
-Servlet name or type: ${pageContext.errorData.servletName} <br/>
-Status code: ${pageContext.errorData.statusCode} <br/>
-Exception: ${pageContext.errorData.throwable} <br/>
-Details: ${pageContext.errorData.throwable.printStackTrace()} <br/>
-<button onclick="goBack()">Go Back</button>
+${requestFrom} ${pageContext.errorData.requestURI} ${isFailed} <br/>
+${servletName}: ${pageContext.errorData.servletName} <br/>
+${statusCode}: ${pageContext.errorData.statusCode} <br/>
+${exception}: ${pageContext.errorData.throwable} <br/>
+${details}: ${pageContext.errorData.throwable.printStackTrace()} <br/>
+<button onclick="goBack()">${goBack}</button>
 </body>
 </html>

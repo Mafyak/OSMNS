@@ -10,13 +10,13 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 import java.io.UnsupportedEncodingException;
-import java.util.ResourceBundle;
+import java.util.Locale;
 
 public class AddNewEmployee implements Command {
 
     private static final Logger LOG = Logger.getLogger(AddNewEmployee.class);
-    private static final ResourceBundle langBundle = ResourceBundle.getBundle("resources/content");
 
     @Override
     public Page execute(HttpServletRequest request) {
@@ -28,6 +28,7 @@ public class AddNewEmployee implements Command {
         Page page = new Page(Manager.getMan().getPage("hr_main_page"), true);
 
         HttpSession session = request.getSession();
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
         session.removeAttribute("infoAddingEmpl");
         User currentHR = (User) session.getAttribute("user");
         String fName = request.getParameter("empFName");
@@ -45,12 +46,10 @@ public class AddNewEmployee implements Command {
         UserService userService = new UserService();
         try {
             userService.addNewEmployee(employee);
-            session.setAttribute("infoAddingEmpl",
-                    langBundle.getString("hr.succ.addEmpl"));
+            session.setAttribute("infoAddingEmpl", Manager.getMan().message("hr.succ.addEmpl", locale));
         } catch (ServiceException e) {
             LOG.info("Error adding employee");
-            session.setAttribute("infoAddingEmpl",
-                    langBundle.getString("hr.err.addEmpl"));
+            session.setAttribute("infoAddingEmpl", Manager.getMan().message("hr.err.addEmpl", locale));
         }
 
         session.setAttribute("user", currentHR);

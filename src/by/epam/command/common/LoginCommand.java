@@ -5,12 +5,16 @@ import by.epam.exception.ServiceException;
 import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 import by.epam.entity.User;
+import by.epam.utils.service.ContentValidator;
 import by.epam.utils.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 
 import org.apache.log4j.Logger;
+
+import java.util.Locale;
 
 public class LoginCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
@@ -19,26 +23,40 @@ public class LoginCommand implements Command {
 
     public Page execute(HttpServletRequest request) {
 
-        Page page;
+        Page pageObj;
         HttpSession session = request.getSession();
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
+        if (locale == null) {
+            locale = new Locale("en");
+            Config.set(session, Config.FMT_LOCALE, locale);
+        }
+        LOG.info("Locale: " + locale);
+
         String login = request.getParameter(PARAM_NAME_LOGIN);
+        if (!ContentValidator.validate(login)) {
+            session.setAttribute("infoMessage", Manager.getMan().message("cmd.email.error", locale));
+            pageObj = new Page(Manager.getMan().getPage("index_page"), true);
+            return pageObj;
+        }
+
         String pass = request.getParameter(PARAM_NAME_PASSWORD);
         UserService userService = new UserService();
         try {
             LOG.info("Login: " + login + ", pass: " + pass);
             User user = userService.login(login, pass);
-            request.getSession().setAttribute("user", user);
+            session.setAttribute("user", user);
             LOG.info("User info: " + user);
             if (user.getId() == 0) {
                 LOG.info("Invalid user/password combination for user: " + login);
                 throw new ServiceException("Empty user");
             }
-            page = new Page(getProperPage(user), true);
+            pageObj = new Page(getProperPage(user), true);
         } catch (ServiceException e) {
-            session.setAttribute("infoMessage", Manager.getMan().message("cmd.login.error"));
-            page = new Page(Manager.getMan().getPage("index_page"), true);
+            session.setAttribute("infoMessage", Manager.getMan().message("cmd.login.error", locale));
+            pageObj = new Page(Manager.getMan().getPage("index_page"), true);
         }
-        return page;
+        request.setAttribute("pageObj", pageObj);
+        return pageObj;
     }
 
     private String getProperPage(User user) {

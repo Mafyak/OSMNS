@@ -11,6 +11,8 @@
     <fmt:message key="cmn.forgotPass" var="forgotPass"/>
     <fmt:message key="cmn.emailToRecPass" var="emailToRecPass"/>
     <fmt:message key="cmn.recovPass" var="recovPass"/>
+    <fmt:message key="cmn.regexLogin" var="regexLogin"/>
+    <fmt:message key="cmn.regexLetterOnly" var="regexLetterOnly"/>
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
 
@@ -23,7 +25,7 @@
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery-1.11.1.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/login-page.js"></script>
-    <title>Login</title>
+    <title>${Login}</title>
 </head>
 <body>
 <div class="container-fluid bg">
@@ -36,7 +38,10 @@
                             <a href="#" class="active" id="login-form-link">${Login}</a>
                         </div>
                         <div class="col-xs-5">
-                            <a href="#" id="register-form-link">${Register}</a>
+                            <a href="#" id="register-form-link"
+                               onclick="document.getElementById('recover-form').style.display='none';
+                               document.getElementById('info-message').style.display='none';return false;"
+                               id="close_popup2">${Register}</a>
                         </div>
                         <div class="col-xs-2">
                             <a href="${pageContext.request.contextPath}/Controller?command=change_language&lang=en"><img
@@ -52,43 +57,45 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="login-form" method="POST" action="Controller" style="display: block;">
-                                <div class="form-group">
-                                    <input type="text" name="login" id="username" tabindex="1" class="form-control"
-                                           placeholder="${Email}" value="">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" id="password" tabindex="2"
-                                           class="form-control" placeholder="${Password}">
-                                </div>
-                                <a href="#"
-                                   onclick="document.getElementById('recover-form').style.display='block';return false;"
-                                   id="close_popup">${forgotPass}?</a>
-                                <div class="form-group">
-                                    ${infoMessage}
-                                    <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <button type="submit" name="command" id="login-submit"
-                                                    class="form-control btn btn-login" value="Login">${Login}</button>
+                            <div class="form-group">
+                                <form id="login-form" method="POST" action="Controller" style="display: block;">
+                                    <div class="form-group">
+                                        <input type="text" name="login" id="username" tabindex="1" class="form-control"
+                                               placeholder="${Email}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" id="password" tabindex="2"
+                                               class="form-control" placeholder="${Password}" required>
+                                    </div>
+                                    <a href="#"
+                                       onclick="document.getElementById('recover-form').style.display='block';return false;"
+                                       id="close_popup">${forgotPass}?</a>
+                                    <div class="form-group">
+                                        <p id="info-message">${infoMessage}</p>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <button type="submit" name="command" id="login-submit"
+                                                        class="form-control btn btn-login"
+                                                        value="Login">${Login}</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
-                            <form method="POST" action="Controller">
-                                <div class="form-group" id="recover-form" style="display: none;">
-                                    <div class="form-group">
-                                        <hr/>
-                                        <input type="text" name="recovEm" id="recovEm" class="form-control"
-                                               placeholder="${emailToRecPass}">
+                                </form>
+                                <form method="POST" action="Controller">
+                                    <div class="form-group" id="recover-form" style="display: none;">
+                                        <div class="form-group">
+                                            <hr/>
+                                            <input type="text" name="recovEm" id="recovEm" class="form-control"
+                                                   placeholder="${emailToRecPass}">
+                                        </div>
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <button type="submit" name="command" id="pass-recover"
+                                                    class="form-control btn btn-login"
+                                                    value="Recover_password">${recovPass}</button>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <button type="submit" name="command" id="pass-recover"
-                                                class="form-control btn btn-login"
-                                                value="Recover_password">${recovPass}</button>
-                                    </div>
-                                </div>
-                            </form>
-                            </form>
+                                </form>
+                            </div>
 
                             <form id="register-form" action="Controller" method="POST" style="display: none;">
                                 <div class="form-group">
@@ -99,16 +106,16 @@
                                     <input type="password" name="regPassword" id="regPassword" tabindex="1"
                                            class="form-control"
                                            placeholder="${Password}" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                           title="Must contain at least one number, one uppercase, lowercase letter and at least 8 or more characters"
+                                           title="${regexLogin}"
                                            required>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" name="fName" id="first-name" tabindex="2" class="form-control"
-                                           placeholder="${fName}" required>
+                                           placeholder="${fName}" pattern="[a-zA-Z]+" title="${regexLetterOnly}" required>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" name="lName" id="last-name" tabindex="2" class="form-control"
-                                           placeholder="${lName}" required>
+                                           placeholder="${lName}" pattern="[a-zA-Z]+" title="${regexLetterOnly}" required>
                                 </div>
                                 <div class="form-group">
                                     <div class="row">

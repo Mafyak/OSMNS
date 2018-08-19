@@ -21,7 +21,7 @@
                         <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=hr_main_page">${main_page}</a>
                     </div>
                     <div class="col-xs-2">
-                        <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=path.page.emplProfile">${search_by_ssn}</a>
+                        <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=emp_profile_page">${search_by_ssn}</a>
                     </div>
                     <div class="col-xs-2 mr-sm-2">
                         <a href="${pageContext.request.contextPath}/Controller?command=goTo&page=settings_page">${mySettings}</a>

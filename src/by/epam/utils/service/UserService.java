@@ -5,6 +5,7 @@ import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
 import by.epam.exception.ServiceException;
+
 import java.util.List;
 
 import by.epam.utils.calculator.TrustRateCalculator;
@@ -30,6 +31,17 @@ public class UserService {
         }
     }
 
+
+    public void setUserIdByEmailAndPass(User user) throws ServiceException {
+        try {
+            LOG.info("Setting user id for user: " + user);
+            userDAO.setUserIdByEmailAndPass(user);
+        } catch (DAOException e) {
+            LOG.info("DAOException in UserService method setUserIdByEmailAndPass()");
+            throw new ServiceException("Detected DAOException in UserService method setUserIdByEmailAndPass()", e);
+        }
+    }
+
     public void setNewPassword(String login, String pass) throws ServiceException {
         Security security = new Security();
         try {
@@ -40,10 +52,10 @@ public class UserService {
         }
     }
 
-    public void addNewEmployee(User user) throws ServiceException{
-        try{
+    public void addNewEmployee(User user) throws ServiceException {
+        try {
             userDAO.registerEmployee(user);
-        } catch (DAOException e){
+        } catch (DAOException e) {
             LOG.info("DAOException in UserService method addNewEmployee()");
             throw new ServiceException("DAOException in UserService method addNewEmployee()");
         }

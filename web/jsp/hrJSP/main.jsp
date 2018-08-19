@@ -28,6 +28,8 @@
     <fmt:message key="cmn.ssn" var="ssn"/>
     <fmt:message key="cmn.yes" var="yes"/>
     <fmt:message key="cmn.no" var="no"/>
+    <fmt:message key="cmn.regex9Digits" var="regex9Digits"/>
+    <fmt:message key="cmn.regex1to10" var="regex1to10"/>
 </fmt:bundle>
 <fmt:setLocale value="${locale}"/>
 
@@ -51,7 +53,8 @@
                     <input name="empFName" class="form-control" placeholder="${empFName}" required>
                     <input name="empMName" class="form-control" placeholder="${empMName}" required>
                     <input name="empLName" class="form-control" placeholder="${empLName}" required>
-                    <input name="empSSN" class="form-control" pattern="\d+" title="Digits only" placeholder="${ssn}"
+                    <input name="empSSN" class="form-control" pattern="\d{9}" title="${regex9Digits}"
+                           placeholder="${ssn}"
                            required>
                     <input type="submit" name="command" class="btn" value="${Add_new_employee}">
                 </div>
@@ -72,20 +75,21 @@
             <div class="row">
                 <div class="form-group">
                     ${lookup_emp}:
-                    <input name="SSN" class="form-control" placeholder="${ssn}" pattern="[0-9]+"
-                           title="Number only" required>
-                    <input type="submit" name="command" class="btn" value="${Search_simple}">
+                    <input name="SSN" class="form-control" placeholder="${ssn}" pattern="\d{9}"
+                           title="${regex9Digits}" required>
+                    <input type="submit" name="button" class="btn" value="${Search_simple}">
                 </div>
             </div>
         </form>
+        <c:if test="${not empty emptyEmployee}">${emptyEmployee}</c:if>
 
         <c:if test="${emptyDataFlag}">
             <div class="col-md-8 col-md-offset-4">
                 <table class="table" style="width:50%" border="1px">
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>SSN</th>
+                        <th>${empFName}</th>
+                        <th>${empLName}</th>
+                        <th>${ssn}</th>
                     </tr>
                     <tr>
                         <td>${employee.fName}</td>
@@ -106,11 +110,16 @@
                 </div>
                 ${rate_employee}:
                 <div class="form-group">
-                    <input name="rating1" class="form-control" placeholder="${rating1}" required>
-                    <input name="rating2" class="form-control" placeholder="${rating2}" required>
-                    <input name="rating3" class="form-control" placeholder="${rating3}" required>
-                    <input name="rating4" class="form-control" placeholder="${rating4}" required>
-                    <input name="rating5" class="form-control" placeholder="${rating5}" required>
+                    <input name="rating1" class="form-control" pattern="[1-9]|10"
+                           title="${regex1to10}" placeholder="${rating1}" required>
+                    <input name="rating2" class="form-control" pattern="[1-9]|10"
+                           title="${regex1to10}" placeholder="${rating2}" required>
+                    <input name="rating3" class="form-control" pattern="[1-9]|10"
+                           title="${regex1to10}" placeholder="${rating3}" required>
+                    <input name="rating4" class="form-control" pattern="[1-9]|10"
+                           title="${regex1to10}"placeholder="${rating4}" required>
+                    <input name="rating5" class="form-control" pattern="[1-9]|10"
+                           title="${regex1to10}" placeholder="${rating5}" required>
                 </div>
                 <div class="form-group">
                     ${hire_again}?

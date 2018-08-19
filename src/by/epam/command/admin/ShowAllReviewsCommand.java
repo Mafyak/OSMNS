@@ -1,16 +1,20 @@
 package by.epam.command.admin;
 
 import by.epam.command.Command;
+import by.epam.command.common.GoToPageCommand;
 import by.epam.exception.ServiceException;
 import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 import by.epam.entity.UserHistory;
 import by.epam.utils.service.AdminService;
+import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 import java.util.List;
+import java.util.Locale;
 
 public class ShowAllReviewsCommand implements Command {
 
@@ -22,6 +26,7 @@ public class ShowAllReviewsCommand implements Command {
         AdminService adminService = new AdminService();
         List<UserHistory> userHistories = null;
         HttpSession session = request.getSession();
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
         int index;
 
         try {
@@ -32,10 +37,8 @@ public class ShowAllReviewsCommand implements Command {
 
         LOG.info("index:" + index);
         session.setAttribute("index", index);
+        SessionCleaner.getCleaner().cleanSession(session);
 
-        session.removeAttribute("hrList");
-        session.removeAttribute("unconfirmedReviewsList");
-        session.removeAttribute("companyNameCollisions");
         try {
             Long pages = adminService.getReviewsPoolSize();
             Long size = pages / 10;
@@ -44,9 +47,10 @@ public class ShowAllReviewsCommand implements Command {
             userHistories = adminService.getPagedReviews(index);
             session.setAttribute("pages", size);
         } catch (ServiceException e) {
-            request.setAttribute("ShowAllReviewsError", Manager.getMan().message("msg.error.processing"));
+            request.setAttribute("ShowAllReviewsError", Manager.getMan().message("msg.error.processing", locale));
         }
         session.setAttribute("reviewsList", userHistories);
+        //return new GoToPageCommand().execute(request);
         return new Page(Manager.getMan().getPage("admin_page"), true);
     }
 }

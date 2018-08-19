@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class AddNewReviewCommand implements Command {
@@ -43,7 +44,7 @@ public class AddNewReviewCommand implements Command {
             return page;
         }
 
-        if (currentHR.getCompany() == null) {
+        if (currentHR.getCompany().getName() == null) {
             session.setAttribute("infoMessage", Manager.getMan().message("msg.error.emptComp", locale));
             return page;
         }
@@ -59,6 +60,14 @@ public class AddNewReviewCommand implements Command {
         userHistory.setRating4(Integer.parseInt(request.getParameter(RATING4)));
         userHistory.setRating5(Integer.parseInt(request.getParameter(RATING5)));
         userHistory.setHireAgain((request.getParameter(HIRE_AGAIN).equalsIgnoreCase("Yes") ? 1 : 0));
+
+        Calendar now = Calendar.getInstance();   // Gets the current date and time
+        int year = now.get(Calendar.YEAR);       // The current year
+        LOG.info("current year" + year);
+        if(userHistory.getYearTerminated()>year){
+            session.setAttribute("infoMessage", "Wrong termination year");
+            return page;
+        }
 
         UserService userService = new UserService();
         SessionCleaner sessionCleaner = new SessionCleaner();
