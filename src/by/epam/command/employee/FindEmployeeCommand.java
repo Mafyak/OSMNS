@@ -48,8 +48,8 @@ public class FindEmployeeCommand implements Command {
                     Manager.getMan().message("cmd.ssn.noDataPerSSN", locale));
         } else session.setAttribute("employee", employee);
 
-        session.setAttribute("pageObj", pageObj);
+       // session.setAttribute("pageObj", pageObj);
         session.setAttribute("emptyDataFlag", emptyDataFlag);
-        return new GoToPageCommand().execute(request);
+        return pageObj;
     }
 }

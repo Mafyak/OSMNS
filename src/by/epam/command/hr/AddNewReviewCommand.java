@@ -32,6 +32,7 @@ public class AddNewReviewCommand implements Command {
     public Page execute(HttpServletRequest request) {
         Page page = new Page(Manager.getMan().getPage("hr_main_page"), true);
         HttpSession session = request.getSession();
+        session.removeAttribute("emptyEmployee");
 
         User currentHR = (User) session.getAttribute("user");
         User employee = (User) session.getAttribute("employee");

@@ -37,13 +37,13 @@ public class ShowBySSNCommand implements Command {
             employee = userService.getUserBySSN(Integer.parseInt(employeeSSN));
         } catch (ServiceException e) {
             LOG.info("Error while getting data");
-            session.setAttribute("noDataPerSSN",
+            session.setAttribute("infoMessage",
                     Manager.getMan().message("cmd.ssn.noDataPerSSN", locale));
         }
 
         if (employee.getId() == 0) {
             LOG.info("Employee is empty");
-            session.setAttribute("noDataPerSSN",
+            session.setAttribute("infoMessage",
                     Manager.getMan().message("cmd.ssn.noDataPerSSN", locale));
         }
 
@@ -58,7 +58,7 @@ public class ShowBySSNCommand implements Command {
 
         session.setAttribute("employee", employee);
         session.setAttribute("pageObj", page);
-        return new GoToPageCommand().execute(request);
-        //return page;
+        //return new GoToPageCommand().execute(request);
+        return page;
     }
 }

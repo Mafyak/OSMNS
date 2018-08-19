@@ -18,6 +18,8 @@ public class Page {
     }
 
     public String getPage() {
+//        if (this.toRedirect)
+//            return "/OSMNS" + page;
         return page;
     }
 

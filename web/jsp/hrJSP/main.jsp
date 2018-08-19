@@ -81,7 +81,7 @@
                 </div>
             </div>
         </form>
-        <c:if test="${not empty emptyEmployee}">${emptyEmployee}</c:if>
+        ${emptyEmployee}
 
         <c:if test="${emptyDataFlag}">
             <div class="col-md-8 col-md-offset-4">

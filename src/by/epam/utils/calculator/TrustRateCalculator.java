@@ -1,10 +1,12 @@
 package by.epam.utils.calculator;
 
+import by.epam.utils.manager.Manager;
+
 import java.util.List;
 
 public class TrustRateCalculator {
 
-    private static final double MAX_STANDART_DEVIATION = 4.936612;
+    private static final double MAX_STANDART_DEVIATION = Double.parseDouble(Manager.getMan().getConfig("trust.max.dev"));
 
     /*
     Trust Rate is calculated based on:

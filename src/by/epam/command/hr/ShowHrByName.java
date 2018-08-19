@@ -11,8 +11,10 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ShowHrByName implements Command {
     private static final Logger LOG = Logger.getLogger(ShowHrByName.class);
@@ -20,11 +22,17 @@ public class ShowHrByName implements Command {
     @Override
     public Page execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
+        Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
+        if (locale == null) {
+            locale = new Locale("en");
+            Config.set(session, Config.FMT_LOCALE, locale);
+        }
+
         String fName = request.getParameter("fName");
-        if (fName==null)
+        if (fName == null)
             fName = (String) session.getAttribute("fName");
         String lName = request.getParameter("lName");
-        if (lName==null)
+        if (lName == null)
             lName = (String) session.getAttribute("lName");
         UserService userService = new UserService();
         List<User> hrList = null;
@@ -36,13 +44,14 @@ public class ShowHrByName implements Command {
             hrList.add(userService.getHrById(hrId));
             session.setAttribute("hrList", hrList);
             session.removeAttribute("reviewsList");
+            session.removeAttribute("infoSearcdDelHRMessage");
             session.removeAttribute("unconfirmedReviewsList");
             session.removeAttribute("companyNameCollisions");
             LOG.info("hrId is set in ShowHrByName field");
             return new Page(Manager.getMan().getPage("admin_page"), true);
         } catch (NumberFormatException | ServiceException e) {
             LOG.info("hrId is not set in ShowHrByName field");
-            session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));
+            session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error", locale));
         }
 
         try {
@@ -51,9 +60,9 @@ public class ShowHrByName implements Command {
                 session.setAttribute("lName", lName);
                 hrList = userService.getHrByName(fName, lName);
             } else
-                session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));
+                session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error", locale));
         } catch (ServiceException e) {
-            session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error"));
+            session.setAttribute("infoSearcdDelHRMessage", Manager.getMan().message("cmd.showHR.error", locale));
         }
         session.setAttribute("hrList", hrList);
         return new Page(Manager.getMan().getPage("admin_page"), true);

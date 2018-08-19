@@ -7,13 +7,10 @@ import by.epam.entity.Page;
 import by.epam.entity.User;
 import by.epam.utils.service.ContentValidator;
 import by.epam.utils.service.UserService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
-
 import org.apache.log4j.Logger;
-
 import java.util.Locale;
 
 public class LoginCommand implements Command {
@@ -25,6 +22,7 @@ public class LoginCommand implements Command {
 
         Page pageObj;
         HttpSession session = request.getSession();
+        session.removeAttribute("infoMessage");
         Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
         if (locale == null) {
             locale = new Locale("en");

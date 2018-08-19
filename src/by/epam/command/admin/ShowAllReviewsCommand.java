@@ -1,7 +1,6 @@
 package by.epam.command.admin;
 
 import by.epam.command.Command;
-import by.epam.command.common.GoToPageCommand;
 import by.epam.exception.ServiceException;
 import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
@@ -32,7 +31,8 @@ public class ShowAllReviewsCommand implements Command {
         try {
             index = Integer.parseInt(request.getParameter("page"));
         } catch (NumberFormatException e) {
-            index = (Integer) session.getAttribute("index");
+            Object ind = session.getAttribute("index");
+            index = (ind == null) ? 1 : (int) ind;
         }
 
         LOG.info("index:" + index);

@@ -2,9 +2,7 @@ package by.epam.command.common;
 
 import by.epam.command.Command;
 import by.epam.entity.Page;
-import by.epam.entity.User;
 import by.epam.utils.manager.Manager;
-import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +15,16 @@ public class GoToPageCommand implements Command {
     @Override
     public Page execute(HttpServletRequest request) {
         String page = request.getParameter("page");
+
+        HttpSession session = request.getSession();
+        session.removeAttribute("infoMessage");
+        session.removeAttribute("emptyEmployee");
+        session.removeAttribute("employee");
+        session.removeAttribute("infoSearcdDelHRMessage");
+
         if (page != null)
             return new Page(Manager.getMan().getPage(page));
 
-        HttpSession session = request.getSession();
         return (Page) session.getAttribute("pageObj");
     }
 

@@ -24,6 +24,10 @@ public class RegisterCommand implements Command {
         String login = request.getParameter(PARAM_NAME_LOGIN);
         HttpSession session = request.getSession();
         Locale locale = (Locale) Config.get(session, Config.FMT_LOCALE);
+        if (locale == null) {
+            locale = new Locale("en");
+            Config.set(session, Config.FMT_LOCALE, locale);
+        }
 
         if (!ContentValidator.validate(login)) {
             session.setAttribute("infoMessage", Manager.getMan().message("cmd.email.error", locale));
@@ -40,10 +44,10 @@ public class RegisterCommand implements Command {
         try {
             userService.register(login, pass, fName, mName, lName);
             session.setAttribute("infoMessage", Manager.getMan().message("cmd.reg.success", locale));
-            page = new Page(Manager.getMan().getPage("login_page"), true);
+            page = new Page(Manager.getMan().getPage("index_page"), true);
         } catch (ServiceException e) {
             session.setAttribute("infoMessage", Manager.getMan().message("cmd.reg.failure", locale));
-            page = new Page(Manager.getMan().getPage("login_page"), true);
+            page = new Page(Manager.getMan().getPage("index_page"), true);
         }
         return page;
     }

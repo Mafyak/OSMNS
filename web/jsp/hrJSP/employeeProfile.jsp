@@ -78,6 +78,6 @@
         </c:forEach>
     </table>
 </c:if>
-${noDataPerSSN}
+${infoMessage}
 </body>
 </html>
