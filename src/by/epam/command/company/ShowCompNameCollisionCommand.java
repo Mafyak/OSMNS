@@ -6,6 +6,7 @@ import by.epam.entity.Page;
 import by.epam.exception.ServiceException;
 import by.epam.utils.service.CompanyService;
 import by.epam.utils.manager.Manager;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+
 /**
  * This command shows company name collisions. Uses {@link MergeCompanyCommand} and {@link RemoveCompanyCommand} to get
  * rid of duplicates and incorrect data.

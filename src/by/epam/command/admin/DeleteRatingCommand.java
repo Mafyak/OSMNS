@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
+
 /**
  * Command to delete rating.
  *

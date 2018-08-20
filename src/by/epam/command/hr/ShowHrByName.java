@@ -15,6 +15,7 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 /**
  * HR look up command. Looks up by first and last name.
  *

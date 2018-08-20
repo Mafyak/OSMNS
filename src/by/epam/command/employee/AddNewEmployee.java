@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
+
 /**
  * This command adds new employee to existing database.
  *

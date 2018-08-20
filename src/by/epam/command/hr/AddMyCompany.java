@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 /**
  * Command adds new company and sets it to current user.
  *

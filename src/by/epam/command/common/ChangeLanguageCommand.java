@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
+
 /**
  * Command to change UI language.
  *

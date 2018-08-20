@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 /**
  * CompanyDAO class is used for company targeted operations.
  *
@@ -172,6 +173,7 @@ public class CompanyDAO extends AbstractDAO {
         LOG.info("Test 3");
         updateQuery(queryDeleteCompById, compId);
     }
+
     /**
      * Method returns company ID inside the project based on its official tax/government ID.
      *

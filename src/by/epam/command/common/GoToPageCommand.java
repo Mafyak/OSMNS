@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 /**
  * Command for proper forward. Removes commonly used info attributes in order to provide clean pages.
  *

@@ -172,7 +172,7 @@ public class UserDAO extends AbstractDAO<User> {
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
                 ps.setObject(i + 1, params[i]);
-                LOG.info("param " + (i+1) + " equals to: " + params[i]);
+                LOG.info("param " + (i + 1) + " equals to: " + params[i]);
             }
             try (ResultSet rs = ps.executeQuery()) {
                 Company company;

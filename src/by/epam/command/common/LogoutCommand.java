@@ -5,6 +5,7 @@ import by.epam.utils.manager.Manager;
 import by.epam.entity.Page;
 
 import javax.servlet.http.HttpServletRequest;
+
 /**
  * Logout command.
  *

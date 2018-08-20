@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Calendar;
 import java.util.Locale;
+
 /**
  * Command adds new review to selected employee.
  *
@@ -69,7 +70,7 @@ public class AddNewReviewCommand implements Command {
         Calendar now = Calendar.getInstance();   // Gets the current date and time
         int year = now.get(Calendar.YEAR);       // The current year
         LOG.info("current year" + year);
-        if(userHistory.getYearTerminated()>year){
+        if (userHistory.getYearTerminated() > year) {
             session.setAttribute("infoMessage", "Wrong termination year");
             return page;
         }

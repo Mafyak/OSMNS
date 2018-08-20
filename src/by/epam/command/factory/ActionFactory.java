@@ -3,13 +3,16 @@ package by.epam.command.factory;
 import by.epam.command.Command;
 import by.epam.command.CommandType;
 import by.epam.utils.manager.Manager;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
+
 /**
  * Action factory is a command creation class.
  *
- * @see Command
  * @author Siarhei Huba.
+ * @see Command
  */
 public class ActionFactory {
 

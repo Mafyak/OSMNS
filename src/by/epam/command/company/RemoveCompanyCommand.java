@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
+
 /**
  * Company removal command. Helps merge company command to get rid of unused, duplicate companies.
  *
- * @see MergeCompanyCommand
  * @author Siarhei Huba.
+ * @see MergeCompanyCommand
  */
 public class RemoveCompanyCommand implements Command {
 

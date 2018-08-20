@@ -3,6 +3,7 @@ package by.epam.dao;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
 /**
  * AbstractDAO abstract class is a base DAO class, that includes general DB operations.
  *
@@ -29,15 +31,16 @@ abstract class AbstractDAO<T> {
     int updateQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         try {
-           return updateQuery(conn, query, param);
+            return updateQuery(conn, query, param);
         } finally {
             ConnectionPool.getInstance().returnConnection(conn);
         }
     }
+
     /**
      * General update query method with connection input for more sophisticated queries
      *
-     * @param conn - db connection
+     * @param conn  - db connection
      * @param query - sql query to run
      * @param param - input params
      * @return number of updated rows
@@ -79,7 +82,7 @@ abstract class AbstractDAO<T> {
     /**
      * Method returns a object of collected data from db.
      *
-     * @param query - sql query to run
+     * @param query  - sql query to run
      * @param params - input params
      */
     Object executeForSingleResult(String query, Object... params) throws DAOException {
@@ -106,7 +109,7 @@ abstract class AbstractDAO<T> {
     /**
      * Method returns reviews based on input params. Used both inside adminDAO and userDAO.
      *
-     * @param query - sql query to run
+     * @param query  - sql query to run
      * @param params - input params
      */
     List<UserHistory> getReviews(String query, Object... params) throws DAOException {
