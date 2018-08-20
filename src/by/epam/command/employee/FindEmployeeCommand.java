@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * This command looks up for an employee.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class FindEmployeeCommand implements Command {
 

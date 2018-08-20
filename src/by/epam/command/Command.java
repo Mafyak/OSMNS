@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Main command interface.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public interface Command {
     Page execute(HttpServletRequest request);

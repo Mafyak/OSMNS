@@ -18,7 +18,7 @@ import java.util.Locale;
 /**
  * Command adds new review to selected employee.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class AddNewReviewCommand implements Command {
 

@@ -12,7 +12,7 @@ import by.epam.command.hr.*;
 /**
  * List of all command types.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public enum CommandType {
     LOGIN {

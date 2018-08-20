@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Removes existing HR. NOTE, that reviews, that were previously added by this HR stay.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class RemoveHrCommand implements Command {
     @Override

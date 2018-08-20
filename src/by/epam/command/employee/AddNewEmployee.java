@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * This command adds new employee to existing database.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class AddNewEmployee implements Command {
 

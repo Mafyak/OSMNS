@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 /**
  * UserDAO class is a DAO class for user db operations.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class UserDAO extends AbstractDAO<User> {
 

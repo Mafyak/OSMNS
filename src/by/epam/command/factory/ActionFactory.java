@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
  * Action factory is a command creation class.
  *
  * @see Command
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class ActionFactory {
 

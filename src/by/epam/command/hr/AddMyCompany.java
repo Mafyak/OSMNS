@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Command adds new company and sets it to current user.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class AddMyCompany implements Command {
     private static final Logger LOG = Logger.getLogger(AddMyCompany.class);

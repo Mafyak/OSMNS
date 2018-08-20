@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * Login command.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class LoginCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";

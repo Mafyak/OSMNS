@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * Update user info command. Allows user to change name, email and company.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class UpdateInfoCommand implements Command {
 

@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 /**
  * CompanyDAO class is used for company targeted operations.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class CompanyDAO extends AbstractDAO {
 

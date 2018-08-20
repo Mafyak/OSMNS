@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * This command shows company name collisions. Uses {@link MergeCompanyCommand} and {@link RemoveCompanyCommand} to get
  * rid of duplicates and incorrect data.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class ShowCompNameCollisionCommand implements Command {
 

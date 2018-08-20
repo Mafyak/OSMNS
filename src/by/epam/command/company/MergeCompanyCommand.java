@@ -17,7 +17,7 @@ import java.util.Locale;
  * Merge company command. In case of company data collision such as - user enters proper company name but makes a mistake
  * in tax id, merge company command allow administrator to merge both companies into one, uniting the rest of the info.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class MergeCompanyCommand implements Command {
     private static final Logger LOG = Logger.getLogger(MergeCompanyCommand.class);

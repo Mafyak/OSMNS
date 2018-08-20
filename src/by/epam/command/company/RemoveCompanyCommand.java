@@ -14,7 +14,7 @@ import java.util.Locale;
  * Company removal command. Helps merge company command to get rid of unused, duplicate companies.
  *
  * @see MergeCompanyCommand
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class RemoveCompanyCommand implements Command {
 

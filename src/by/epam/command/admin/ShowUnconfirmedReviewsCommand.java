@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * Command to show unconfirmed reviews only.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class ShowUnconfirmedReviewsCommand implements Command {
 

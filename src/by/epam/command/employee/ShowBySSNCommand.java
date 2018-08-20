@@ -20,7 +20,7 @@ import java.util.Locale;
 /**
  * Show by SSN command looks up for an employee and tries to find review of this employee.
  *
- * @author Siarhei Huba
+ * @author Siarhei Huba.
  */
 public class ShowBySSNCommand implements Command {
 
