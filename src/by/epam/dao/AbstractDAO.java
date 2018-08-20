@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 /**
  * AbstractDAO abstract class is a base DAO class, that includes general DB operations.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 abstract class AbstractDAO<T> {
 
