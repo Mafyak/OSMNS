@@ -13,7 +13,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
-
+/**
+ * This command adds new employee to existing database.
+ *
+ * @author Siarhei Huba
+ */
 public class AddNewEmployee implements Command {
 
     private static final Logger LOG = Logger.getLogger(AddNewEmployee.class);

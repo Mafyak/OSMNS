@@ -13,7 +13,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Command to show unconfirmed reviews only.
+ *
+ * @author Siarhei Huba
+ */
 public class ShowUnconfirmedReviewsCommand implements Command {
 
     @Override

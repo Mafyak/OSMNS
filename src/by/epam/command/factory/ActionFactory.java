@@ -5,7 +5,12 @@ import by.epam.command.CommandType;
 import by.epam.utils.manager.Manager;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
-
+/**
+ * Action factory is a command creation class.
+ *
+ * @see Command
+ * @author Siarhei Huba
+ */
 public class ActionFactory {
 
     private static final Logger LOG = Logger.getLogger(ActionFactory.class);

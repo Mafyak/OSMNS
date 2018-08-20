@@ -15,7 +15,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Calendar;
 import java.util.Locale;
-
+/**
+ * Command adds new review to selected employee.
+ *
+ * @author Siarhei Huba
+ */
 public class AddNewReviewCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(AddNewReviewCommand.class);

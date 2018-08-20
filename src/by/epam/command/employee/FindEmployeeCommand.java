@@ -16,7 +16,11 @@ import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
 
 import java.util.Locale;
-
+/**
+ * This command looks up for an employee.
+ *
+ * @author Siarhei Huba
+ */
 public class FindEmployeeCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(FindEmployeeCommand.class);

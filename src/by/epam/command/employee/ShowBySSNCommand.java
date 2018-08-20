@@ -17,7 +17,11 @@ import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
 
 import java.util.Locale;
-
+/**
+ * Show by SSN command looks up for an employee and tries to find review of this employee.
+ *
+ * @author Siarhei Huba
+ */
 public class ShowBySSNCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(ShowBySSNCommand.class);

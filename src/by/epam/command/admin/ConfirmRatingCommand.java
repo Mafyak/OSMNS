@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
 
+/**
+ * Command to confirm rating.
+ *
+ * @author Siarhei Huba
+ */
 public class ConfirmRatingCommand implements Command {
 
     @Override

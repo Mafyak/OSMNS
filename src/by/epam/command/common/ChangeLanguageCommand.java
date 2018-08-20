@@ -11,7 +11,11 @@ import java.util.Locale;
 
 import by.epam.utils.session.SessionCleaner;
 import org.apache.log4j.Logger;
-
+/**
+ * Command to change UI language.
+ *
+ * @author Siarhei Huba
+ */
 public class ChangeLanguageCommand implements Command {
 
     private final static Logger LOG = Logger.getLogger(ChangeLanguageCommand.class);

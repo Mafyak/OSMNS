@@ -11,7 +11,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+/**
+ * CompanyDAO class is used for company targeted operations.
+ *
+ * @author Siarhei Huba
+ */
 public class CompanyDAO extends AbstractDAO {
 
     private static final Logger LOG = Logger.getLogger(CompanyDAO.class);
@@ -29,6 +33,11 @@ public class CompanyDAO extends AbstractDAO {
     private String queryGetCompanyId = RESOURCE_BUNDLE.getString("GET_COMPANY_ID_BY_NAME");
     private String queryGetCompanyIdByOffId = RESOURCE_BUNDLE.getString("GET_COMPANY_ID_BY_OFF_ID");
 
+    /**
+     * Method gets no params as an input. Searches database for possible company name collisions.
+     *
+     * @see by.epam.command.company.ShowCompNameCollisionCommand
+     */
     public List<Company> getCompNameCollisions() throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         List<Company> list = new ArrayList<>();
@@ -52,6 +61,12 @@ public class CompanyDAO extends AbstractDAO {
         }
         return list;
     }
+
+    /**
+     * Method searches and merges first found company duplicate.
+     *
+     * @param compId - company
+     */
 
     public void mergeCompByInnerId(int compId) throws DAOException {
         int duplId = (int) executeForSingleResult(queryFind2ndcompId, compId, compId);
@@ -81,6 +96,12 @@ public class CompanyDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * Method returns company object from database based on company ID inside this project.
+     *
+     * @param compId - company ID is used for company look up.
+     * @return {@link Company} object based on company ID.
+     */
     private Company getCompById(int compId) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         Company company;
@@ -106,6 +127,12 @@ public class CompanyDAO extends AbstractDAO {
         return company;
     }
 
+    /**
+     * Method returns company object from database based on company official tax ID.
+     *
+     * @param compOffId - company official government ID.
+     * @return {@link Company} object based on company ID.
+     */
     public Company getCompanyByOffId(int compOffId) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         Company company;
@@ -131,7 +158,11 @@ public class CompanyDAO extends AbstractDAO {
         return company;
     }
 
-    //doesn't work properly - doesn't change company id in history.
+    /**
+     * Method removes duplicate and fixes company id in history so that only one id is used in all the reviews.
+     *
+     * @param compId - company ID is used for company look up.
+     */
     public void removeCompByInnerId(int compId) throws DAOException {
         int duplId = (int) executeForSingleResult(queryFind2ndcompId, compId, compId);
         LOG.info("Test 1");
@@ -141,17 +172,28 @@ public class CompanyDAO extends AbstractDAO {
         LOG.info("Test 3");
         updateQuery(queryDeleteCompById, compId);
     }
-
+    /**
+     * Method returns company ID inside the project based on its official tax/government ID.
+     *
+     * @param companyOfficialId - company ID is used for company look up.
+     * @return number of rows affected.
+     */
     int getCompanyIdByOfficialId(int companyOfficialId) throws DAOException {
         if (executeForSingleResult(queryGetCompanyIdByOffId, companyOfficialId) == null) {
             return 0;
         } else return (int) executeForSingleResult(queryGetCompanyIdByOffId, companyOfficialId);
     }
 
+    // method is not used but has a potential.
     public int getCompanyIdByName(String companyName) throws DAOException {
         return (int) executeForSingleResult(queryGetCompanyId, companyName);
     }
 
+    /**
+     * Method adds new company to db.
+     *
+     * @param companyName - company object to be added.
+     */
     public void addCompany(Company companyName) throws DAOException {
         executeQuery(queryAddCompany, companyName.getName(), companyName.getNiche(), companyName.getLocation(),
                 companyName.getHeadcount(), companyName.getCompanyOfficialId());

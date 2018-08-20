@@ -26,6 +26,7 @@ public class AdminDAO extends AbstractDAO<User> {
     private String queryDeleteHrByIdFromHrhead = RESOURCE_BUNDLE.getString("DELETE_HR_BY_ID_HRHEAD");
     private String queryDeleteHrByIdFromLogin = RESOURCE_BUNDLE.getString("DELETE_HR_BY_ID_LOGIN");
 
+
     public List<UserHistory> getPagedReviews(int page) throws DAOException {
         return getReviews(getPagedReviews, (page - 1) * 10);
     }

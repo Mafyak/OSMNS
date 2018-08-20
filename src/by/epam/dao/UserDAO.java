@@ -153,6 +153,44 @@ public class UserDAO extends AbstractDAO<User> {
         return employee;
     }
 
+    private List<User> getHrWithCompanyDataList(String query, Object... params) throws DAOException {
+        Connection conn = ConnectionPool.getInstance().getConnection();
+        List<User> userList = new ArrayList<>();
+        User user;
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            for (int i = 0; i < params.length; i++) {
+                ps.setObject(i + 1, params[i]);
+                LOG.info("param " + (i+1) + " equals to: " + params[i]);
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                Company company;
+                while (rs.next()) {
+                    user = new User();
+                    user.setId(rs.getInt("idHRhead"));
+                    user.setfName(rs.getString("fName"));
+                    user.setmName(rs.getString("mName"));
+                    user.setlName(rs.getString("lName"));
+                    company = new Company();
+                    company.setName(rs.getString("name"));
+                    company.setId(rs.getInt("idCompany"));
+                    company.setNiche(rs.getString("niche"));
+                    company.setLocation(rs.getString("location"));
+                    company.setHeadcount(rs.getInt("headcount"));
+                    company.setCompanyOfficialId(rs.getInt("offCompId"));
+                    company.setId(rs.getInt("idCompany"));
+                    user.setCompany(company);
+                    userList.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            LOG.info("SQL Exception during getHr method in UserDAO");
+            throw new DAOException("SQL Exception during getHr command execution", e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(conn);
+        }
+        return userList;
+    }
+
     public User getEntityBySSN(int SSN) throws DAOException {
         User employee = getEmployeeBySSN(SSN);
         LOG.info("Passed getEntityBySSN in UserDAO, id: " + employee.getId());

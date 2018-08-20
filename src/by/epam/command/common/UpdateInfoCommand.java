@@ -16,7 +16,11 @@ import javax.servlet.jsp.jstl.core.Config;
 import org.apache.log4j.Logger;
 
 import java.util.Locale;
-
+/**
+ * Update user info command. Allows user to change name, email and company.
+ *
+ * @author Siarhei Huba
+ */
 public class UpdateInfoCommand implements Command {
 
     private static final String PARAM_FIRST_NAME = "fName";

@@ -12,7 +12,11 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
-
+/**
+ * Password recover command. Sends user an email with new, randomly created password.
+ *
+ * @author Siarhei Huba
+ */
 public class RecoverPassCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(RecoverPassCommand.class);

@@ -15,7 +15,11 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * HR look up command. Looks up by first and last name.
+ *
+ * @author Siarhei Huba
+ */
 public class ShowHrByName implements Command {
     private static final Logger LOG = Logger.getLogger(ShowHrByName.class);
 

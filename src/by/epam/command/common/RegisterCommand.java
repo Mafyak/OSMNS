@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
-
+/**
+ * Registration command.
+ *
+ * @author Siarhei Huba
+ */
 public class RegisterCommand implements Command {
 
     private static final String PARAM_NAME_LOGIN = "regLogin";

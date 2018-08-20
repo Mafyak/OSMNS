@@ -14,7 +14,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Command to show all reviews.
+ *
+ * @author Siarhei Huba
+ */
 public class ShowAllReviewsCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(ShowAllReviewsCommand.class);

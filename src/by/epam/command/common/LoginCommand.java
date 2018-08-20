@@ -12,7 +12,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import org.apache.log4j.Logger;
 import java.util.Locale;
-
+/**
+ * Login command.
+ *
+ * @author Siarhei Huba
+ */
 public class LoginCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String PARAM_NAME_PASSWORD = "password";
@@ -56,7 +60,12 @@ public class LoginCommand implements Command {
         request.setAttribute("pageObj", pageObj);
         return pageObj;
     }
-
+    /**
+     * Command for proper forward. Removes commonly used info attributes in order to provide clean pages.
+     *
+     * @return String type link representation based on user type(HR/admin) during login process.
+     * @author Siarhei Huba
+     */
     private String getProperPage(User user) {
         switch (user.getType()) {
             case HR:

@@ -1,7 +1,5 @@
 package by.epam.dao;
 
-import by.epam.entity.Company;
-import by.epam.entity.User;
 import by.epam.entity.UserHistory;
 import by.epam.exception.DAOException;
 import by.epam.pool.ConnectionPool;
@@ -13,11 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
+/**
+ * AbstractDAO abstract class is a base DAO class, that includes general DB operations.
+ *
+ * @author Siarhei Huba
+ */
 abstract class AbstractDAO<T> {
 
     private static final Logger LOG = Logger.getLogger(AbstractDAO.class);
 
+    /**
+     * General update query method
+     *
+     * @param query - sql query to run
+     * @param param - input params
+     */
     int updateQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         try {
@@ -26,7 +34,14 @@ abstract class AbstractDAO<T> {
             ConnectionPool.getInstance().returnConnection(conn);
         }
     }
-
+    /**
+     * General update query method with connection input for more sophisticated queries
+     *
+     * @param conn - db connection
+     * @param query - sql query to run
+     * @param param - input params
+     * @return number of updated rows
+     */
     int updateQuery(Connection conn, String query, Object... param) throws DAOException {
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             for (int i = 0; i < param.length; i++) {
@@ -40,6 +55,12 @@ abstract class AbstractDAO<T> {
         }
     }
 
+    /**
+     * General execute query method.
+     *
+     * @param query - sql query to run
+     * @param param - input params
+     */
     void executeQuery(String query, Object... param) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -55,6 +76,12 @@ abstract class AbstractDAO<T> {
         }
     }
 
+    /**
+     * Method returns a object of collected data from db.
+     *
+     * @param query - sql query to run
+     * @param params - input params
+     */
     Object executeForSingleResult(String query, Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         Object result = null;
@@ -76,6 +103,12 @@ abstract class AbstractDAO<T> {
         return result;
     }
 
+    /**
+     * Method returns reviews based on input params. Used both inside adminDAO and userDAO.
+     *
+     * @param query - sql query to run
+     * @param params - input params
+     */
     List<UserHistory> getReviews(String query, Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         List<UserHistory> userHistories;
@@ -86,11 +119,8 @@ abstract class AbstractDAO<T> {
                 ps.setObject(i + 1, params[i]);
                 LOG.info("Param # " + i + 1 + " equals " + params[i]);
             }
-            LOG.info("Before try block");
             try (ResultSet rs = ps.executeQuery()) {
-                LOG.info("Test 0");
                 userHistories = new ArrayList<>();
-                LOG.info("Test 1");
                 while (rs.next()) {
                     userHistory = new UserHistory();
                     userHistory.setIdCompany(rs.getInt("idCompany"));
@@ -123,45 +153,4 @@ abstract class AbstractDAO<T> {
         return userHistories;
     }
 
-    List<User> getHrWithCompanyDataList(String query, Object... params) throws DAOException {
-        Connection conn = ConnectionPool.getInstance().getConnection();
-        List<User> userList = new ArrayList<>();
-        User user;
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            for (int i = 0; i < params.length; i++) {
-                ps.setObject(i + 1, params[i]);
-                LOG.info("param " + (i+1) + " equals to: " + params[i]);
-            }
-            try (ResultSet rs = ps.executeQuery()) {
-                Company company;
-                while (rs.next()) {
-                    LOG.info("Checkpoint 1");
-                    user = new User();
-                    user.setId(rs.getInt("idHRhead"));
-                    user.setfName(rs.getString("fName"));
-                    user.setmName(rs.getString("mName"));
-                    LOG.info("Checkpoint 2");
-                    user.setlName(rs.getString("lName"));
-                    company = new Company();
-                    company.setName(rs.getString("name"));
-                    company.setId(rs.getInt("idCompany"));
-                    company.setNiche(rs.getString("niche"));
-                    LOG.info("Checkpoint 3");
-                    company.setLocation(rs.getString("location"));
-                    company.setHeadcount(rs.getInt("headcount"));
-                    company.setCompanyOfficialId(rs.getInt("offCompId"));
-                    company.setId(rs.getInt("idCompany"));
-                    LOG.info("Checkpoint 4");
-                    user.setCompany(company);
-                    userList.add(user);
-                }
-            }
-        } catch (SQLException e) {
-            LOG.info("SQL Exception during getHr method in UserDAO");
-            throw new DAOException("SQL Exception during getHr command execution", e);
-        } finally {
-            ConnectionPool.getInstance().returnConnection(conn);
-        }
-        return userList;
-    }
 }

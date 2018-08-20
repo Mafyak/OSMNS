@@ -10,7 +10,11 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
-
+/**
+ * Command to delete rating.
+ *
+ * @author Siarhei Huba
+ */
 public class DeleteRatingCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(DeleteRatingCommand.class);
