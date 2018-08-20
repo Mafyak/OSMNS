@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 /**
  * Command to change UI language.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class ChangeLanguageCommand implements Command {
 

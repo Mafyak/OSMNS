@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Command for proper forward. Removes commonly used info attributes in order to provide clean pages.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class GoToPageCommand implements Command {
 

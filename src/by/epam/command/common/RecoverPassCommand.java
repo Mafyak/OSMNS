@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * Password recover command. Sends user an email with new, randomly created password.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class RecoverPassCommand implements Command {
 

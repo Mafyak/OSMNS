@@ -17,7 +17,7 @@ import java.util.Locale;
 /**
  * Command to show all reviews.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class ShowAllReviewsCommand implements Command {
 

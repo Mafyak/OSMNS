@@ -13,7 +13,7 @@ import java.util.Locale;
 /**
  * Command to delete rating.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class DeleteRatingCommand implements Command {
 

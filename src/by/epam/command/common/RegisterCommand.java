@@ -14,7 +14,7 @@ import java.util.Locale;
 /**
  * Registration command.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class RegisterCommand implements Command {
 

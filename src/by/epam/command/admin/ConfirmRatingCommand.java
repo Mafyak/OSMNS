@@ -13,7 +13,7 @@ import java.util.Locale;
 /**
  * Command to confirm rating.
  *
- * @author Siarhei Huba.
+ * @author Siarhei Huba
  */
 public class ConfirmRatingCommand implements Command {
 
