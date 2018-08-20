@@ -41,7 +41,12 @@ public class UserService {
             throw new ServiceException("Detected DAOException in UserService method setUserIdByEmailAndPass()", e);
         }
     }
-
+    /**
+     * Sets new password for a user with current login.
+     *
+     * @param login - login of a targeted user
+     * @param pass - new pass for this user
+     */
     public void setNewPassword(String login, String pass) throws ServiceException {
         Security security = new Security();
         try {
@@ -52,6 +57,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Adds new employee to database
+     *
+     * @param user - user to be added
+     */
     public void addNewEmployee(User user) throws ServiceException {
         try {
             userDAO.registerEmployee(user);
@@ -61,6 +71,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Updates an user based on inner id
+     *
+     * @param user - user to be updated
+     */
     public void updateUserInfo(User user) throws ServiceException {
         try {
             userDAO.updateUserInfo(user);
@@ -70,6 +85,10 @@ public class UserService {
         }
     }
 
+    /**
+     * Registers a new user based on set of params
+     *
+     */
     public void register(String login, String pass, String fName, String mName, String lName) throws ServiceException {
         Security security = new Security();
         User user = new User();
@@ -86,7 +105,10 @@ public class UserService {
             throw new ServiceException("Detected DAOException in UserService register() method", e);
         }
     }
-
+    /**
+     * Adds new review to review pool
+     *
+     */
     public void addReview(User hrHead, User employee, UserHistory history) throws ServiceException {
         try {
             userDAO.addReview(hrHead, employee, history);

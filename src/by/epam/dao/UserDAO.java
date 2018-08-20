@@ -14,6 +14,11 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
+/**
+ * UserDAO class is a DAO class for user db operations.
+ *
+ * @author Siarhei Huba
+ */
 public class UserDAO extends AbstractDAO<User> {
 
     private final static Logger LOG = Logger.getLogger("UserDAO");
@@ -40,6 +45,13 @@ public class UserDAO extends AbstractDAO<User> {
     public UserDAO() {
     }
 
+    /**
+     * Login query checks for existence of login and password combinations and tries to get user information based
+     * on this data
+     *
+     * @param params - params for login
+     * @return {@link User}
+     */
     public User login(Object... params) throws DAOException {
         Connection conn = ConnectionPool.getInstance().getConnection();
         User user;
